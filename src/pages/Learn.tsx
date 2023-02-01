@@ -15,8 +15,9 @@ export const Learn = () => {
 
   const [cachedData, setCachedData] = useState();
 
-  
+  const [learnedKanjiArray, setLearnedKanjiArray] = useState([]);
 
+ 
   interface Kanji {
     character?: string;
     meanings: string[];
@@ -33,30 +34,60 @@ export const Learn = () => {
     kanji: Kanji;
   }
 
-  const filterLearnedKanji = async () => {
-    const currentUser = auth.currentUser?.uid;
-    const kanjiArray = []
-    
-    if (!currentUser) return;
-    const learnedKanji = await getDocs(collection(db, "users", currentUser, "learned"))
-
-    learnedKanji.forEach((doc) => {
-
-      const kanjiData = doc.data()
-      kanjiArray.push(kanjiData.kanji)
-         
-    });
-
-    const learnedKanjiCharacters = kanjiArray.map((kanji) => kanji.character);
-    const filteredKanji = kanji.filter((kanji) => !learnedKanjiCharacters.includes(kanji.character))
+  //filter learned kanji from the main array
+  const filterLearnedKanji = () => {
+    const learnedKanjiCharacters = learnedKanjiArray.map((kanji) => kanji.character);
+    const filteredKanji = kanji.filter((kanji) => !learnedKanjiCharacters.includes(kanji.character));
     
     setKanji(filteredKanji);
+  };
+
+  //move selected kanji to the "learned" category
+  const handleSaveKanji = (kanji: Kanji) => {
+
+    const currentUser = auth.currentUser?.uid
+    kanji.category = "learned";
+    
+    setDoc(doc(db, "users", currentUser, "learned", kanji.character), {
+      kanji
+    });
+    
+    setLearnedKanjiArray([...learnedKanjiArray, kanji]);
+  }
+  
+  //triggers when the learnedKanjiArray changes
+  useEffect(() => {
+    filterLearnedKanji();
+  }, [learnedKanjiArray]);  
+
+  //fetch the users learned kanji collection on user login 
+  useEffect(() => {
+
+    const getKanjis = async () => {
+
+      const kanjiArray = []
+
+      const currentUser = auth.currentUser?.uid
+
+      const querySnapshot = await getDocs(collection(db, "users", currentUser, "learned"));
+      querySnapshot.forEach((doc) => {
+
+      const kanjiData = doc.data()
+      
+      kanjiArray.push(kanjiData.kanji)
+      
+    });
+
+    
+    setLearnedKanjiArray(kanjiArray)
   }
 
-  // filterLearnedKanji()
+  getKanjis()
 
 
+  }, [auth.currentUser]);
 
+  //fetch the main list of kanji if the user is logged in 
   useEffect(() => {
 
     if (!cachedData) {
@@ -108,18 +139,6 @@ export const Learn = () => {
     setKanji(sortedKanji)
   }
 
-
-  //move selected kanji to the "learned" category
-  const handleSaveKanji = (kanji: Kanji) => {
-
-    const currentUser = auth.currentUser?.uid
-    kanji.category = "learned";
-    
-    setDoc(doc(db, "users", currentUser, "learned", kanji.character), {
-      kanji
-    });
-     
-  }
 
 
 

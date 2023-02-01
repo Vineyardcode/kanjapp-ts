@@ -1,7 +1,7 @@
 import React, {useEffect, useState}from 'react';
 import { database, db, auth } from '../config/firebase';
 import "./Learn.css"
-import { doc, setDoc, collection, addDoc, getDocs } from "firebase/firestore"; 
+import { doc, setDoc, collection, addDoc, getDocs, } from "firebase/firestore"; 
 const Learned = () => {
 
   const [kanji, setKanji] = useState<Kanji[]>([]);
@@ -26,32 +26,14 @@ const Learned = () => {
     kanji: Kanji;
   }
 
-  useEffect(() => {
 
-    const getKanjis = async () => {
-
-      const kanjiArray = []
-
-      const currentUser = auth.currentUser?.uid
-
-      const querySnapshot = await getDocs(collection(db, "users", currentUser, "learned"));
-      querySnapshot.forEach((doc) => {
-
-      const kanjiData = doc.data()
-      
-      kanjiArray.push(kanjiData.kanji)
-      
-    });
 
     
     // console.log(kanjiArray)
     setKanji(kanjiArray)
-  }
-
-  getKanjis()
+  
 
 
-  }, []);
 
   // console.log(kanji)
 
