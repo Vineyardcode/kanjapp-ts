@@ -5,6 +5,9 @@ import "./Learn.css"
 import { doc, setDoc, collection, addDoc, getDocs } from "firebase/firestore"; 
 
 
+
+
+
 export const Learn = () => {
 
   const [kanji, setKanji] = useState<Kanji[]>([]);
@@ -17,7 +20,7 @@ export const Learn = () => {
 
   const [learnedKanjiArray, setLearnedKanjiArray] = useState([]);
 
- 
+  
   interface Kanji {
     character?: string;
     meanings: string[];
