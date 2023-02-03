@@ -10,6 +10,8 @@ import { doc, setDoc, collection, addDoc, getDocs } from "firebase/firestore";
 
 export const Learn = () => {
 
+  
+
   const [kanji, setKanji] = useState<Kanji[]>([]);
   
   const [modal, setModal] = useState<Modal>({ show: false, kanji: {} });

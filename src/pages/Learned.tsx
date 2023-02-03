@@ -2,7 +2,7 @@ import React, {useEffect, useState}from 'react';
 import { database, db, auth } from '../config/firebase';
 import "./Learn.css"
 import { doc, setDoc, collection, addDoc, getDocs, } from "firebase/firestore"; 
-import { useSelector } from 'react-redux';
+import { useSelector } from '@reduxjs/toolkit';
 
 
 const Learned = () => {
@@ -34,8 +34,8 @@ const Learned = () => {
 
 
     
-    // console.log(kanjiArray)
-    setKanji(kanjiArray)
+    onsole.log(learnedKanjiArray)
+    
   
 
 

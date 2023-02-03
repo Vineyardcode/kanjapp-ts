@@ -6,7 +6,7 @@ import { Navbar } from "./components/navbar";
 import './App.css'
 import { Learn } from './pages/Learn';
 import Learned from './pages/Learned';
-import { useDispatch, useSelector } from 'react-redux';
+import { useDispatch, useSelector } from '@reduxjs/toolkit';
 import { setLearnedKanjiArray } from './store';
 
 
