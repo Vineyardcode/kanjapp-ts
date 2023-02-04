@@ -6,14 +6,10 @@ import { Navbar } from "./components/navbar";
 import './App.css'
 import { Learn } from './pages/Learn';
 import Learned from './pages/Learned';
-import { useDispatch, useSelector } from '@reduxjs/toolkit';
-import { setLearnedKanjiArray } from './store';
+
 
 
 function App() {
-
-  const dispatch = useDispatch();
-  const learnedKanjiArray = useSelector((state: LearnedKanjiArrayState) => state.learnedKanjiArray);
 
   
   return (

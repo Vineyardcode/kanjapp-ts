@@ -2,18 +2,19 @@ import React, {useEffect, useState}from 'react';
 import { database, db, auth } from '../config/firebase';
 import "./Learn.css"
 import { doc, setDoc, collection, addDoc, getDocs, } from "firebase/firestore"; 
-import { useSelector } from '@reduxjs/toolkit';
+import { useSelector } from 'react-redux';
+
 
 
 const Learned = () => {
 
-  const [kanji, setKanji] = useState<Kanji[]>([]);
+  const [kanji, setKanji] = useState<Kanji[]>();
   
   const [modal, setModal] = useState<Modal>({ show: false, kanji: {} });
 
   const [selectedOption, setSelectedOption] = useState('sort_freq')
 
-  const learnedKanjiArray = useSelector((state: LearnedKanjiArrayState) => state.learnedKanjiArray);
+  const learnedKanjiArray = useSelector(state => state.learnedKanjiArray);
 
   interface Kanji {
     character?: string;
@@ -31,16 +32,6 @@ const Learned = () => {
     kanji: Kanji;
   }
 
-
-
-    
-    onsole.log(learnedKanjiArray)
-    
-  
-
-
-
-  // console.log(kanji)
 
   const showModal = (kanji: Kanji) => setModal({ show: true, kanji });
 

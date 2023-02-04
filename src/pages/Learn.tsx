@@ -23,6 +23,7 @@ export const Learn = () => {
   const [learnedKanjiArray, setLearnedKanjiArray] = useState([]);
 
   
+  
   interface Kanji {
     character?: string;
     meanings: string[];
