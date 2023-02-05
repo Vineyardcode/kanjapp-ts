@@ -8,11 +8,11 @@ import { Learn } from './pages/Learn';
 import Learned from './pages/Learned';
 
 
-
 function App() {
 
   
   return (
+    
     <div className="App">
       
       <BrowserRouter>
@@ -28,6 +28,7 @@ function App() {
       </BrowserRouter>
       
     </div>
+   
   )
 }
 

@@ -1,17 +1,10 @@
-import { configureStore, createSlice } from '@reduxjs/toolkit';
-
-const learnedKanjiArraySlice = createSlice({
-  name: 'learnedKanjiArray',
-  initialState: [] as string[],
-  reducers: {
-    addKanji: (state, action) => {
-      state.push(action.payload);
-    },
-  },
-});
+import { configureStore } from "@reduxjs/toolkit";
+import learnedKanjiArraySlice from "./learnedKanjiSlice";
 
 const store = configureStore({
   reducer: {
-    learnedKanjiArray: learnedKanjiArraySlice.reducer,
+    learnedKanjiArray: learnedKanjiArraySlice,
   },
 });
+
+export default store;

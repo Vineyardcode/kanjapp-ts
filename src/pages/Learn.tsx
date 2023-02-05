@@ -5,7 +5,8 @@ import "./Learn.css"
 import { doc, setDoc, collection, addDoc, getDocs } from "firebase/firestore"; 
 
 
-
+import { useDispatch } from "react-redux";
+import { setLearnedKanjiArray } from "../learnedKanjiSlice";
 
 
 export const Learn = () => {
@@ -22,8 +23,19 @@ export const Learn = () => {
 
   const [learnedKanjiArray, setLearnedKanjiArray] = useState([]);
 
+  const dispatch = useDispatch();
+
+  const addKanji = (kanji: any) => {
+    setLearnedKanjiArrayState([...learnedKanjiArray, kanji]);
+    dispatch(setLearnedKanjiArray([...learnedKanjiArray, kanji]));
+  };
   
-  
+
+
+
+
+
+
   interface Kanji {
     character?: string;
     meanings: string[];
