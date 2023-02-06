@@ -18,4 +18,4 @@ const learnedKanjiSlice = createSlice({
 });
 
 export const { addLearnedKanji } = learnedKanjiSlice.actions;
-export default learnedKanjiSlice.reducer;
+export default learnedKanjiSlice;

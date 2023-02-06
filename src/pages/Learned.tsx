@@ -15,7 +15,7 @@ const Learned: React.FC = () => {
 
   const [selectedOption, setSelectedOption] = useState('sort_freq')
 
-  const learnedKanjiArray = useSelector((state) => state.learnedKanji);
+  const learnedKanjiArray = useSelector((state) => state);
   
   console.log(learnedKanjiArray)
 
@@ -98,11 +98,11 @@ const Learned: React.FC = () => {
           <button onClick={hideModal}>Close</button>
         </div>
       )}
-      {/* {learnedKanjiArray.map((item, index) => (
+      {learnedKanjiArray.map((item, index) => (
         <button key={index} onClick={() => showModal(item)}>
           {item.character}
         </button>
-      ))} */}
+      ))}
 
     </div>
 

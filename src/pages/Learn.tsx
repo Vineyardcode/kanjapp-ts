@@ -6,7 +6,7 @@ import { doc, setDoc, collection, addDoc, getDocs } from "firebase/firestore";
 
 
 import { useDispatch } from "react-redux";
-import { setLearnedKanjiArray } from "../learnedKanjiSlice";
+import { addLearnedKanji } from "../learnedKanjiSlice";
 
 
 export const Learn = () => {
@@ -23,11 +23,16 @@ export const Learn = () => {
 
   const [learnedKanjiArray, setLearnedKanjiArray] = useState([]);
 
+
+
+
+  //dispatch into the global state
   const dispatch = useDispatch();
 
-  const addKanji = (kanji: string) => {
-    setLearnedKanjiArray((prevArray) => [...prevArray, kanji]);
+  const handleSubmit = (kanji) => {
+    
     dispatch(addLearnedKanji(kanji));
+    
   };
 
 
@@ -60,7 +65,7 @@ export const Learn = () => {
 
   //move selected kanji to the "learned" category
   const handleSaveKanji = (kanji: Kanji) => {
-
+    
     const currentUser = auth.currentUser?.uid
     kanji.category = "learned";
     
@@ -69,13 +74,13 @@ export const Learn = () => {
     });
     
     setLearnedKanjiArray([...learnedKanjiArray, kanji]);
-    
+    handleSubmit(kanji)
   }
   
   //triggers when the learnedKanjiArray changes
   useEffect(() => {
     filterLearnedKanji();
-    
+
   }, [learnedKanjiArray]);  
 
   //fetch the users learned kanji collection on user login 
