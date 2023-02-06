@@ -15,7 +15,7 @@ const Learned: React.FC = () => {
 
   const [selectedOption, setSelectedOption] = useState('sort_freq')
 
-  const learnedKanjiArray = useSelector((state) => state.learnedKanjiArray.learnedKanjiArray);
+  const learnedKanjiArray = useSelector((state) => state.learnedKanji);
   
   console.log(learnedKanjiArray)
 

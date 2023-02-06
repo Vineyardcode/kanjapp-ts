@@ -25,12 +25,10 @@ export const Learn = () => {
 
   const dispatch = useDispatch();
 
-  const addKanji = (kanji: any) => {
-    setLearnedKanjiArrayState([...learnedKanjiArray, kanji]);
-    dispatch(setLearnedKanjiArray([...learnedKanjiArray, kanji]));
+  const addKanji = (kanji: string) => {
+    setLearnedKanjiArray((prevArray) => [...prevArray, kanji]);
+    dispatch(addLearnedKanji(kanji));
   };
-  
-
 
 
 
@@ -71,11 +69,13 @@ export const Learn = () => {
     });
     
     setLearnedKanjiArray([...learnedKanjiArray, kanji]);
+    
   }
   
   //triggers when the learnedKanjiArray changes
   useEffect(() => {
     filterLearnedKanji();
+    
   }, [learnedKanjiArray]);  
 
   //fetch the users learned kanji collection on user login 

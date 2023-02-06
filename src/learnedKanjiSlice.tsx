@@ -1,17 +1,21 @@
-import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
+import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 
-export const learnedKanjiSlice = createSlice({
+export interface LearnedKanji {
+  kanji: string;
+  meaning: string;
+}
+
+const initialState: LearnedKanji[] = [];
+
+const learnedKanjiSlice = createSlice({
   name: 'learnedKanji',
-  initialState: {
-    learnedKanjiArray: []
-  },
+  initialState,
   reducers: {
-    setLearnedKanjiArray: (state, action) => {
-      state.learnedKanjiArray = action.payload;
+    addLearnedKanji: (state, action: PayloadAction<LearnedKanji>) => {
+      state.push(action.payload);
     }
   }
 });
 
-export const { setLearnedKanjiArray } = learnedKanjiSlice.actions;
-
+export const { addLearnedKanji } = learnedKanjiSlice.actions;
 export default learnedKanjiSlice.reducer;
