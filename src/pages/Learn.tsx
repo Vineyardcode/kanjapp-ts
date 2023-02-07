@@ -1,4 +1,4 @@
-import React, {useEffect, useState}from 'react';
+import React, {useEffect, useLayoutEffect, useState}from 'react';
 import { database, db, auth } from '../config/firebase';
 import { onValue, orderByChild, ref, query, get, child } from 'firebase/database';
 import "./Learn.css"
@@ -26,15 +26,15 @@ export const Learn = () => {
 
 
 
-  //dispatch into the global state
+  //dispatch the learnedKanjiArray into the global state
   const dispatch = useDispatch();
 
-  const handleSubmit = (kanji) => {
+  // dispatch(addLearnedKanji(learnedKanjiArray));
+  
     
-    dispatch(addLearnedKanji(kanji));
     
-  };
-
+ 
+  
 
 
 
@@ -74,14 +74,17 @@ export const Learn = () => {
     });
     
     setLearnedKanjiArray([...learnedKanjiArray, kanji]);
-    handleSubmit(kanji)
+    
   }
   
   //triggers when the learnedKanjiArray changes
   useEffect(() => {
+    
+  
     filterLearnedKanji();
+  }, [learnedKanjiArray]); 
 
-  }, [learnedKanjiArray]);  
+  
 
   //fetch the users learned kanji collection on user login 
   useEffect(() => {

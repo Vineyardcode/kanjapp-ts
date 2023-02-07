@@ -17,7 +17,9 @@ const Learned: React.FC = () => {
 
   const learnedKanjiArray = useSelector((state) => state);
   
-  console.log(learnedKanjiArray)
+
+
+
 
   interface Kanji {
     character?: string;
@@ -78,11 +80,11 @@ const Learned: React.FC = () => {
   return (
     <>
 
-<select value={selectedOption} onChange={handleChange}>
-  <option value="sort_freq">Sort by frequency</option>
-  <option value="sort_grade">Sort by grade</option>
-  <option value="sort_strokes">Sort by strokes</option>
-</select>
+    <select value={selectedOption} onChange={handleChange}>
+      <option value="sort_freq">Sort by frequency</option>
+      <option value="sort_grade">Sort by grade</option>
+      <option value="sort_strokes">Sort by strokes</option>
+    </select>
 
     <div>
     {modal.show && (
@@ -98,11 +100,11 @@ const Learned: React.FC = () => {
           <button onClick={hideModal}>Close</button>
         </div>
       )}
-      {learnedKanjiArray.map((item, index) => (
+      {/* {learnedKanjiArray.map((item, index) => (
         <button key={index} onClick={() => showModal(item)}>
           {item.character}
         </button>
-      ))}
+      ))} */}
 
     </div>
 

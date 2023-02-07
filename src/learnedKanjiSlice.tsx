@@ -3,6 +3,7 @@ import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 export interface LearnedKanji {
   kanji: string;
   meaning: string;
+  character: string;
 }
 
 const initialState: LearnedKanji[] = [];
@@ -12,7 +13,10 @@ const learnedKanjiSlice = createSlice({
   initialState,
   reducers: {
     addLearnedKanji: (state, action: PayloadAction<LearnedKanji>) => {
-      state.push(action.payload);
+      const index = state.findIndex(kanji => kanji.character === action.payload.character);
+      if (index === -1) {
+        state.push(action.payload);
+      }
     }
   }
 });
