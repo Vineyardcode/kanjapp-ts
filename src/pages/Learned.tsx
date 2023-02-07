@@ -9,17 +9,28 @@ import { useSelector } from 'react-redux';
 
 const Learned: React.FC = () => {
 
-  const [kanji, setKanji] = useState<Kanji[]>();
-  
+  const [learnedKanjiArray, setLearnedKanjiArray] = useState<Kanji[]>([]);
+ 
   const [modal, setModal] = useState<Modal>({ show: false, kanji: {} });
 
   const [selectedOption, setSelectedOption] = useState('sort_freq')
 
-  const learnedKanjiArray = useSelector((state) => state);
+  // const learnedKanjiArray = useSelector((state) => state);
   
+  useEffect(() => {
+    readFromLocalStorage();
+  }, []);
+
+  const readFromLocalStorage = () => {
+    const storedKanji = localStorage.getItem("learnedKanjiArray");
+    if (storedKanji) {
+      const kanjiArray: Kanji[] = JSON.parse(storedKanji);
+      setLearnedKanjiArray(kanjiArray);
+    }
+  };
 
 
-
+  // console.log(learnedKanjiArray)
 
   interface Kanji {
     character?: string;
@@ -100,11 +111,11 @@ const Learned: React.FC = () => {
           <button onClick={hideModal}>Close</button>
         </div>
       )}
-      {/* {learnedKanjiArray.map((item, index) => (
+      {learnedKanjiArray.map((item, index) => (
         <button key={index} onClick={() => showModal(item)}>
           {item.character}
         </button>
-      ))} */}
+      ))}
 
     </div>
 

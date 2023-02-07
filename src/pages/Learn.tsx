@@ -60,7 +60,17 @@ export const Learn = () => {
     const learnedKanjiCharacters = learnedKanjiArray.map((kanji) => kanji.character);
     const filteredKanji = kanji.filter((kanji) => !learnedKanjiCharacters.includes(kanji.character));
     
+    
+
     setKanji(filteredKanji);
+  };
+
+  const saveKanji = (kanji: Kanji) => {
+    let learnedKanjiArray = JSON.parse(localStorage.getItem("learnedKanjiArray")) || [];
+    if (!learnedKanjiArray.some(k => k.character === kanji.character)) {
+      learnedKanjiArray.push(kanji);
+      localStorage.setItem("learnedKanjiArray", JSON.stringify(learnedKanjiArray));
+    }
   };
 
   //move selected kanji to the "learned" category
@@ -74,15 +84,16 @@ export const Learn = () => {
     });
     
     setLearnedKanjiArray([...learnedKanjiArray, kanji]);
-    
+    saveKanji(kanji)
   }
   
   //triggers when the learnedKanjiArray changes
   useEffect(() => {
+
+
     
-  
     filterLearnedKanji();
-  }, [learnedKanjiArray]); 
+  }, [learnedKanjiArray]);
 
   
 
@@ -109,8 +120,7 @@ export const Learn = () => {
   }
 
   getKanjis()
-
-
+  
   }, [auth.currentUser]);
 
   //fetch the main list of kanji if the user is logged in 
@@ -131,9 +141,7 @@ export const Learn = () => {
 
   
 
-  const showModal = (kanji: Kanji) => setModal({ show: true, kanji });
 
-  const hideModal = () => setModal({ ...modal, show: false });
 
   const handleChange = (event) => {
     setSelectedOption(event.target.value)
@@ -166,7 +174,9 @@ export const Learn = () => {
   }
 
 
+  const showModal = (kanji: Kanji) => setModal({ show: true, kanji });
 
+  const hideModal = () => setModal({ ...modal, show: false });
 
 
   return (
