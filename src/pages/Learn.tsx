@@ -4,14 +4,11 @@ import { onValue, orderByChild, ref, query, get, child } from 'firebase/database
 import "./Learn.css"
 import { doc, setDoc, collection, addDoc, getDocs } from "firebase/firestore"; 
 
-
 import { useDispatch } from "react-redux";
 import { addLearnedKanji } from "../learnedKanjiSlice";
 
 
 export const Learn = () => {
-
-  
 
   const [kanji, setKanji] = useState<Kanji[]>([]);
   
@@ -24,21 +21,10 @@ export const Learn = () => {
   const [learnedKanjiArray, setLearnedKanjiArray] = useState([]);
 
 
-
-
   //dispatch the learnedKanjiArray into the global state
-  const dispatch = useDispatch();
-
+  // const dispatch = useDispatch();
   // dispatch(addLearnedKanji(learnedKanjiArray));
   
-    
-    
- 
-  
-
-
-
-
   interface Kanji {
     character?: string;
     meanings: string[];
@@ -55,16 +41,15 @@ export const Learn = () => {
     kanji: Kanji;
   }
 
-  //filter learned kanji from the main array
-  const filterLearnedKanji = () => {
-    const learnedKanjiCharacters = learnedKanjiArray.map((kanji) => kanji.character);
-    const filteredKanji = kanji.filter((kanji) => !learnedKanjiCharacters.includes(kanji.character));
-    
-    
+  useEffect(() => {
+    const storedKanji = localStorage.getItem("learnedKanji");
+    if (storedKanji) {
+      const kanjiArray = JSON.parse(storedKanji);
+      setLearnedKanjiArray(kanjiArray);
+    }
+  }, []);
 
-    setKanji(filteredKanji);
-  };
-
+  //save learned kanji to localStorage
   const saveKanji = (kanji: Kanji) => {
     let learnedKanjiArray = JSON.parse(localStorage.getItem("learnedKanjiArray")) || [];
     if (!learnedKanjiArray.some(k => k.character === kanji.character)) {
@@ -85,17 +70,17 @@ export const Learn = () => {
     
     setLearnedKanjiArray([...learnedKanjiArray, kanji]);
     saveKanji(kanji)
-  }
-  
-  //triggers when the learnedKanjiArray changes
-  useEffect(() => {
+  };
 
 
-    
-    filterLearnedKanji();
-  }, [learnedKanjiArray]);
 
-  
+
+
+
+
+
+
+
 
   //fetch the users learned kanji collection on user login 
   useEffect(() => {
@@ -139,10 +124,6 @@ export const Learn = () => {
     
   }, []);
 
-  
-
-
-
   const handleChange = (event) => {
     setSelectedOption(event.target.value)
     // call the sorting function based on the selected option
@@ -153,31 +134,27 @@ export const Learn = () => {
     } else if (event.target.value === 'sort_strokes') {
       sortKanjiByStrokes()
     }
-  }
-
-  
+  };
 
   //sort kanji by freq
   const sortKanji = () => {
     kanji.sort((a, b) => (a.freq > b.freq) ? 1 : -1)
     setKanji([...kanji])
-  }
+  };
   //sort kanji by grade
   const sortKanjiByGrade = () => {
     const sortedKanji = [...kanji].sort((a, b) => a.grade - b.grade)
     setKanji(sortedKanji)
-  }
+  };
   //sort kanji by strokes
   const sortKanjiByStrokes = () => {
     const sortedKanji = [...kanji].sort((a, b) => a.strokes - b.strokes)
     setKanji(sortedKanji)
-  }
-
+  };
 
   const showModal = (kanji: Kanji) => setModal({ show: true, kanji });
 
   const hideModal = () => setModal({ ...modal, show: false });
-
 
   return (
     <>
@@ -202,7 +179,9 @@ export const Learn = () => {
             <button onClick={hideModal}>Close</button>
           </div>
         )}
-        {kanji.map((item, index) => (
+        {kanji
+          .filter(kanji => !learnedKanjiArray.some(k => k.character === kanji.character))
+          .map((item, index) => (
           <button key={index} onClick={() => showModal(item)}>
             {item.character}
           </button>
