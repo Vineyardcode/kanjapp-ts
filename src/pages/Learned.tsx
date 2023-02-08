@@ -29,9 +29,6 @@ const Learned: React.FC = () => {
     }
   };
 
-
-  // console.log(learnedKanjiArray)
-
   interface Kanji {
     character?: string;
     meanings: string[];
@@ -70,17 +67,17 @@ const Learned: React.FC = () => {
   //sort kanji by freq
   const sortKanji = () => {
     kanji.sort((a, b) => (a.freq > b.freq) ? 1 : -1)
-    setKanji([...kanji])
+    setLearnedKanjiArray([...learnedKanjiArray])
   }
   //sort kanji by grade
   const sortKanjiByGrade = () => {
-    const sortedKanji = [...kanji].sort((a, b) => a.grade - b.grade)
-    setKanji(sortedKanji)
+    const sortedKanji = [...learnedKanjiArray].sort((a, b) => a.grade - b.grade)
+    setLearnedKanjiArray(sortedKanji)
   }
   //sort kanji by strokes
   const sortKanjiByStrokes = () => {
-    const sortedKanji = [...kanji].sort((a, b) => a.strokes - b.strokes)
-    setKanji(sortedKanji)
+    const sortedKanji = [...learnedKanjiArray].sort((a, b) => a.strokes - b.strokes)
+    setLearnedKanjiArray(sortedKanji)
   }
 
 

@@ -20,7 +20,6 @@ export const Learn = () => {
 
   const [learnedKanjiArray, setLearnedKanjiArray] = useState([]);
 
-
   //dispatch the learnedKanjiArray into the global state
   // const dispatch = useDispatch();
   // dispatch(addLearnedKanji(learnedKanjiArray));
@@ -41,6 +40,7 @@ export const Learn = () => {
     kanji: Kanji;
   }
 
+  //fetch learned kanji from localStorage and save them to a state variable
   useEffect(() => {
     const storedKanji = localStorage.getItem("learnedKanji");
     if (storedKanji) {
@@ -58,7 +58,7 @@ export const Learn = () => {
     }
   };
 
-  //move selected kanji to the "learned" category
+  //move selected kanji to the "learned" collection in firestore
   const handleSaveKanji = (kanji: Kanji) => {
     
     const currentUser = auth.currentUser?.uid
@@ -71,16 +71,6 @@ export const Learn = () => {
     setLearnedKanjiArray([...learnedKanjiArray, kanji]);
     saveKanji(kanji)
   };
-
-
-
-
-
-
-
-
-
-
 
   //fetch the users learned kanji collection on user login 
   useEffect(() => {
@@ -108,7 +98,7 @@ export const Learn = () => {
   
   }, [auth.currentUser]);
 
-  //fetch the main list of kanji if the user is logged in 
+  //fetch the main list of kanji if the user is logged in and cache those
   useEffect(() => {
 
     if (!cachedData) {
@@ -124,9 +114,10 @@ export const Learn = () => {
     
   }, []);
 
+  // call the sorting function based on the selected option
   const handleChange = (event) => {
     setSelectedOption(event.target.value)
-    // call the sorting function based on the selected option
+    
     if (event.target.value === 'sort_freq') {
       sortKanji()
     } else if (event.target.value === 'sort_grade') {

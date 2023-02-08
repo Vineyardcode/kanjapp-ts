@@ -14,11 +14,15 @@ export const Login = () => {
         // Save the user to the database
         const currentUser = result.user.uid
         try {
-          const docRef = await setDoc(doc(db, "users", currentUser), {
-            email: auth.currentUser?.email,
-            uid: result.user.uid,
+          const docRef = await setDoc(
+            doc(db, "users", currentUser),
+            {
+              email: auth.currentUser?.email,
+              uid: result.user.uid,
             
-          });
+            },
+            { merge: true }
+          );
           
         } catch (e) {
           console.error("Error adding document: ", e);
