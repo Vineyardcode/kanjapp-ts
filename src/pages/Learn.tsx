@@ -143,6 +143,8 @@ export const Learn = () => {
     setKanji(sortedKanji)
   };
 
+
+
   const showModal = (kanji: Kanji) => setModal({ show: true, kanji });
 
   const hideModal = () => setModal({ ...modal, show: false });
@@ -171,12 +173,16 @@ export const Learn = () => {
           </div>
         )}
         {kanji
+          .sort((a, b) => b.jlpt_new - a.jlpt_new)
           .filter(kanji => !learnedKanjiArray.some(k => k.character === kanji.character))
           .map((item, index) => (
           <button key={index} onClick={() => showModal(item)}>
             {item.character}
           </button>
-        ))}
+          ))
+
+        }
+         
       </div>
 
     </>
