@@ -148,7 +148,7 @@ export const Learn = () => {
   const showModal = (kanji: Kanji) => setModal({ show: true, kanji });
 
   const hideModal = () => setModal({ ...modal, show: false });
-
+  const jlptLevels = [5,4,3,2,1];
   return (
     <>
 
@@ -172,17 +172,24 @@ export const Learn = () => {
             <button onClick={hideModal}>Close</button>
           </div>
         )}
+<div>
+    {jlptLevels.map((level) => (
+      <div key={level}>
+        <h2>JLPT Level {level}</h2>
         {kanji
-          .sort((a, b) => b.jlpt_new - a.jlpt_new)
-          .filter(kanji => !learnedKanjiArray.some(k => k.character === kanji.character))
-          .map((item, index) => (
-          <button key={index} onClick={() => showModal(item)}>
-            {item.character}
-          </button>
-          ))
+            .filter((kanji) => kanji.jlpt_new === level)
+            .sort((a, b) => b.jlpt_new - a.jlpt_new)
+            .filter(kanji => !learnedKanjiArray.some(k => k.character === kanji.character))
+            .map((item, index) => (
+            <button key={index} onClick={() => showModal(item)}>
+              {item.character}
+            </button>
+            ))
 
-        }
-         
+          }
+      </div>
+    ))}
+  </div>
       </div>
 
     </>
