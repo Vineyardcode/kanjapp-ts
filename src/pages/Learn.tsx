@@ -98,7 +98,7 @@ export const Learn = () => {
   
   }, [auth.currentUser]);
 
-  //fetch the main list of kanji if the user is logged in and cache those
+  //fetch the main list of kanji if the user is logged in and cache those data
   useEffect(() => {
 
     if (!cachedData) {
@@ -148,6 +148,7 @@ export const Learn = () => {
   const showModal = (kanji: Kanji) => setModal({ show: true, kanji });
 
   const hideModal = () => setModal({ ...modal, show: false });
+
   const jlptLevels = [5,4,3,2,1];
   return (
     <>
@@ -159,7 +160,14 @@ export const Learn = () => {
       </select>
 
       <div>
-      {modal.show && (
+
+
+        <div>
+            {jlptLevels.map((level) => (
+              <div key={level}>
+                <h2>JLPT Level {level}</h2>
+
+                {modal.show && (
           <div>
             <div>Character: {modal.kanji.character}</div>
             <div>Meaning: {modal.kanji.meanings[0]}</div>
@@ -172,24 +180,23 @@ export const Learn = () => {
             <button onClick={hideModal}>Close</button>
           </div>
         )}
-<div>
-    {jlptLevels.map((level) => (
-      <div key={level}>
-        <h2>JLPT Level {level}</h2>
-        {kanji
-            .filter((kanji) => kanji.jlpt_new === level)
-            .sort((a, b) => b.jlpt_new - a.jlpt_new)
-            .filter(kanji => !learnedKanjiArray.some(k => k.character === kanji.character))
-            .map((item, index) => (
-            <button key={index} onClick={() => showModal(item)}>
-              {item.character}
-            </button>
-            ))
 
-          }
-      </div>
-    ))}
-  </div>
+
+
+                {kanji
+                    .filter((kanji) => kanji.jlpt_new === level)
+                    .sort((a, b) => b.jlpt_new - a.jlpt_new)
+                    .filter(kanji => !learnedKanjiArray.some(k => k.character === kanji.character))
+                    .map((item, index) => (
+                    <button key={index} onClick={() => showModal(item)}>
+                      {item.character}
+                    </button>
+                    ))
+                  }
+              </div>
+            ))}
+        </div>
+
       </div>
 
     </>
