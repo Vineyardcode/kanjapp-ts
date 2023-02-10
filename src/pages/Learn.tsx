@@ -119,7 +119,7 @@ export const Learn = () => {
     setSelectedOption(event.target.value)
     
     if (event.target.value === 'sort_freq') {
-      sortKanji()
+      sortKanjiByFreq()
     } else if (event.target.value === 'sort_grade') {
       sortKanjiByGrade()
     } else if (event.target.value === 'sort_strokes') {
@@ -128,7 +128,7 @@ export const Learn = () => {
   };
 
   //sort kanji by freq
-  const sortKanji = () => {
+  const sortKanjiByFreq = () => {
     kanji.sort((a, b) => (a.freq > b.freq) ? 1 : -1)
     setKanji([...kanji])
   };
@@ -150,6 +150,62 @@ export const Learn = () => {
   const hideModal = () => setModal({ ...modal, show: false });
 
   const jlptLevels = [5,4,3,2,1];
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  const [sortByFreq, setSortByFreq] = useState(false);
+  const [sortByGrade, setSortByGrade] = useState(false);
+  const [sortByStrokes, setSortByStrokes] = useState(false);
+  
+  const handleSortByFreqChange = () => {
+    setSortByFreq(!sortByFreq);
+  };
+  
+  const handleSortByGradeChange = () => {
+    setSortByGrade(!sortByGrade);
+  };
+  
+  const handleSortByStrokesChange = () => {
+    setSortByStrokes(!sortByStrokes);
+  };
+  
+  const sortKanji = () => {
+    let sortedKanji = [...kanji];
+  
+    if (sortByFreq) {
+      sortedKanji.sort((a, b) => (a.freq > b.freq) ? 1 : -1)
+    }
+  
+    if (sortByGrade) {
+      sortedKanji.sort((a, b) => a.grade - b.grade)
+    }
+  
+    if (sortByStrokes) {
+      sortedKanji.sort((a, b) => a.strokes - b.strokes)
+    }
+  
+    setKanji(sortedKanji);
+  };
+  
+  useEffect(() => {
+    sortKanji();
+  }, [sortByFreq, sortByGrade, sortByStrokes]);
+
+
+
   return (
     <>
 
@@ -161,6 +217,19 @@ export const Learn = () => {
 
       <div>
 
+
+      <label>
+  <input type="checkbox" checked={sortByFreq} onChange={handleSortByFreqChange} />
+  Sort by frequency
+</label>
+<label>
+  <input type="checkbox" checked={sortByGrade} onChange={handleSortByGradeChange} />
+  Sort by grade
+</label>
+<label>
+  <input type="checkbox" checked={sortByStrokes} onChange={handleSortByStrokesChange} />
+  Sort by strokes
+</label>
 
         <div>
             {jlptLevels.map((level) => (
