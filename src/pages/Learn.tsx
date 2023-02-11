@@ -20,6 +20,10 @@ export const Learn = () => {
 
   const [learnedKanjiArray, setLearnedKanjiArray] = useState([]);
 
+  const [sortByFreq, setSortByFreq] = useState(false);
+  const [sortByGrade, setSortByGrade] = useState(false);
+  const [sortByStrokes, setSortByStrokes] = useState(false);
+
   //dispatch the learnedKanjiArray into the global state
   // const dispatch = useDispatch();
   // dispatch(addLearnedKanji(learnedKanjiArray));
@@ -115,61 +119,6 @@ export const Learn = () => {
   }, []);
 
   // call the sorting function based on the selected option
-  const handleChange = (event) => {
-    setSelectedOption(event.target.value)
-    
-    if (event.target.value === 'sort_freq') {
-      sortKanjiByFreq()
-    } else if (event.target.value === 'sort_grade') {
-      sortKanjiByGrade()
-    } else if (event.target.value === 'sort_strokes') {
-      sortKanjiByStrokes()
-    }
-  };
-
-  //sort kanji by freq
-  const sortKanjiByFreq = () => {
-    kanji.sort((a, b) => (a.freq > b.freq) ? 1 : -1)
-    setKanji([...kanji])
-  };
-  //sort kanji by grade
-  const sortKanjiByGrade = () => {
-    const sortedKanji = [...kanji].sort((a, b) => a.grade - b.grade)
-    setKanji(sortedKanji)
-  };
-  //sort kanji by strokes
-  const sortKanjiByStrokes = () => {
-    const sortedKanji = [...kanji].sort((a, b) => a.strokes - b.strokes)
-    setKanji(sortedKanji)
-  };
-
-
-
-  const showModal = (kanji: Kanji) => setModal({ show: true, kanji });
-
-  const hideModal = () => setModal({ ...modal, show: false });
-
-  const jlptLevels = [5,4,3,2,1];
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-  const [sortByFreq, setSortByFreq] = useState(false);
-  const [sortByGrade, setSortByGrade] = useState(false);
-  const [sortByStrokes, setSortByStrokes] = useState(false);
-  
   const handleSortByFreqChange = () => {
     setSortByFreq(!sortByFreq);
   };
@@ -204,51 +153,86 @@ export const Learn = () => {
     sortKanji();
   }, [sortByFreq, sortByGrade, sortByStrokes]);
 
+  const showModal = (kanji: Kanji) => setModal({ show: true, kanji });
 
+  const hideModal = () => setModal({ ...modal, show: false });
+
+  
+
+  //create anki flash cards out of selected kanji
+  const createAnkiCard = (kanjiData: Kanji) => {
+    const api = new XMLHttpRequest();
+    api.open("POST", "http://localhost:8765");
+  
+    const note = {
+      deckName: "Default",
+      modelName: "Basic",
+      fields: {
+        Front: kanjiData.character,
+        Back: kanjiData.meanings+' ',
+
+      },
+      tags: []
+    };
+  
+    api.send(JSON.stringify({
+      action: "addNote",
+      version: 6,
+      params: {
+        note: note
+      }
+    }));
+  
+    api.onreadystatechange = function() {
+      if (this.readyState === XMLHttpRequest.DONE && this.status === 200) {
+        console.log(`Kanji ${kanjiData.character} was added to Anki successfully!`);
+        
+      }
+    };
+  };
+
+  const jlptLevels = [5,4,3,2,1];
 
   return (
     <>
 
-      <select value={selectedOption} onChange={handleChange}>
-        <option value="sort_freq">Sort by frequency</option>
-        <option value="sort_grade">Sort by grade</option>
-        <option value="sort_strokes">Sort by strokes</option>
-      </select>
 
-      <div>
+
+    <div>
 
 
       <label>
-  <input type="checkbox" checked={sortByFreq} onChange={handleSortByFreqChange} />
-  Sort by frequency
-</label>
-<label>
-  <input type="checkbox" checked={sortByGrade} onChange={handleSortByGradeChange} />
-  Sort by grade
-</label>
-<label>
-  <input type="checkbox" checked={sortByStrokes} onChange={handleSortByStrokesChange} />
-  Sort by strokes
-</label>
+          <input type="checkbox" checked={sortByFreq} onChange={handleSortByFreqChange} />
+          Sort by frequency
+        </label>
+        <label>
+          <input type="checkbox" checked={sortByGrade} onChange={handleSortByGradeChange} />
+          Sort by grade
+        </label>
+        <label>
+          <input type="checkbox" checked={sortByStrokes} onChange={handleSortByStrokesChange} />
+          Sort by strokes
+      </label>
 
         <div>
             {jlptLevels.map((level) => (
               <div key={level}>
                 <h2>JLPT Level {level}</h2>
 
-                {modal.show && (
-          <div>
-            <div>Character: {modal.kanji.character}</div>
-            <div>Meaning: {modal.kanji.meanings[0]}</div>
-            <div>Frequency: {modal.kanji.freq}</div>
-            <div>Grade: {modal.kanji.grade}</div>
-            <div>JLPT (New): {modal.kanji.jlpt_new}</div>
-            <div>JLPT (Old): {modal.kanji.jlpt_old}</div>
-            <div>Strokes: {modal.kanji.strokes}</div>
-            <button onClick={() => handleSaveKanji(modal.kanji)}>Move to learned</button>
-            <button onClick={hideModal}>Close</button>
-          </div>
-        )}
+            {modal.show && (
+                <div>
+                  <div>Character: {modal.kanji.character}</div>
+                  <div>Meaning: {modal.kanji.meanings+''}</div>
+                  <div>Frequency: {modal.kanji.freq}</div>
+                  <div>Grade: {modal.kanji.grade}</div>
+                  <div>JLPT (New): {modal.kanji.jlpt_new}</div>
+                  <div>JLPT (Old): {modal.kanji.jlpt_old}</div>
+                  <div>Strokes: {modal.kanji.strokes}</div>
+                  <button onClick={() => handleSaveKanji(modal.kanji)}>Move to learned</button>
+                  <button onClick={() => createAnkiCard(modal.kanji)}>Create anki card</button>
+                  <button onClick={hideModal}>Close</button>
+                </div>
+            )}
 
 
 
