@@ -106,7 +106,7 @@ export const Learn = () => {
   useEffect(() => {
 
     if (!cachedData) {
-      const kanjiRef = ref(database, 'kyouiku');
+      const kanjiRef = ref(database, 'jouyou');
       get(kanjiRef).then((snap) => {
         const kanjis = snap.val();
         setKanji(Object.values(kanjis));
@@ -225,8 +225,7 @@ export const Learn = () => {
                   <div>Meaning: {modal.kanji.meanings+''}</div>
                   <div>Frequency: {modal.kanji.freq}</div>
                   <div>Grade: {modal.kanji.grade}</div>
-                  <div>JLPT (New): {modal.kanji.jlpt_new}</div>
-                  <div>JLPT (Old): {modal.kanji.jlpt_old}</div>
+                  <div>JLPT (New): {modal.kanji.jlpt_new}</div>                
                   <div>Strokes: {modal.kanji.strokes}</div>
                   <button onClick={() => handleSaveKanji(modal.kanji)}>Move to learned</button>
                   <button onClick={() => createAnkiCard(modal.kanji)}>Create anki card</button>
