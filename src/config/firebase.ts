@@ -8,14 +8,7 @@ import { getDatabase, ref} from "firebase/database";
 
 // Your web app's Firebase configuration
 const firebaseConfig = {
-  apiKey: "AIzaSyAj2ZhiQUATidxpcwGEIgjp_I_uDWxs-Qk",
-  authDomain: "kanjapp2.firebaseapp.com",
-  databaseURL: "https://kanjapp2-default-rtdb.europe-west1.firebasedatabase.app",
-  projectId: "kanjapp2",
-  storageBucket: "kanjapp2.appspot.com",
-  messagingSenderId: "744137002416",
-  appId: "1:744137002416:web:80329de24cbea30ee71a75",
-  measurementId: "G-SD6W7L94K9"
+config
 };
 
 // Initialize Firebase
@@ -31,4 +24,4 @@ export const db = getFirestore(app);
 export const database = getDatabase(app);
 
 
-//export const kanjiRef = ref(database, "https://kanjapp2-default-rtdb.europe-west1.firebasedatabase.app/")
+//export const kanjiRef = ref(database, "https://config/")
