@@ -213,13 +213,15 @@ export const Learn = () => {
           <input type="checkbox" checked={sortByStrokes} onChange={handleSortByStrokesChange} />
           Sort by strokes
       </label>
-
+      
         <div>
             {jlptLevels.map((level) => (
+              
               <div key={level}>
                 <h2>JLPT Level {level}</h2>
-
+                
             {modal.show && (
+              
                 <div>
                   <div>Character: {modal.kanji.character}</div>
                   <div>Meaning: {modal.kanji.meanings+''}</div>
@@ -232,19 +234,25 @@ export const Learn = () => {
                   <button onClick={hideModal}>Close</button>
                 </div>
             )}
-
-
-
+<div id="main">
+<div id="container">
                 {kanji
                     .filter((kanji) => kanji.jlpt_new === level)
                     .sort((a, b) => b.jlpt_new - a.jlpt_new)
                     .filter(kanji => !learnedKanjiArray.some(k => k.character === kanji.character))
                     .map((item, index) => (
+
+
+
                     <button key={index} onClick={() => showModal(item)}>
                       {item.character}
                     </button>
+                   
+
                     ))
                   }
+ </div>
+</div>
               </div>
             ))}
         </div>
