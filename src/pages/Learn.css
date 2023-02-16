@@ -11,24 +11,24 @@
 
 #main {
   display:flex;
-  --s: 35px;  /* size  */
-  --m: 5px;    /* margin */
-  --f: calc(var(--s)*1.7324 + 4*var(--m));
+  /* --s: 35px;  
+  --m: 3px;     */
+  /* --f: calc(var(--s)*1.7324 + 4*var(--m)); */
 
 }
 #container {
   font-size: 0;
 }
 #container button {
-  /* width: var(--s); */
-  margin: 7px;
-  /* height: calc(var(--s)*1.1547);  */
+  width: 30px;
+  height: 30px;
+ /*  margin: 5px;  
   display: inline-block;
   font-size:initial;
   clip-path: polygon(0% 25%, 0% 75%, 50% 100%, 100% 75%, 100% 25%, 50% 0%);
-  margin-bottom: calc(var(--m) - var(--s)*0.2885); 
+  margin-bottom: calc(var(--m) - var(--s)*0.2885);  */
   
-transition: 0.5s;
+  transition: 0.5s;
 } 
 
 #container button:nth-child(odd) {
@@ -38,7 +38,7 @@ transition: 0.5s;
 
 #container button:hover{
 
-transform: translateY(-0.25em);
+  transform: translateY(-0.25em);
 
 }
 

@@ -248,7 +248,6 @@ export const Learn = () => {
                       {item.character}
                     </button>
                    
-
                     ))
                   }
  </div>
