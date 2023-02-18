@@ -1,8 +1,11 @@
 import React, {useEffect, useLayoutEffect, useState}from 'react';
+
 import { database, db, auth } from '../config/firebase';
 import { onValue, orderByChild, ref, query, get, child } from 'firebase/database';
+import { doc, setDoc, collection, addDoc, getDocs } from "firebase/firestore";
+
+import Modal from '../components/Modal';
 import "./Learn.css"
-import { doc, setDoc, collection, addDoc, getDocs } from "firebase/firestore"; 
 
 import { useDispatch } from "react-redux";
 import { addLearnedKanji } from "../learnedKanjiSlice";
@@ -196,10 +199,7 @@ export const Learn = () => {
   return (
     <>
 
-
-
     <div>
-
 
       <label>
           <input type="checkbox" checked={sortByFreq} onChange={handleSortByFreqChange} />
@@ -220,19 +220,8 @@ export const Learn = () => {
               <div key={level}>
                 <h2>JLPT Level {level}</h2>
                 
-            {modal.show && (
-              
-                <div>
-                  <div>Character: {modal.kanji.character}</div>
-                  <div>Meaning: {modal.kanji.meanings+''}</div>
-                  <div>Frequency: {modal.kanji.freq}</div>
-                  <div>Grade: {modal.kanji.grade}</div>
-                  <div>JLPT (New): {modal.kanji.jlpt_new}</div>                
-                  <div>Strokes: {modal.kanji.strokes}</div>
-                  <button onClick={() => handleSaveKanji(modal.kanji)}>Move to learned</button>
-                  <button onClick={() => createAnkiCard(modal.kanji)}>Create anki card</button>
-                  <button onClick={hideModal}>Close</button>
-                </div>
+                {modal.show && (
+                <Modal modal={modal} hideModal={() => hideModal} handleSaveKanji={() => handleSaveKanji} createAnkiCard={() => createAnkiCard}/>
             )}
 <div id="main">
 <div id="container">
@@ -241,8 +230,6 @@ export const Learn = () => {
                     .sort((a, b) => b.jlpt_new - a.jlpt_new)
                     .filter(kanji => !learnedKanjiArray.some(k => k.character === kanji.character))
                     .map((item, index) => (
-
-
 
                     <button key={index} onClick={() => showModal(item)}>
                       {item.character}

@@ -31,10 +31,10 @@
   transition: 0.5s;
 } 
 
-#container button:nth-child(odd) {
+/* #container button:nth-child(odd) {
   background: rgb(145, 7, 7);
   
-}
+} */
 
 #container button:hover{
 
@@ -52,10 +52,11 @@
 .container div:nth-child(19) {
   opacity: 0;
 } */
-#container:before {
+
+/* #container:before {
   content: "";
   width: calc(var(--s) / 2 + var(--m));
   float: left;
   height: 120%; 
   shape-outside: repeating-linear-gradient(#0000 0 calc(var(--f) - 3px), #000 0 var(--f));
-}
+} */
