@@ -1,26 +1,37 @@
 import React from 'react'
+import { Kanji } from "..pages/Learn";
 
-type ModalProps = {
-  modal: Modal
-  hideModal: () => void
-  handleSaveKanji: () => void
-  createAnkiCard: () => void
+
+interface ModalProps {
+  show: boolean;
+  kanji: Kanji;
+  hideModal: () => void;
+  handleSaveKanji: (kanji: Kanji) => void;
+  createAnkiCard: (kanjiData: Kanji) => void;
 }
-const Modal = ({ modal, handleSaveKanji, createAnkiCard, hideModal }: ModalProps) => {
-  return (
-      <div>
-          <div>Character: {modal.kanji.character}</div>
-          <div>Meaning: {modal.kanji.meanings + ''}</div>
-          <div>Frequency: {modal.kanji.freq}</div>
-          <div>Grade: {modal.kanji.grade}</div>
-          <div>JLPT (New): {modal.kanji.jlpt_new}</div>
-          <div>Strokes: {modal.kanji.strokes}</div>
-          <div>Kunyomi reading: {modal.kanji.readings_kun}</div>
-          <button onClick={() => handleSaveKanji(modal.kanji)}>Move to learned</button>
-          <button onClick={() => createAnkiCard(modal.kanji)}>Create anki card</button>
-          <button onClick={() => hideModal}>Close</button>
+
+export const Modal: React.FC<ModalProps> = ({ show, kanji, hideModal, handleSaveKanji, createAnkiCard }) => {
+  return show ? (
+    <div className="modal">
+      <div className="modal-content">
+
+        <div className="modal-body">
+          <h3>{kanji.character}</h3>
+          <p>Meanings: {kanji.meanings.join(", ")}</p>
+          <p>Frequency: {kanji.freq}</p>
+          <p>Grade: {kanji.grade}</p>
+          <p>JLPT Level: {kanji.jlpt_new || kanji.jlpt_old}</p>
+          <p>Category: {kanji.category}</p>
+          <p>Strokes: {kanji.strokes}</p>
+          
+          <button onClick={() => handleSaveKanji(kanji)}>Save kanji</button>
+          <button onClick={() => createAnkiCard(kanji)}>Create anki card</button>
+          <button onClick={hideModal}>Close</button>
+        </div>
       </div>
-  )
-}
+    </div>
+  ) : null;
+};
+
 
 export default Modal
