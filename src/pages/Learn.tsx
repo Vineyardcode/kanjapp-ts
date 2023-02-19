@@ -19,7 +19,7 @@ export const Learn = () => {
   const [modal, setModal] = useState<Modal>({ show: false, kanji: {} })
   const [selectedOption, setSelectedOption] = useState('sort_freq')
   const [cachedData, setCachedData] = useState();
-  const [learnedKanjiArray, setLearnedKanjiArray] = useState([]);
+  const [learnedKanjiArray, setLearnedKanjiArray] = useState<Kanji[]>([]);
   const [sortByFreq, setSortByFreq] = useState(false);
   const [sortByGrade, setSortByGrade] = useState(false);
   const [sortByStrokes, setSortByStrokes] = useState(false);
@@ -30,13 +30,13 @@ export const Learn = () => {
   
   interface Kanji {
     character?: string;
-    meanings: string[];
+    meanings?: string[];
     freq?: number;
     grade?: number;
     jlpt_new?: number;
     jlpt_old?: number;
-    category: string;
-    strokes: number;
+    category?: string;
+    strokes?: number;
     
   }
   
@@ -54,6 +54,18 @@ export const Learn = () => {
     }
   }, []);
 
+  //move selected kanji to the "learned" collection in firestore
+  const handleSaveKanji = (kanji: Kanji) => {
+
+    const currentUser = auth.currentUser?.uid;
+    const learnedRef = collection(db, "users", currentUser, "learned");
+    const docRef = doc(learnedRef, kanji.character);
+    setDoc(docRef, { kanji });
+    
+    setLearnedKanjiArray([...learnedKanjiArray, kanji]);
+    saveKanji(kanji);
+  };
+
   //save learned kanji to localStorage
   const saveKanji = (kanji: Kanji) => {
     let learnedKanjiArray = JSON.parse(localStorage.getItem("learnedKanjiArray")) || [];
@@ -63,30 +75,27 @@ export const Learn = () => {
     }
   };
 
-  //fetch the users learned kanji collection on user login 
+  //fetch the users "learned" kanji collection on user login 
   useEffect(() => {
-
-    const getKanjis = async () => {
-
-      const kanjiArray = []
-
-      const currentUser = auth.currentUser?.uid
-
-      const querySnapshot = await getDocs(collection(db, "users", currentUser, "learned"));
-      querySnapshot.forEach((doc) => {
-
-      const kanjiData = doc.data()
-      
-      kanjiArray.push(kanjiData.kanji)
-      
-    });
-
+    const currentUser = auth.currentUser;
     
-    setLearnedKanjiArray(kanjiArray)
-  }
-
-  getKanjis()
+    if (!currentUser) {
+      return; // Don't do anything if currentUser is not defined yet
+    }
   
+    const getKanjis = async () => {
+      const kanjiArray = [];
+  
+      const querySnapshot = await getDocs(collection(db, "users", currentUser.uid, "learned"));
+      querySnapshot.forEach((doc) => {
+        const kanjiData = doc.data();
+        kanjiArray.push(kanjiData.kanji);
+      });
+  
+      setLearnedKanjiArray(kanjiArray);
+    }
+  
+    getKanjis();
   }, [auth.currentUser]);
 
   //fetch the main list of kanji if the user is logged in and cache those data
@@ -171,20 +180,6 @@ export const Learn = () => {
         
       }
     };
-  };
-
-  //move selected kanji to the "learned" collection in firestore
-  const handleSaveKanji = (kanji: Kanji) => {
-  
-    const currentUser = auth.currentUser?.uid
-    kanji.category = "learned";
-    
-    setDoc(doc(db, "users", currentUser, "learned", kanji.character), {
-      kanji
-    });
-    
-    setLearnedKanjiArray([...learnedKanjiArray, kanji]);
-    saveKanji(kanji)
   };
 
   //modal options

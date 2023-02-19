@@ -1,5 +1,5 @@
 import React from 'react'
-import { Kanji } from "..pages/Learn";
+import { Kanji } from "./pages/Learn";
 
 
 interface ModalProps {
@@ -13,7 +13,7 @@ interface ModalProps {
 export const Modal: React.FC<ModalProps> = ({ show, kanji, hideModal, handleSaveKanji, createAnkiCard }) => {
   return show ? (
     <div className="modal">
-      <div className="modal-content">
+      <div className="modal-body">
 
         <div className="modal-body">
           <h3>{kanji.character}</h3>
