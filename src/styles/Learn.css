@@ -9,25 +9,26 @@
   background-color: rgba(0,0,0,0.4);
 }
 
-#main {
+/* #main {
   display:flex;
-  /* --s: 35px;  
-  --m: 3px;     */
-  /* --f: calc(var(--s)*1.7324 + 4*var(--m)); */
+  --s: 35px;  
+  --m: 3px;     
+  --f: calc(var(--s)*1.7324 + 4*var(--m))
 
-}
+} */
 #container {
   font-size: 0;
 }
 #container button {
-  width: 30px;
-  height: 30px;
- /*  margin: 5px;  
-  display: inline-block;
+  width: 35px;
+  height: 35px;
+  margin: 3px;  
+/*  display: inline-block;
   font-size:initial;
   clip-path: polygon(0% 25%, 0% 75%, 50% 100%, 100% 75%, 100% 25%, 50% 0%);
   margin-bottom: calc(var(--m) - var(--s)*0.2885);  */
-  
+  color: #000;
+  box-shadow: 3px 1px 3.5px;
   transition: 0.5s;
 } 
 

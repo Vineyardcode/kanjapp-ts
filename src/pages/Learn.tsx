@@ -1,28 +1,25 @@
-import React, {useEffect, useLayoutEffect, useState}from 'react';
-
+//react
+import React, {useEffect, useLayoutEffect, useState, useMemo}from 'react';
+//firebase
 import { database, db, auth } from '../config/firebase';
 import { onValue, orderByChild, ref, query, get, child } from 'firebase/database';
 import { doc, setDoc, collection, addDoc, getDocs } from "firebase/firestore";
-
+//components, pages, styles
 import Modal from '../components/Modal';
-import "./Learn.css"
-
+import "../styles/Learn.css"
+//redux
 import { useDispatch } from "react-redux";
 import { addLearnedKanji } from "../learnedKanjiSlice";
 
 
+
 export const Learn = () => {
 
-  const [kanji, setKanji] = useState<Kanji[]>([]);
-  
-  const [modal, setModal] = useState<Modal>({ show: false, kanji: {} });
-
+  const [kanji, setKanji] = useState<Kanji[]>([]); 
+  const [modal, setModal] = useState<Modal>({ show: false, kanji: {} })
   const [selectedOption, setSelectedOption] = useState('sort_freq')
-
   const [cachedData, setCachedData] = useState();
-
   const [learnedKanjiArray, setLearnedKanjiArray] = useState([]);
-
   const [sortByFreq, setSortByFreq] = useState(false);
   const [sortByGrade, setSortByGrade] = useState(false);
   const [sortByStrokes, setSortByStrokes] = useState(false);
@@ -40,6 +37,7 @@ export const Learn = () => {
     jlpt_old?: number;
     category: string;
     strokes: number;
+    
   }
   
   interface Modal {
@@ -63,20 +61,6 @@ export const Learn = () => {
       learnedKanjiArray.push(kanji);
       localStorage.setItem("learnedKanjiArray", JSON.stringify(learnedKanjiArray));
     }
-  };
-
-  //move selected kanji to the "learned" collection in firestore
-  const handleSaveKanji = (kanji: Kanji) => {
-    
-    const currentUser = auth.currentUser?.uid
-    kanji.category = "learned";
-    
-    setDoc(doc(db, "users", currentUser, "learned", kanji.character), {
-      kanji
-    });
-    
-    setLearnedKanjiArray([...learnedKanjiArray, kanji]);
-    saveKanji(kanji)
   };
 
   //fetch the users learned kanji collection on user login 
@@ -121,7 +105,7 @@ export const Learn = () => {
     
   }, []);
 
-  // call the sorting function based on the selected option
+  // call the sorting function according to the selected option
   const handleSortByFreqChange = () => {
     setSortByFreq(!sortByFreq);
   };
@@ -133,7 +117,8 @@ export const Learn = () => {
   const handleSortByStrokesChange = () => {
     setSortByStrokes(!sortByStrokes);
   };
-  
+
+  //functions for sorting the kanji
   const sortKanji = () => {
     let sortedKanji = [...kanji];
   
@@ -155,12 +140,6 @@ export const Learn = () => {
   useEffect(() => {
     sortKanji();
   }, [sortByFreq, sortByGrade, sortByStrokes]);
-
-  const showModal = (kanji: Kanji) => setModal({ show: true, kanji });
-
-  const hideModal = () => setModal({ ...modal, show: false });
-
-  
 
   //create anki flash cards out of selected kanji
   const createAnkiCard = (kanjiData: Kanji) => {
@@ -194,7 +173,39 @@ export const Learn = () => {
     };
   };
 
+  //move selected kanji to the "learned" collection in firestore
+  const handleSaveKanji = (kanji: Kanji) => {
+  
+    const currentUser = auth.currentUser?.uid
+    kanji.category = "learned";
+    
+    setDoc(doc(db, "users", currentUser, "learned", kanji.character), {
+      kanji
+    });
+    
+    setLearnedKanjiArray([...learnedKanjiArray, kanji]);
+    saveKanji(kanji)
+  };
+
+  //modal options
+  const showModal = (kanji: Kanji) => setModal({ show: true, kanji });
+  const hideModal = () => setModal({ ...modal, show: false });
+
+  //levels
   const jlptLevels = [5,4,3,2,1];
+
+  //filter kanjis and group them by JLPT
+  const sortedKanji = jlptLevels.map((level) => {
+    const kanjiForLevel = kanji
+      .filter((kanji) => kanji.jlpt_new === level)
+      .filter((kanji) => !learnedKanjiArray.some((k) => k.character === kanji.character))
+      .sort((a, b) => b.jlpt_new - a.jlpt_new);
+
+    return {
+      level,
+      kanji: kanjiForLevel,
+    };
+  });
 
   return (
     <>
@@ -214,33 +225,33 @@ export const Learn = () => {
           Sort by strokes
       </label>
       
-        <div>
-            {jlptLevels.map((level) => (
-              
-              <div key={level}>
-                <h2>JLPT Level {level}</h2>
-                
-                {modal.show && (
-                <Modal modal={modal} hideModal={() => hideModal} handleSaveKanji={() => handleSaveKanji} createAnkiCard={() => createAnkiCard}/>
-            )}
-<div id="main">
-<div id="container">
-                {kanji
-                    .filter((kanji) => kanji.jlpt_new === level)
-                    .sort((a, b) => b.jlpt_new - a.jlpt_new)
-                    .filter(kanji => !learnedKanjiArray.some(k => k.character === kanji.character))
-                    .map((item, index) => (
+      <div>
 
+          {sortedKanji.map((group) => (
+            <div key={group.level}>
+              <h2>JLPT Level {group.level}</h2>
+
+              {modal.show && (
+                <Modal
+                  show={modal.show}
+                  kanji={modal.kanji}
+                  hideModal={hideModal}
+                  handleSaveKanji={handleSaveKanji}
+                  createAnkiCard={createAnkiCard}
+                />
+              )}
+
+              <div id="main">
+                <div id="container">
+                  {group.kanji.map((item, index) => (
                     <button key={index} onClick={() => showModal(item)}>
                       {item.character}
                     </button>
-                   
-                    ))
-                  }
- </div>
-</div>
+                  ))}
+                </div>
               </div>
-            ))}
+            </div>
+          ))}
         </div>
 
       </div>

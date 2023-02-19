@@ -1,6 +1,6 @@
 import React, {useEffect, useState}from 'react';
 import { database, db, auth } from '../config/firebase';
-import "./Learn.css"
+import "../styles/Learn.css"
 import { doc, setDoc, collection, addDoc, getDocs, } from "firebase/firestore"; 
 
 import { useSelector } from 'react-redux';
