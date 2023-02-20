@@ -17,9 +17,12 @@ export const Learn = () => {
 
   const [kanji, setKanji] = useState<Kanji[]>([]); 
   const [modal, setModal] = useState<Modal>({ show: false, kanji: {} })
-  const [selectedOption, setSelectedOption] = useState('sort_freq')
   const [cachedData, setCachedData] = useState();
   const [learnedKanjiArray, setLearnedKanjiArray] = useState<Kanji[]>([]);
+
+  const [selectedLevel, setSelectedLevel] = useState("")
+
+  const [selectedOption, setSelectedOption] = useState('sort_freq')
   const [sortByFreq, setSortByFreq] = useState(false);
   const [sortByGrade, setSortByGrade] = useState(false);
   const [sortByStrokes, setSortByStrokes] = useState(false);
@@ -132,7 +135,7 @@ export const Learn = () => {
     let sortedKanji = [...kanji];
   
     if (sortByFreq) {
-      sortedKanji.sort((a, b) => (a.freq > b.freq) ? 1 : -1)
+      sortedKanji.sort((a, b) => a.freq - b.freq)
     }
   
     if (sortByGrade) {
@@ -186,7 +189,7 @@ export const Learn = () => {
   const showModal = (kanji: Kanji) => setModal({ show: true, kanji });
   const hideModal = () => setModal({ ...modal, show: false });
 
-  //levels
+  //JLPT levels
   const jlptLevels = [5,4,3,2,1];
 
   //filter kanjis and group them by JLPT
@@ -201,6 +204,31 @@ export const Learn = () => {
       kanji: kanjiForLevel,
     };
   });
+
+  //calculate color based on frequency
+  const colorScale = (freq?: number) => {
+
+      if (freq === undefined) {
+          return 'rgb (0,255, 0)';
+        }
+
+        const minFreq = 1;
+        const maxFreq = 2345;
+        const normalizedFreq = (freq - minFreq) / (maxFreq - minFreq);
+        const hue = 120 + normalizedFreq * 240; // range from green to blue
+      
+        return `hsl(${hue}, 100%, 50%)`;
+  };
+
+
+
+
+
+
+
+
+
+  
 
   return (
     <>
@@ -226,26 +254,27 @@ export const Learn = () => {
             <div key={group.level}>
               <h2>JLPT Level {group.level}</h2>
 
-              {modal.show && (
-                <Modal
-                  show={modal.show}
-                  kanji={modal.kanji}
-                  hideModal={hideModal}
-                  handleSaveKanji={handleSaveKanji}
-                  createAnkiCard={createAnkiCard}
-                />
-              )}
+                  {modal.show && (
+                    <Modal
+                      show={modal.show}
+                      kanji={modal.kanji}
+                      hideModal={hideModal}
+                      handleSaveKanji={handleSaveKanji}
+                      createAnkiCard={createAnkiCard}
+                    />
+                  )}
 
-              <div id="main">
+              
                 <div id="container">
                   {group.kanji.map((item, index) => (
-                    <button key={index} onClick={() => showModal(item)}>
+                    <button key={index} onClick={() => showModal(item)} className="kanji-button" style={{ backgroundColor: colorScale(item.freq) }}>
                       {item.character}
                     </button>
                   ))}
                 </div>
-              </div>
+
             </div>
+            
           ))}
         </div>
 

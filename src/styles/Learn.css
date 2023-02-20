@@ -9,33 +9,22 @@
   background-color: rgba(0,0,0,0.4);
 }
 
-/* #main {
-  display:flex;
-  --s: 35px;  
-  --m: 3px;     
-  --f: calc(var(--s)*1.7324 + 4*var(--m))
-
-} */
 #container {
   font-size: 0;
 }
-#container button {
+
+.kanji-button {
+  
   width: 35px;
   height: 35px;
   margin: 3px;  
-/*  display: inline-block;
-  font-size:initial;
-  clip-path: polygon(0% 25%, 0% 75%, 50% 100%, 100% 75%, 100% 25%, 50% 0%);
-  margin-bottom: calc(var(--m) - var(--s)*0.2885);  */
-  color: #000;
+  
   box-shadow: 3px 1px 3.5px;
   transition: 0.5s;
-} 
+}
 
-/* #container button:nth-child(odd) {
-  background: rgb(145, 7, 7);
-  
-} */
+
+
 
 #container button:hover{
 
@@ -43,21 +32,3 @@
 
 }
 
-/* Strategically hide certain divs: */
-/* .container div:nth-child(1) {
-  opacity: 0;
-}
-.container div:nth-child(5) {
-  opacity: 0;
-}
-.container div:nth-child(19) {
-  opacity: 0;
-} */
-
-/* #container:before {
-  content: "";
-  width: calc(var(--s) / 2 + var(--m));
-  float: left;
-  height: 120%; 
-  shape-outside: repeating-linear-gradient(#0000 0 calc(var(--f) - 3px), #000 0 var(--f));
-} */
