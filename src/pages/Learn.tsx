@@ -20,7 +20,7 @@ export const Learn = () => {
   const [cachedData, setCachedData] = useState();
   const [learnedKanjiArray, setLearnedKanjiArray] = useState<Kanji[]>([]);
 
-  const [selectedLevel, setSelectedLevel] = useState("")
+  const [selectedLevels, setSelectedLevels] = useState([5, 4, 3, 2, 1]);
 
   const [selectedOption, setSelectedOption] = useState('sort_freq')
   const [sortByFreq, setSortByFreq] = useState(false);
@@ -189,22 +189,6 @@ export const Learn = () => {
   const showModal = (kanji: Kanji) => setModal({ show: true, kanji });
   const hideModal = () => setModal({ ...modal, show: false });
 
-  //JLPT levels
-  const jlptLevels = [5,4,3,2,1];
-
-  //filter kanjis and group them by JLPT
-  const sortedKanji = jlptLevels.map((level) => {
-    const kanjiForLevel = kanji
-      .filter((kanji) => kanji.jlpt_new === level)
-      .filter((kanji) => !learnedKanjiArray.some((k) => k.character === kanji.character))
-      .sort((a, b) => b.jlpt_new - a.jlpt_new);
-
-    return {
-      level,
-      kanji: kanjiForLevel,
-    };
-  });
-
   //calculate color based on frequency
   const colorScale = (freq?: number) => {
 
@@ -213,47 +197,79 @@ export const Learn = () => {
         }
 
         const minFreq = 1;
-        const maxFreq = 2345;
+        const maxFreq = 2479;
         const normalizedFreq = (freq - minFreq) / (maxFreq - minFreq);
         const hue = 120 + normalizedFreq * 240; // range from green to blue
       
         return `hsl(${hue}, 100%, 50%)`;
   };
 
-
-
-
-
-
-
-  "GIT TEST"
-
+  //filter kanjis and group them by JLPT
+  const sortedKanji = selectedLevels.map((level) => {
+    const kanjiForLevel = kanji
+        .filter((kanji) => kanji.jlpt_new === level)
+        .filter((kanji) => !learnedKanjiArray.some((k) => k.character === kanji.character))
+        .sort((a, b) => b.jlpt_new - a.jlpt_new);
   
+      return {
+        level,
+        kanji: kanjiForLevel,
+      };
+    });
+  
+  const handleLevelSelection = (e) => {
+    const level = Number(e.target.value);
+    const index = selectedLevels.indexOf(level);
+
+    if (index === -1) {
+      setSelectedLevels([...selectedLevels, level]);
+    } else {
+      setSelectedLevels(selectedLevels.filter((l) => l !== level));
+    }
+  };
 
   return (
     <>
 
     <div>
 
-      <label>
-          <input type="checkbox" checked={sortByFreq} onChange={handleSortByFreqChange} />
-          Sort by frequency
-        </label>
-        <label>
-          <input type="checkbox" checked={sortByGrade} onChange={handleSortByGradeChange} />
-          Sort by grade
-        </label>
-        <label>
-          <input type="checkbox" checked={sortByStrokes} onChange={handleSortByStrokesChange} />
-          Sort by strokes
-      </label>
+      <section>
+        <h3>Sort</h3>
+            <label>
+                <input type="checkbox" checked={sortByFreq} onChange={handleSortByFreqChange} />
+                Sort by frequency
+              </label>
+              <label>
+                <input type="checkbox" checked={sortByGrade} onChange={handleSortByGradeChange} />
+                Sort by grade
+              </label>
+              <label>
+                <input type="checkbox" checked={sortByStrokes} onChange={handleSortByStrokesChange} />
+                Sort by strokes
+            </label>
+      </section>
+
+      <div>
+        <h3>Select JLPT levels:</h3>
+        {[5, 4, 3, 2, 1].map((level) => (
+          <label key={level}>
+            <input
+              type="checkbox"
+              value={level}
+              checked={selectedLevels.includes(level)}
+              onChange={handleLevelSelection}
+            />
+            N{level}
+          </label>
+        ))}
+      </div>
+
       
       <div>
 
           {sortedKanji.map((group) => (
             <div key={group.level}>
               <h2>JLPT Level {group.level}</h2>
-
                   {modal.show && (
                     <Modal
                       show={modal.show}
@@ -263,8 +279,6 @@ export const Learn = () => {
                       createAnkiCard={createAnkiCard}
                     />
                   )}
-
-              
                 <div id="container">
                   {group.kanji.map((item, index) => (
                     <button key={index} onClick={() => showModal(item)} className="kanji-button" style={{ backgroundColor: colorScale(item.freq) }}>
@@ -272,7 +286,6 @@ export const Learn = () => {
                     </button>
                   ))}
                 </div>
-
             </div>
             
           ))}
