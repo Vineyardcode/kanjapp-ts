@@ -8,7 +8,14 @@ import { getDatabase, ref} from "firebase/database";
 
 // Your web app's Firebase configuration
 const firebaseConfig = {
-config
+  apiKey: "AIzaSyAj2ZhiQUATidxpcwGEIgjp_I_uDWxs-Qk",
+  authDomain: "kanjapp2.firebaseapp.com",
+  databaseURL: "https://kanjapp2-default-rtdb.europe-west1.firebasedatabase.app",
+  projectId: "kanjapp2",
+  storageBucket: "kanjapp2.appspot.com",
+  messagingSenderId: "744137002416",
+  appId: "1:744137002416:web:80329de24cbea30ee71a75",
+  measurementId: "G-SD6W7L94K9"
 };
 
 // Initialize Firebase
