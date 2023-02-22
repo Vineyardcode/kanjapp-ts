@@ -117,41 +117,43 @@ export const Learn = () => {
     
   }, []);
 
-  // call the sorting function according to the selected option
-  const handleSortByFreqChange = () => {
-    setSortByFreq(!sortByFreq);
-  };
-  
-  const handleSortByGradeChange = () => {
-    setSortByGrade(!sortByGrade);
-  };
-  
-  const handleSortByStrokesChange = () => {
-    setSortByStrokes(!sortByStrokes);
-  };
+
+  //call the sorting function every time a sorting option is changed
+  useEffect(() => {
+    sortKanji();
+  }, [sortByFreq, sortByGrade, sortByStrokes]);
 
   //functions for sorting the kanji
   const sortKanji = () => {
-    let sortedKanji = [...kanji];
-  
+    let filteredKanji = kanji.filter(k => selectedLevels.includes(k.jlpt_new));
+    let sortedKanji = [...filteredKanji];
+    
     if (sortByFreq) {
       sortedKanji.sort((a, b) => a.freq - b.freq)
     }
-  
+    
     if (sortByGrade) {
       sortedKanji.sort((a, b) => a.grade - b.grade)
     }
-  
+    
     if (sortByStrokes) {
       sortedKanji.sort((a, b) => a.strokes - b.strokes)
     }
   
     setKanji(sortedKanji);
   };
-  
-  useEffect(() => {
-    sortKanji();
-  }, [sortByFreq, sortByGrade, sortByStrokes]);
+
+  const handleSortByFreqChange = () => {
+    setSortByFreq(!sortByFreq);
+  };
+
+  const handleSortByGradeChange = () => {
+    setSortByGrade(!sortByGrade);
+  };
+
+  const handleSortByStrokesChange = () => {
+    setSortByStrokes(!sortByStrokes);
+  };
 
   //create anki flash cards out of selected kanji
   const createAnkiCard = (kanjiData: Kanji) => {
@@ -197,7 +199,7 @@ export const Learn = () => {
         }
 
         const minFreq = 1;
-        const maxFreq = 2479;
+        const maxFreq = 2495;
         const normalizedFreq = (freq - minFreq) / (maxFreq - minFreq);
         const hue = 120 + normalizedFreq * 240; // range from green to blue
       
@@ -216,7 +218,8 @@ export const Learn = () => {
         kanji: kanjiForLevel,
       };
     });
-  
+
+  //handling of user selected JLPT levels
   const handleLevelSelection = (e) => {
     const level = Number(e.target.value);
     const index = selectedLevels.indexOf(level);
@@ -266,28 +269,26 @@ export const Learn = () => {
 
       
       <div>
-
-          {sortedKanji.map((group) => (
-            <div key={group.level}>
-              <h2>JLPT Level {group.level}</h2>
-                  {modal.show && (
-                    <Modal
-                      show={modal.show}
-                      kanji={modal.kanji}
-                      hideModal={hideModal}
-                      handleSaveKanji={handleSaveKanji}
-                      createAnkiCard={createAnkiCard}
-                    />
-                  )}
-                <div id="container">
-                  {group.kanji.map((item, index) => (
-                    <button key={index} onClick={() => showModal(item)} className="kanji-button" style={{ backgroundColor: colorScale(item.freq) }}>
-                      {item.character}
-                    </button>
-                  ))}
-                </div>
-            </div>
-            
+        {sortedKanji.map((group) => (
+          <div key={group.level}>
+            <h2>JLPT Level {group.level}</h2>
+                {modal.show && (
+                  <Modal
+                    show={modal.show}
+                    kanji={modal.kanji}
+                    hideModal={hideModal}
+                    handleSaveKanji={handleSaveKanji}
+                    createAnkiCard={createAnkiCard}
+                  />
+                )}
+              <div id="container">
+                {group.kanji.map((item, index) => (
+                  <button key={index} onClick={() => showModal(item)} className="kanji-button" style={{ backgroundColor: colorScale(item.freq) }}>
+                    {item.character}
+                  </button>
+                ))}
+              </div>
+          </div>          
           ))}
         </div>
 
