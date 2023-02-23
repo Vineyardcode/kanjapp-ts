@@ -127,24 +127,37 @@ export const Learn = () => {
   const sortKanji = () => {
     let filteredKanji = kanji.filter(k => selectedLevels.includes(k.jlpt_new));
     let sortedKanji = [...filteredKanji];
-    
-    if (sortByFreq) {
-      sortedKanji.sort((a, b) => a.freq - b.freq)
-    }
-    
-    if (sortByGrade) {
-      sortedKanji.sort((a, b) => a.grade - b.grade)
-    }
-    
-    if (sortByStrokes) {
-      sortedKanji.sort((a, b) => a.strokes - b.strokes)
-    }
   
+    sortedKanji.sort((a, b) => {
+      if (sortByFreq) {
+        if (a.freq && b.freq) {
+          return a.freq - b.freq;
+        } else if (a.freq) {
+          return -1;
+        } else if (b.freq) {
+          return 1;
+        }
+      }
+      
+      if (sortByGrade) {
+        return a.grade - b.grade;
+      }
+      
+      if (sortByStrokes) {
+        return a.strokes - b.strokes;
+      }
+      
+      // If no sorting criteria matched, preserve the original order
+      return 0;
+    });
+    
+    console.log(sortedKanji);
     setKanji(sortedKanji);
   };
 
   const handleSortByFreqChange = () => {
     setSortByFreq(!sortByFreq);
+
   };
 
   const handleSortByGradeChange = () => {
