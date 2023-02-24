@@ -151,7 +151,7 @@ export const Learn = () => {
       return 0;
     });
     
-    console.log(sortedKanji);
+    
     setKanji(sortedKanji);
   };
 
