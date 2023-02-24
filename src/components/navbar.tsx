@@ -15,10 +15,10 @@ export const Navbar = () => {
     <div className="navbar">
       <div className="links">
         <Link to="/Learn"> Learn </Link>
-        <Link to="/Learned">Learned</Link>
+        <Link to="/Learned"> Learned </Link>
         <Link to="/"> Home </Link>
         <Link to="/Login"> Login </Link>
-        
+        <Link to="/Test"> Take a test </Link>
         
       </div>
       <div className="user">
