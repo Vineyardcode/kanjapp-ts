@@ -8,9 +8,9 @@ import { doc, setDoc, collection, addDoc, getDocs } from "firebase/firestore";
 import Modal from '../components/Modal';
 import "../styles/Learn.css"
 //redux
-import { useDispatch } from "react-redux";
-import { addLearnedKanji } from "../learnedKanjiSlice";
+import { useDispatch, useSelector } from "react-redux";
 
+import { selectCachedData } from '../store/features/cachedDataSlice';
 
 
 export const Learn = () => {
@@ -28,9 +28,20 @@ export const Learn = () => {
   const [sortByStrokes, setSortByStrokes] = useState(false);
 
   //dispatch the learnedKanjiArray into the global state
-  // const dispatch = useDispatch();
-  // dispatch(addLearnedKanji(learnedKanjiArray));
+  const dispatch = useDispatch();
   
+
+
+
+  useEffect(() => {
+
+  dispatch(selectCachedData(cachedData));
+   
+  }, [dispatch, cachedData]);
+
+  
+  // console.log(cachedData)
+
   interface Kanji {
     character?: string;
     meanings?: string[];
@@ -214,7 +225,7 @@ export const Learn = () => {
         const minFreq = 1;
         const maxFreq = 2495;
         const normalizedFreq = (freq - minFreq) / (maxFreq - minFreq);
-        const hue = 120 + normalizedFreq * 240; // range from green to blue
+        const hue = 120 + (normalizedFreq * -120); // range from green to red
       
         return `hsl(${hue}, 100%, 50%)`;
   };
@@ -280,7 +291,6 @@ export const Learn = () => {
         ))}
       </div>
 
-      
       <div>
         {sortedKanji.map((group) => (
           <div key={group.level}>
