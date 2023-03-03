@@ -1,8 +1,8 @@
 import { configureStore } from '@reduxjs/toolkit';
-import cachedDataSlice from './features/cachedDataSlice';
+import kanjiSlice from './features/kanjiSlice';
 
 export const store = configureStore({
   reducer: {
-    cachedData: cachedDataSlice,
+    kanji: kanjiSlice,
   },
 });

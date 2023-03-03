@@ -8,16 +8,15 @@ import { doc, setDoc, collection, addDoc, getDocs } from "firebase/firestore";
 import Modal from '../components/Modal';
 import "../styles/Learn.css"
 //redux
-import { useDispatch, useSelector } from "react-redux";
-
-import { selectCachedData } from '../store/features/cachedDataSlice';
+import { useDispatch, useSelector } from 'react-redux';
+import { fetchKanji } from '../store/features/kanjiSlice';
 
 
 export const Learn = () => {
 
   const [kanji, setKanji] = useState<Kanji[]>([]); 
   const [modal, setModal] = useState<Modal>({ show: false, kanji: {} })
-  const [cachedData, setCachedData] = useState();
+  
   const [learnedKanjiArray, setLearnedKanjiArray] = useState<Kanji[]>([]);
 
   const [selectedLevels, setSelectedLevels] = useState([5, 4, 3, 2, 1]);
@@ -26,21 +25,6 @@ export const Learn = () => {
   const [sortByFreq, setSortByFreq] = useState(false);
   const [sortByGrade, setSortByGrade] = useState(false);
   const [sortByStrokes, setSortByStrokes] = useState(false);
-
-  //dispatch the learnedKanjiArray into the global state
-  const dispatch = useDispatch();
-  
-
-
-
-  useEffect(() => {
-
-  dispatch(selectCachedData(cachedData));
-   
-  }, [dispatch, cachedData]);
-
-  
-  // console.log(cachedData)
 
   interface Kanji {
     character?: string;
@@ -58,6 +42,23 @@ export const Learn = () => {
     show: boolean;
     kanji: Kanji;
   }
+
+  //get kanji from the store
+  const dispatch = useDispatch();
+  const kanjiData = useSelector((state) => state.kanji.kanji);
+  
+  useEffect(() => {
+    async function dispatchData() {
+      await dispatch(fetchKanji());
+    }
+    dispatchData()
+  }, [dispatch])
+
+  useEffect(() => {
+    setKanji(kanjiData);
+    console.log(kanji.length);
+    
+  }, [kanjiData]);
 
   //fetch learned kanji from localStorage and save them to a state variable
   useEffect(() => {
@@ -112,23 +113,6 @@ export const Learn = () => {
     getKanjis();
   }, [auth.currentUser]);
 
-  //fetch the main list of kanji if the user is logged in and cache those data
-  useEffect(() => {
-
-    if (!cachedData) {
-      const kanjiRef = ref(database, 'jouyou');
-      get(kanjiRef).then((snap) => {
-        const kanjis = snap.val();
-        setKanji(Object.values(kanjis));
-        setCachedData(Object.values(kanjis));
-      });
-    } else {
-      setKanji(cachedData);
-    }
-    
-  }, []);
-
-
   //call the sorting function every time a sorting option is changed
   useEffect(() => {
     sortKanji();
@@ -149,23 +133,24 @@ export const Learn = () => {
           return 1;
         }
       }
-      
+  
       if (sortByGrade) {
         return a.grade - b.grade;
       }
-      
+  
       if (sortByStrokes) {
         return a.strokes - b.strokes;
       }
-      
-      // If no sorting criteria matched, preserve the original order
-      return 0;
+  
+      // sort items with undefined jlpt_new property to the end of the list
+      const aJlpt = a.jlpt_new || Infinity;
+      const bJlpt = b.jlpt_new || Infinity;
+      return aJlpt - bJlpt;
     });
-    
-    
+  
     setKanji(sortedKanji);
   };
-
+  
   const handleSortByFreqChange = () => {
     setSortByFreq(!sortByFreq);
 
