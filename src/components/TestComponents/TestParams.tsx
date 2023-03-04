@@ -1,104 +1,116 @@
 import React from 'react'
 import { useEffect, useState } from 'react';
-import Exam from '../components/TestComponents/Exam';
 
 
-const TestParams = ({}) => {
 
+const TestParams = (kanjiData: Kanji) => {
 
-const [testParams, setTestParams] = useState({
-  kanjiCount: '',
-  strokeCount: '',
-  jlptLevel: '',
-  gradeLevel: '',
-});
-const [testKanji, setTestKanji] = useState([]);
+  const [numKanji, setNumKanji] = useState(5);
+  const [minStrokes, setMinStrokes] = useState(1);
+  const [maxStrokes, setMaxStrokes] = useState(20);
+  const [jlptLevel, setJlptLevel] = useState(1);
+  const [minGrade, setMinGrade] = useState(1);
+  const [selectedKanji, setSelectedKanji] = useState<Kanji[]>([]);
 
-const handleParamsChange = (e) => {
-  setTestParams({
-    ...testParams,
-    [e.target.name]: e.target.value,
-  });
-};
-
-const handleSubmit = (e) => {
-  e.preventDefault();
-  // Filter kanji based on test params
-  const filteredKanji = kanjiData.filter((kanji) => {
-    return (
-      (!testParams.kanjiCount ||
-        parseInt(testParams.kanjiCount) === kanji.character.length) &&
-      (!testParams.strokeCount ||
-        parseInt(testParams.strokeCount) === kanji.strokes) &&
-      (!testParams.jlptLevel ||
-        parseInt(testParams.jlptLevel) === kanji.jlpt_new) &&
-      (!testParams.gradeLevel ||
-        parseInt(testParams.gradeLevel) === kanji.grade)
-    );
-  });
-  // Shuffle filtered kanji and set as test kanji
-  setTestKanji(shuffleArray(filteredKanji));
-};
-
-// Helper function to shuffle array
-const shuffleArray = (arr) => {
-  const shuffledArr = [...arr];
-  for (let i = shuffledArr.length - 1; i > 0; i--) {
-    const j = Math.floor(Math.random() * (i + 1));
-    [shuffledArr[i], shuffledArr[j]] = [shuffledArr[j], shuffledArr[i]];
+  interface Kanji {
+    character?: string;
+    meanings?: string[];
+    freq?: number;
+    grade?: number;
+    jlpt_new?: number;
+    jlpt_old?: number;
+    category?: string;
+    strokes?: number;
   }
-  return shuffledArr;
-};
+  
+  interface TestParams {
+    numKanji: number;
+    minStrokes: number;
+    maxStrokes: number;
+    jlptLevel: number;
+    minGrade: number;
+  }
 
 
-return (
-  <div>
-  <h2>Take a Kanji Test</h2>
-  <form onSubmit={handleSubmit}>
-    <label>
-      Number of Kanji:
-      <input
-        type="number"
-        name="kanjiCount"
-        value={testParams.kanjiCount}
-        onChange={handleParamsChange}
-      />
-    </label>
-    <label>
-      Number of Strokes:
-      <input
-        type="number"
-        name="strokeCount"
-        value={testParams.strokeCount}
-        onChange={handleParamsChange}
-      />
-    </label>
-    <label>
-      JLPT Level:
-      <input
-        type="number"
-        name="jlptLevel"
-        value={testParams.jlptLevel}
-        onChange={handleParamsChange}
-      />
-    </label>
-    <label>
-      Grade Level:
-      <input
-        type="number"
-        name="gradeLevel"
-        value={testParams.gradeLevel}
-        onChange={handleParamsChange}
-      />
-    </label>
-    <button type="submit">Start Test</button>
-  </form>
-  {testKanji.length > 0 && (
-    <Exam testKanji={testKanji} />
-  )}
-</div>
-)
 
-}
+  const handleGenerateKanji = (kanjiData) => {
+    const filteredKanji = kanjiData.filter(
+      (kanji) =>
+        kanji.strokes >= minStrokes &&
+        kanji.strokes <= maxStrokes &&
+        kanji.jlpt_new === jlptLevel &&
+        kanji.grade >= minGrade
+    );
+    const shuffledKanji = filteredKanji.sort(() => 0.5 - Math.random());
+    const selected = shuffledKanji.slice(0, numKanji);
+    setSelectedKanji(selected);
+  };
 
-export default TestParams
+  return (
+    <>
+      <div>
+        <label htmlFor="numKanji">Number of Kanji:</label>
+        <input
+          type="number"
+          name="numKanji"
+          value={numKanji}
+          onChange={(e) => setNumKanji(Number(e.target.value))}
+        />
+      </div>
+      <div>
+        <label htmlFor="minStrokes">Minimum strokes:</label>
+        <input
+          type="number"
+          name="minStrokes"
+          value={minStrokes}
+          onChange={(e) => setMinStrokes(Number(e.target.value))}
+        />
+      </div>
+      <div>
+        <label htmlFor="maxStrokes">Maximum strokes:</label>
+        <input
+          type="number"
+          name="maxStrokes"
+          value={maxStrokes}
+          onChange={(e) => setMaxStrokes(Number(e.target.value))}
+        />
+      </div>
+      <div>
+        <label htmlFor="jlptLevel">JLPT level:</label>
+        <select
+          name="jlptLevel"
+          value={jlptLevel}
+          onChange={(e) => setJlptLevel(Number(e.target.value))}
+        >
+          <option value={1}>N1</option>
+          <option value={2}>N2</option>
+          <option value={3}>N3</option>
+          <option value={4}>N4</option>
+          <option value={5}>N5</option>
+          
+        </select>
+      </div>
+      <div>
+        <label htmlFor="minGrade">Minimum grade:</label>
+        <select
+        name="minGrade"
+        value={minGrade}
+        onChange={(e) => setMinGrade(Number(e.target.value))}
+        >
+        <option value={1}>1</option>
+        <option value={2}>2</option>
+        <option value={3}>3</option>
+        <option value={4}>4</option>
+        <option value={5}>5</option>
+        <option value={6}>6</option>
+        <option value={8}>8</option>
+        <option value={9}>9</option>
+        </select>
+      </div>
+      <button onClick={handleGenerateKanji}>Generate Kanji</button>
+      
+  </>
+  );
+  };
+  
+  export default TestParams;
