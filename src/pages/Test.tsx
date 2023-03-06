@@ -17,8 +17,10 @@ const Test = () => {
 
   const [options, setOptions] = useState<Kanji[]>([]);
 
-  const [currentQuestion, setCurrentQuestion] = useState<Kanji[]>([]);
+  const [currentQuestion, setCurrentQuestion] = useState<Kanji | null>(null);
   const [usedKanji, setUsedKanji] = useState<Kanji[]>([]);
+
+  const [score, setScore] = useState(0);
 
 
   //get kanji from store
@@ -34,20 +36,19 @@ const Test = () => {
   }, [dispatch])
   ///////////////////////////////////////////////////////////
   
-
   const handleNextQuestion = () => {
     // Select a random kanji from the list of selected kanji that hasn't been used before
     const unusedKanji = selectedKanji.filter(kanji => !usedKanji.includes(kanji));
     const nextKanji = unusedKanji[Math.floor(Math.random() * unusedKanji.length)];
-  
+
     // Add the new kanji to the list of used kanji and set it as the new current question
     setUsedKanji([...usedKanji, nextKanji]);
     setCurrentQuestion(nextKanji);
-    console.log(currentQuestion);
     
+    generateOptions()
+
   };
 
-  
   const handleGenerateKanji = () => {
 
     //create list of kanji
@@ -66,26 +67,38 @@ const Test = () => {
     const selected = shuffledKanji.slice(0, numKanji);
     setSelectedKanji(selected);
 
-    // filter out selecteKanji characters from kanjiData and create options 
-    const generateOptions = () => {
-      const unselectedKanji = kanjiData.filter(
-        (kanji) => !selectedKanji.includes(kanji)
-      );
-      const answerOptions = [];
-      for (let i = 0; i < 6; i++) {
-        const randIndex = Math.floor(Math.random() * unselectedKanji.length);
-        answerOptions.push(unselectedKanji[randIndex]);
-      }
-      setOptions(answerOptions);
-    };
-  
     generateOptions();
-    
-    //console.log(options);
+
+    const initialQuestion = selected[Math.floor(Math.random() * selected.length)];
+    setUsedKanji([initialQuestion]);
+    setCurrentQuestion(initialQuestion);   
+
   };
       
-  
-  
+  // filter out selectedKanji characters from kanjiData and create options 
+  const generateOptions = () => {
+    const unselectedKanji = kanjiData.filter(
+      (kanji) => !selectedKanji.includes(kanji)
+    );
+    const answerOptions = [];
+    for (let i = 0; i < 6; i++) {
+      const randIndex = Math.floor(Math.random() * unselectedKanji.length);
+      answerOptions.push(unselectedKanji[randIndex]);
+    }
+    setOptions(answerOptions);
+  };
+
+  //quiz logic 
+  const quizLogic = (selectedKanji: Kanji) => {
+
+    if (selectedKanji.character === currentQuestion?.character) {
+      setScore((prevScore) => prevScore + 1);
+    }
+    handleNextQuestion()
+console.log(score);
+
+
+  }
 
   return (
     <>
@@ -151,42 +164,29 @@ const Test = () => {
     </div>
     <button onClick={handleGenerateKanji}>Generate Kanji</button>
 
+
+<div className='quiz'>
+
     <ul>
       {selectedKanji.map((kanji) => (
-        <li key={kanji.character}>{kanji.character}</li>
+        <button key={kanji.character} onClick={() => quizLogic(kanji)}>{kanji.character}</button>
       ))}
     </ul>
+
     <div>
-      {options.map((option, index) => (
-      <div key={option.character}>
-        <input
-          type="radio"
-          id={option.character}
-          name="kanjiOptions"
-          value={option.character}
-          
-        />
-        <label htmlFor={option.character}>{option.meanings + ", "}</label>
-      </div>
-      ))}
+      {currentQuestion && currentQuestion.meanings && (
         
-        {currentQuestion && (
-          <>
-            <input
-              type="radio"
-              id={currentQuestion.character}
-              name="kanjiOptions"
-              value={currentQuestion.character}
-            />
-            <label htmlFor={currentQuestion.character}>{currentQuestion.meanings + ", "}</label>
-            <button onClick={handleNextQuestion}>Next</button>
-          </>
-          )}
-
-      
-
-
+        <label htmlFor={currentQuestion.character}>
+          {currentQuestion.meanings + ", "}
+        </label>
+          
+      )}
     </div>
+      
+</div>      
+
+
+    
 
 
   </>
