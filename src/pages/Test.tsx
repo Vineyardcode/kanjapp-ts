@@ -3,11 +3,11 @@ import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { fetchKanji } from '../store/features/kanjiSlice';
 
-
+import KanjiQuiz from '../components/TestComponents/KanjiQuiz';
 
 const Test = () => {
 
-  const [numKanji, setNumKanji] = useState(10);
+  const [numKanji, setNumKanji] = useState(9999);
   const [minStrokes, setMinStrokes] = useState(1);
   const [maxStrokes, setMaxStrokes] = useState(3);
   const [jlptLevel, setJlptLevel] = useState<string | number>('All');
@@ -21,6 +21,8 @@ const Test = () => {
   const [usedKanji, setUsedKanji] = useState<Kanji[]>([]);
 
   const [score, setScore] = useState(0);
+
+  const [isAnswerCorrect, setIsAnswerCorrect] = useState<boolean>(null);
 
 
   //get kanji from store
@@ -89,17 +91,36 @@ const Test = () => {
   };
 
   //quiz logic 
-  const quizLogic = (selectedKanji: Kanji) => {
+  const handleAsnwer = (selectedKanji: Kanji) => {
 
-    if (selectedKanji.character === currentQuestion?.character) {
-      setScore((prevScore) => prevScore + 1);
+    if (selectedKanji.character === currentQuestion.character) {
+      setScore(score + 1);
+      setIsAnswerCorrect(true);
+    } else {
+      setIsAnswerCorrect(false);
     }
+
     handleNextQuestion()
-console.log(score);
-
-
+    
   }
 
+
+
+  useEffect(() => {
+    if (isAnswerCorrect) {
+      setTimeout(() => {
+        setIsAnswerCorrect(null);
+        
+      }, 2000);
+    } else {
+      setTimeout(() => {
+        setIsAnswerCorrect(null);
+      }, 2000);
+    }
+
+    
+  }, [isAnswerCorrect]);
+  
   return (
     <>
       <div>
@@ -165,27 +186,69 @@ console.log(score);
     <button onClick={handleGenerateKanji}>Generate Kanji</button>
 
 
-<div className='quiz'>
+    {/* <div className='quiz'>
 
-    <ul>
-      {selectedKanji.map((kanji) => (
-        <button key={kanji.character} onClick={() => quizLogic(kanji)}>{kanji.character}</button>
-      ))}
-    </ul>
+<ul>
+  {selectedKanji.map((kanji) => (
+    <button key={kanji.character} onClick={() => handleAsnwer(kanji)}>{kanji.character}</button>
+  ))}
+</ul>
 
-    <div>
-      {currentQuestion && currentQuestion.meanings && (
-        
-        <label htmlFor={currentQuestion.character}>
-          {currentQuestion.meanings + ", "}
-        </label>
-          
+<div>
+  {currentQuestion && currentQuestion.meanings && (
+    
+    <label htmlFor={currentQuestion.character}>
+      {isAnswerCorrect !== null && (
+        <div>
+          {isAnswerCorrect ? 'Correct!' : `Wrong! The correct answer was ${currentQuestion.character}`}
+        </div>
       )}
-    </div>
+      {currentQuestion.meanings + ", "}
+    </label>
       
-</div>      
+  )}
+  {!currentQuestion && (
+    <div>
+      Your score: {score}
+    </div>
+  )}
+</div>
+  
+</div> */}
+
+<div className='quiz2'>
 
 
+
+  <div>
+    {currentQuestion && currentQuestion.meanings && (
+      
+      <h1 htmlFor={currentQuestion.character}>
+        {isAnswerCorrect !== null && (
+          <div>
+            {isAnswerCorrect ? 'Correct!' : `Wrong! The correct answer was ${currentQuestion.meanings}`}
+          </div>
+        )}
+        {currentQuestion.character }
+      </h1>
+        
+    )}
+  </div>
+
+  <ul>
+    {selectedKanji.map((kanji) => (
+      <button key={kanji.character} onClick={() => handleAsnwer(kanji)}>{kanji.meanings + ", "}</button>
+    ))}
+  </ul>
+
+  {!currentQuestion && (
+    <div>
+      Your score: {score}
+    </div>
+  )}
+
+  
+</div>
     
 
 
