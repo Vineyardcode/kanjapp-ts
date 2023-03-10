@@ -18,7 +18,8 @@ const storageWatcher = () => {
 
     return () => {
       
-      window.removeEventListener("beforeunload", saveDataBeforeUnload);
+    window.removeEventListener("beforeunload", saveDataBeforeUnload);
+    
     };
   }, []);
 
