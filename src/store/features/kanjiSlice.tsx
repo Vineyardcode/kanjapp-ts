@@ -9,13 +9,6 @@ export const fetchKanji = createAsyncThunk('kanji/fetchKanji', async () => {
   return kanjis;
 });
 
-  // get(kanjiRef)
-  // .then((snap) => {
-  //   const kanjis = snap.val();
-  //   return { kanjis };
-  // });
-
-
 const kanjiSlice = createSlice({
   name: 'kanji',
   initialState: {

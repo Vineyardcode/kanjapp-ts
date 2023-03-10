@@ -56,13 +56,13 @@ export const Learn = () => {
 
   useEffect(() => {
     setKanji(kanjiData);
-    console.log(kanji.length);
+    
     
   }, [kanjiData]);
 
   //fetch learned kanji from localStorage and save them to a state variable
   useEffect(() => {
-    const storedKanji = localStorage.getItem("learnedKanji");
+    const storedKanji = localStorage.getItem("learnedKanjiArray");
     if (storedKanji) {
       const kanjiArray = JSON.parse(storedKanji);
       setLearnedKanjiArray(kanjiArray);
@@ -77,10 +77,10 @@ export const Learn = () => {
     const docRef = doc(learnedRef, kanji.character);
     setDoc(docRef, { kanji });
     
-    setLearnedKanjiArray([...learnedKanjiArray, kanji]);
+    setLearnedKanjiArray([learnedKanjiArray, kanji]);
     saveKanji(kanji);
   };
-
+ 
   //save learned kanji to localStorage
   const saveKanji = (kanji: Kanji) => {
     let learnedKanjiArray = JSON.parse(localStorage.getItem("learnedKanjiArray")) || [];
