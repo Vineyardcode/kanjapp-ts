@@ -1,0 +1,14 @@
+.questions{
+
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  grid-template-rows: 1fr 1fr 1fr;
+  grid-gap: 10px;
+  margin: 10px;
+  
+}
+
+.questions button{
+  
+  height: 5rem;
+}

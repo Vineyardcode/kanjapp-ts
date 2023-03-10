@@ -77,7 +77,7 @@ const Test = () => {
       const prevScore = localStorage.getItem(kanji.character);
       if (prevScore) {
         localStorage.setItem(kanji.character, String(parseInt(prevScore) + 1));
-        if (parseInt(prevScore) + 1 === 2) {
+        if (parseInt(prevScore) + 1 === 5) {
           localStorage.removeItem(kanji.character);
           const learnedKanjiArray = JSON.parse(localStorage.getItem('learnedKanjiArray') || '[]');
           if (!learnedKanjiArray.some((k: Kanji) => k.character === kanji.character)) {
@@ -94,21 +94,6 @@ const Test = () => {
     handleNextQuestion();
   }
 
-  // useEffect(() => {
-  //   if (isAnswerCorrect) {
-  //     setTimeout(() => {
-  //       setIsAnswerCorrect(null);
-        
-  //     }, 2000);
-  //   } else {
-  //     setTimeout(() => {
-  //       setIsAnswerCorrect(null);
-  //     }, 2000);
-  //   }
-
-    
-  // }, [isAnswerCorrect]);
-  
   const handleNextQuestion = () => {
     // Select a random kanji from the list of selected kanji that hasn't been used before
     const unusedKanji = selectedKanji.filter(kanji => !usedKanji.includes(kanji));
@@ -131,15 +116,12 @@ const Test = () => {
     const kanjiWithoutCurrent = kanjiData.filter((kanji) => kanji !== currentQuestion);
     const shuffled = kanjiWithoutCurrent.sort(() => 0.5 - Math.random());
 
-    const options = shuffled.slice(0, 9).concat(currentQuestion)
+    const options = shuffled.slice(0, 8).concat(currentQuestion)
     const shuffledOptions = options.sort(() => 0.5 - Math.random());
 
     setQuestions(shuffledOptions)
 
   };
-
-
-
 
   return (
     <>
@@ -230,7 +212,7 @@ const Test = () => {
       {questions.map((kanji) => (
         <button 
         key={kanji.character} 
-        onClick={() => handleAnswer(kanji)}>{kanji.meanings + ", "}{" "}</button>
+        onClick={() => handleAnswer(kanji)}>{kanji.meanings.join(", ")}</button>
       ))}
     </div>
 
@@ -244,7 +226,7 @@ const Test = () => {
 
   </div>
     
-{storageWatcher()}
+  {storageWatcher()}
   </>
   );
   };

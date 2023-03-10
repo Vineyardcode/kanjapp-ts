@@ -1,0 +1,18 @@
+.progress-bar {
+  display: flex;
+  align-items: center;
+  height: 30px;
+  margin-bottom: 10px;
+  margin: 10px;
+}
+
+.progress {
+  height: 100%;
+  background-color: rgb(145, 7, 7);
+  border-radius: 5px;
+}
+
+.percent {
+  font-size: 14px;
+  margin-left: 10px;
+}
