@@ -13,6 +13,7 @@ import { doc, setDoc, collection, addDoc, getDocs } from "firebase/firestore";
 //components
 import ProgressBar from '../components/ProgressBar';
 
+
 export const Main = () => {
 
   const [learnedKanjiArray, setLearnedKanjiArray] = useState<Kanji[]>([]);
@@ -89,6 +90,7 @@ Object.keys(totalByJlpt).forEach((jlpt) => {
           <ProgressBar percent={percentByJlpt[jlpt]} />
         </div>
       ))}
+      
     </>
   );
 };

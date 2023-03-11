@@ -7,6 +7,7 @@ import { doc, setDoc, collection, addDoc, getDocs } from "firebase/firestore";
 //components, pages, styles
 import Modal from '../components/Modal';
 import "../styles/Learn.css"
+import storageWatcher from '../store/storageWatcher';
 //redux
 import { useDispatch, useSelector } from 'react-redux';
 import { fetchKanji } from '../store/features/kanjiSlice';
@@ -60,16 +61,16 @@ export const Learn = () => {
     
   }, [kanjiData]);
 
-  //fetch learned kanji from localStorage and save them to a state variable
+  //fetch learned kanji from sessionStorage and save them to a state variable
   useEffect(() => {
-    const storedKanji = localStorage.getItem("learnedKanjiArray");
+    const storedKanji = sessionStorage.getItem("learnedKanjiArray");
     if (storedKanji) {
       const kanjiArray = JSON.parse(storedKanji);
       setLearnedKanjiArray(kanjiArray);
     }
   }, []);
 
-  //move selected kanji to the "learned" collection in firestore
+  //move selected kanji to the "learned" collection in firestore and update the learnedKanjiArray state variable
   const handleSaveKanji = (kanji: Kanji) => {
 
     const currentUser = auth.currentUser?.uid;
@@ -81,13 +82,15 @@ export const Learn = () => {
     saveKanji(kanji);
   };
  
-  //save learned kanji to localStorage
+  //save learned kanji to sessionStorage
   const saveKanji = (kanji: Kanji) => {
-    let learnedKanjiArray = JSON.parse(localStorage.getItem("learnedKanjiArray")) || [];
+    let learnedKanjiArray = JSON.parse(sessionStorage.getItem("learnedKanjiArray")) || [];
     if (!learnedKanjiArray.some(k => k.character === kanji.character)) {
       learnedKanjiArray.push(kanji);
-      localStorage.setItem("learnedKanjiArray", JSON.stringify(learnedKanjiArray));
+      sessionStorage.setItem("learnedKanjiArray", JSON.stringify(learnedKanjiArray));
+      
     }
+    setLearnedKanjiArray(learnedKanjiArray)
   };
 
   //fetch the users "learned" kanji collection on user login 
@@ -108,6 +111,7 @@ export const Learn = () => {
       });
   
       setLearnedKanjiArray(kanjiArray);
+       
     }
   
     getKanjis();
@@ -301,7 +305,7 @@ export const Learn = () => {
         </div>
 
       </div>
-
+      {storageWatcher()}
     </>
   );
   

@@ -1,7 +1,7 @@
 import React, {useEffect, useState}from 'react';
 import { database, db, auth } from '../config/firebase';
 import "../styles/Learn.css"
-import { doc, setDoc, collection, addDoc, getDocs, } from "firebase/firestore"; 
+import { doc, setDoc, collection, deleteDoc, getDocs, } from "firebase/firestore"; 
 
 import { useSelector } from 'react-redux';
 
@@ -18,11 +18,11 @@ const Learned: React.FC = () => {
   // const learnedKanjiArray = useSelector((state) => state);
   
   useEffect(() => {
-    readFromLocalStorage();
+    readFromSessionStorage();
   }, []);
 
-  const readFromLocalStorage = () => {
-    const storedKanji = localStorage.getItem("learnedKanjiArray");
+  const readFromSessionStorage = () => {
+    const storedKanji = sessionStorage.getItem("learnedKanjiArray");
     if (storedKanji) {
       const kanjiArray: Kanji[] = JSON.parse(storedKanji);
       setLearnedKanjiArray(kanjiArray);
@@ -31,13 +31,13 @@ const Learned: React.FC = () => {
 
   interface Kanji {
     character?: string;
-    meanings: string[];
+    meanings: string[]; 
     freq?: number;
     grade?: number;
     jlpt_new?: number;
     jlpt_old?: number;
-    category: string;
-    strokes: number;
+    category?: string;
+    strokes?: number;
   }
   
   interface Modal {
@@ -62,8 +62,6 @@ const Learned: React.FC = () => {
     }
   }
 
-  
-
   //sort kanji by freq
   const sortKanji = () => {
     kanji.sort((a, b) => (a.freq > b.freq) ? 1 : -1)
@@ -79,11 +77,24 @@ const Learned: React.FC = () => {
     const sortedKanji = [...learnedKanjiArray].sort((a, b) => a.strokes - b.strokes)
     setLearnedKanjiArray(sortedKanji)
   }
-
-
-
-
-
+  //delete kanji from the database and from sessionStorage
+  const handleForgetKanji = async (kanji: Kanji) => {
+    let learnedKanjiArray = JSON.parse(sessionStorage.getItem("learnedKanjiArray")) || [];
+    learnedKanjiArray = learnedKanjiArray.filter(k => k.character !== kanji.character);
+    sessionStorage.setItem("learnedKanjiArray", JSON.stringify(learnedKanjiArray));
+  
+    const currentUser = auth.currentUser?.uid;
+    if (currentUser) {
+      const kanjiRef = doc(collection(db, "users", currentUser, "learned"), kanji.character);
+      try {
+        await deleteDoc(kanjiRef);
+        console.log("Kanji deleted successfully from Firestore");
+      } catch (error) {
+        console.error("Error deleting kanji from Firestore: ", error);
+      }
+    }
+    setLearnedKanjiArray(learnedKanjiArray)
+  };
 
   return (
     <>
@@ -104,7 +115,7 @@ const Learned: React.FC = () => {
           <div>JLPT (New): {modal.kanji.jlpt_new}</div>
           <div>JLPT (Old): {modal.kanji.jlpt_old}</div>
           <div>Strokes: {modal.kanji.strokes}</div>
-          {/* <button onClick={() => handleSaveKanji(modal.kanji)}>Move to learned</button> */}
+          <button onClick={() => handleForgetKanji(modal.kanji)}>Forget this kanji</button>
           <button onClick={hideModal}>Close</button>
         </div>
       )}
@@ -115,7 +126,7 @@ const Learned: React.FC = () => {
       ))}
 
     </div>
-
+    
     </>
   );
   
