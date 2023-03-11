@@ -6,7 +6,7 @@ const storageWatcher = () => {
   
   useEffect(() => {
     const saveDataBeforeUnload = (event: BeforeUnloadEvent) => {
-      const storedKanji = JSON.parse(localStorage.getItem("learnedKanjiArray") || "[]") as Kanji[];
+      const storedKanji = JSON.parse(sessionStorage.getItem("learnedKanjiArray") || "[]") as Kanji[];
       storedKanji.forEach((kanji: Kanji) => {
         handleSaveKanji(kanji);
       });
