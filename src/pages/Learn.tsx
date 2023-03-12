@@ -22,7 +22,7 @@ export const Learn = () => {
 
   const [selectedLevels, setSelectedLevels] = useState([5, 4, 3, 2, 1]);
 
-  const [selectedOption, setSelectedOption] = useState('sort_freq')
+  
   const [sortByFreq, setSortByFreq] = useState(false);
   const [sortByGrade, setSortByGrade] = useState(false);
   const [sortByStrokes, setSortByStrokes] = useState(false);
@@ -57,8 +57,6 @@ export const Learn = () => {
 
   useEffect(() => {
     setKanji(kanjiData);
-    
-    
   }, [kanjiData]);
 
   //fetch learned kanji from sessionStorage and save them to a state variable
@@ -70,18 +68,6 @@ export const Learn = () => {
     }
   }, []);
 
-  //move selected kanji to the "learned" collection in firestore and update the learnedKanjiArray state variable
-  const handleSaveKanji = (kanji: Kanji) => {
-
-    const currentUser = auth.currentUser?.uid;
-    const learnedRef = collection(db, "users", currentUser, "learned");
-    const docRef = doc(learnedRef, kanji.character);
-    setDoc(docRef, { kanji });
-    
-    setLearnedKanjiArray([learnedKanjiArray, kanji]);
-    saveKanji(kanji);
-  };
- 
   //save learned kanji to sessionStorage
   const saveKanji = (kanji: Kanji) => {
     let learnedKanjiArray = JSON.parse(sessionStorage.getItem("learnedKanjiArray")) || [];
@@ -92,30 +78,6 @@ export const Learn = () => {
     }
     setLearnedKanjiArray(learnedKanjiArray)
   };
-
-  //fetch the users "learned" kanji collection on user login 
-  useEffect(() => {
-    const currentUser = auth.currentUser;
-    
-    if (!currentUser) {
-      return; // Don't do anything if currentUser is not defined yet
-    }
-  
-    const getKanjis = async () => {
-      const kanjiArray = [];
-  
-      const querySnapshot = await getDocs(collection(db, "users", currentUser.uid, "learned"));
-      querySnapshot.forEach((doc) => {
-        const kanjiData = doc.data();
-        kanjiArray.push(kanjiData.kanji);
-      });
-  
-      setLearnedKanjiArray(kanjiArray);
-       
-    }
-  
-    getKanjis();
-  }, [auth.currentUser]);
 
   //call the sorting function every time a sorting option is changed
   useEffect(() => {
@@ -289,7 +251,7 @@ export const Learn = () => {
                     show={modal.show}
                     kanji={modal.kanji}
                     hideModal={hideModal}
-                    handleSaveKanji={handleSaveKanji}
+                    handleSaveKanji={saveKanji}
                     createAnkiCard={createAnkiCard}
                   />
                 )}

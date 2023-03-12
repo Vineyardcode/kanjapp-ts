@@ -1,11 +1,16 @@
-import { auth, provider, db } from "../config/firebase";
-import { signInWithPopup } from "firebase/auth";
+//react
 import { useNavigate } from "react-router-dom";
+//firebase
 import { setDoc, doc, collection, getDocs } from "firebase/firestore";
-
+import { signInWithPopup } from "firebase/auth";
+import { auth, provider, db } from "../config/firebase";
+//redux toolkit
+import { useDispatch } from "react-redux";
+import { loginUser } from "../store/features/authSlice";
 
 export const Login = () => {
   const navigate = useNavigate();
+  const dispatch = useDispatch();
 
   const signInWithGoogle = async () => {
     const result = await signInWithPopup(auth, provider).then(
@@ -28,6 +33,13 @@ export const Login = () => {
   
           // Save the "learned" kanji collection to sessionStorage
           sessionStorage.setItem("learnedKanjiArray", JSON.stringify(learnedKanjiArray));
+
+          // Dispatch login action
+          dispatch(loginUser({
+            email: auth.currentUser?.email,
+            uid: result.user.uid,
+
+          }));
              
         } catch (e) {
           console.error("Error adding document: ", e);
@@ -37,7 +49,6 @@ export const Login = () => {
     console.log(result);
     navigate("/");
   };
-  
 
 
 
