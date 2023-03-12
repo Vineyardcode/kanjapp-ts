@@ -14,13 +14,12 @@ const Learned: React.FC = () => {
   const [modal, setModal] = useState<Modal>({ show: false, kanji: {} });
 
   const [selectedOption, setSelectedOption] = useState('sort_freq')
-
-  // const learnedKanjiArray = useSelector((state) => state);
   
+  //kanji fetching
   useEffect(() => {
     readFromSessionStorage();
   }, []);
-
+  
   const readFromSessionStorage = () => {
     const storedKanji = sessionStorage.getItem("learnedKanjiArray");
     if (storedKanji) {
@@ -44,8 +43,7 @@ const Learned: React.FC = () => {
     show: boolean;
     kanji: Kanji;
   }
-
-
+  //modal options and sorting
   const showModal = (kanji: Kanji) => setModal({ show: true, kanji });
 
   const hideModal = () => setModal({ ...modal, show: false });
@@ -77,6 +75,7 @@ const Learned: React.FC = () => {
     const sortedKanji = [...learnedKanjiArray].sort((a, b) => a.strokes - b.strokes)
     setLearnedKanjiArray(sortedKanji)
   }
+
   //delete kanji from the database and from sessionStorage
   const handleForgetKanji = async (kanji: Kanji) => {
     let learnedKanjiArray = JSON.parse(sessionStorage.getItem("learnedKanjiArray")) || [];
