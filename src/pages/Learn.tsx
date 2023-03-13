@@ -2,7 +2,7 @@
 import React, {useEffect, useLayoutEffect, useState, useMemo}from 'react';
 //firebase
 import { database, db, auth } from '../config/firebase';
-import { onValue, orderByChild, ref, query, get, child } from 'firebase/database';
+import { onValue, orderByChild, ref, query, get, child, limitToFirst } from 'firebase/database';
 import { doc, setDoc, collection, addDoc, getDocs } from "firebase/firestore";
 //components, pages, styles
 import Modal from '../components/Modal';
@@ -12,10 +12,11 @@ import storageWatcher from '../store/storageWatcher';
 import { useDispatch, useSelector } from 'react-redux';
 import { fetchKanji } from '../store/features/kanjiSlice';
 
+import joyo from "../kanjiData/joyo.json"
 
 export const Learn = () => {
 
-  const [kanji, setKanji] = useState<Kanji[]>([]); 
+  const [kanji, setKanji] = useState(joyo); 
   const [modal, setModal] = useState<Modal>({ show: false, kanji: {} })
   
   const [learnedKanjiArray, setLearnedKanjiArray] = useState<Kanji[]>([]);
@@ -43,21 +44,6 @@ export const Learn = () => {
     show: boolean;
     kanji: Kanji;
   }
-
-  //get kanji from the store
-  const dispatch = useDispatch();
-  const kanjiData = useSelector((state) => state.kanji.kanji);
-  
-  useEffect(() => {
-    async function dispatchData() {
-      await dispatch(fetchKanji());
-    }
-    dispatchData()
-  }, [dispatch])
-
-  useEffect(() => {
-    setKanji(kanjiData);
-  }, [kanjiData]);
 
   //fetch learned kanji from sessionStorage and save them to a state variable
   useEffect(() => {
@@ -115,6 +101,8 @@ export const Learn = () => {
     });
   
     setKanji(sortedKanji);
+
+    
   };
   
   const handleSortByFreqChange = () => {
@@ -257,7 +245,7 @@ export const Learn = () => {
                 )}
               <div id="container">
                 {group.kanji.map((item, index) => (
-                  <button key={index} onClick={() => showModal(item)} className="kanji-button" style={{ backgroundColor: colorScale(item.freq) }}>
+                  <button key={item.character} onClick={() => showModal(item)} className="kanji-button" style={{ backgroundColor: colorScale(item.freq) }}>
                     {item.character}
                   </button>
                 ))}
