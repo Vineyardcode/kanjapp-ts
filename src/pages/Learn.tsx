@@ -23,7 +23,6 @@ export const Learn = () => {
 
   const [selectedLevels, setSelectedLevels] = useState([5, 4, 3, 2, 1]);
 
-  
   const [sortByFreq, setSortByFreq] = useState(false);
   const [sortByGrade, setSortByGrade] = useState(false);
   const [sortByStrokes, setSortByStrokes] = useState(false);
@@ -255,7 +254,7 @@ export const Learn = () => {
         </div>
 
       </div>
-      {storageWatcher()}
+      
     </>
   );
   

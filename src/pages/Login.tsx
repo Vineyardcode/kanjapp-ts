@@ -1,14 +1,31 @@
 //react
 import { useNavigate } from "react-router-dom";
+import { useEffect } from "react";
+
 //firebase
 import { setDoc, doc, collection, getDocs } from "firebase/firestore";
-import { signInWithPopup } from "firebase/auth";
+import { signInWithPopup, onAuthStateChanged } from "firebase/auth";
 import { auth, provider, db } from "../config/firebase";
+
 //redux toolkit
 import { useDispatch } from "react-redux";
 import { loginUser } from "../store/features/authSlice";
+import { current } from "@reduxjs/toolkit";
 
 export const Login = () => {
+
+  interface Kanji {
+    character?: string;
+    meanings?: string[];
+    freq?: number;
+    grade?: number;
+    jlpt_new?: number;
+    jlpt_old?: number;
+    category?: string;
+    strokes?: number;
+    
+  }
+
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
@@ -18,7 +35,7 @@ export const Login = () => {
         // Save the user to the database
         const currentUser = result.user.uid
         try {
-          const docRef = await setDoc(
+          await setDoc(
             doc(db, "users", currentUser),
             {
               email: auth.currentUser?.email,
@@ -51,10 +68,31 @@ export const Login = () => {
   };
 
 
+  useEffect(() => {
+
+    
+
+      const saveDataBeforeUnload = () => {
+        const storedKanji = JSON.parse(sessionStorage.getItem("learnedKanjiArray") || "[]") as Kanji[];
+        storedKanji.forEach((kanji: Kanji) => {
+          handleSaveKanji(kanji);
+        });
+        
+      };
+
+      const handleSaveKanji = async (kanji: Kanji) => {
+        const currentUser = auth.currentUser?.uid;
+        if (currentUser) {
+          const learnedRef = collection(db, "users", currentUser, "learned");
+          const docRef = doc(learnedRef, kanji.character);
+          await setDoc(docRef, { kanji });
+        }
+        
+      };
 
 
 
-
+  }, [])
 
   return (
     <div>
