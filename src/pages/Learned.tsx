@@ -104,27 +104,29 @@ const Learned: React.FC = () => {
       <option value="sort_strokes">Sort by strokes</option>
     </select>
 
-    <div>
-    {modal.show && (
-        <div>
-          <div>Character: {modal.kanji.character}</div>
-          <div>Meaning: {modal.kanji.meanings[0]}</div>
-          <div>Frequency: {modal.kanji.freq}</div>
-          <div>Grade: {modal.kanji.grade}</div>
-          <div>JLPT (New): {modal.kanji.jlpt_new}</div>
-          <div>JLPT (Old): {modal.kanji.jlpt_old}</div>
-          <div>Strokes: {modal.kanji.strokes}</div>
-          <button onClick={() => handleForgetKanji(modal.kanji)}>Forget this kanji</button>
-          <button onClick={hideModal}>Close</button>
-        </div>
-      )}
-      {learnedKanjiArray.map((item, index) => (
-        <button key={index} onClick={() => showModal(item)}>
-          {item.character}
-        </button>
-      ))}
-
-    </div>
+    {learnedKanjiArray.length === 0 ? (
+      <h1>You know nothing !</h1>
+    ) : (
+      <div>
+        {modal.show && (
+          <div>
+            <div>Character: {modal.kanji.character}</div>
+            <div>Meaning: {modal.kanji.meanings[0]}</div>
+            <div>Frequency: {modal.kanji.freq}</div>
+            <div>Grade: {modal.kanji.grade}</div>
+            <div>JLPT (New): {modal.kanji.jlpt_new}</div>
+            <div>Strokes: {modal.kanji.strokes}</div>
+            <button onClick={() => handleForgetKanji(modal.kanji)}>Forget this kanji</button>
+            <button onClick={hideModal}>Close</button>
+          </div>
+        )}
+        {learnedKanjiArray.map((item, index) => (
+          <button key={index} onClick={() => showModal(item)}>
+            {item.character}
+          </button>
+        ))}
+      </div>
+    )}
     
     </>
   );

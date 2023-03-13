@@ -5,6 +5,8 @@ import { fetchKanji } from '../store/features/kanjiSlice';
 
 import "../styles/Test.css"
 import storageWatcher from '../store/storageWatcher';
+
+import joyo from "../kanjiData/joyo.json"
 const Test = () => {
 
   const [numKanji, setNumKanji] = useState(9999);
@@ -14,9 +16,6 @@ const Test = () => {
   const [minGrade, setMinGrade] = useState(1);
   const [selectedKanji, setSelectedKanji] = useState<Kanji[]>([]);
   
-
-  
-
   const [currentQuestion, setCurrentQuestion] = useState<Kanji | null>(null);
   const [usedKanji, setUsedKanji] = useState<Kanji[]>([]);
 
@@ -26,19 +25,19 @@ const Test = () => {
 
   const [questions, setQuestions] = useState<Kanji[]>([]);
 
-  //get kanji from store
-  ///////////////////////////////////////////////////////////
-  const dispatch = useDispatch();
-  const kanjiData = useSelector((state) => state.kanji.kanji);
-  
-  useEffect(() => {
-    async function dispatchData() {
-      await dispatch(fetchKanji());
-    }
-    dispatchData()
-  }, [dispatch])
-  ///////////////////////////////////////////////////////////
+  const [kanjiData, setKanjiData] = useState(joyo); 
 
+  interface Kanji {
+    character?: string;
+    meanings?: string[];
+    freq?: number;
+    grade?: number;
+    jlpt_new?: number;
+    jlpt_old?: number;
+    category?: string;
+    strokes?: number;
+    
+  }
 
   const handleGenerateKanji = () => {
 
