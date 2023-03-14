@@ -1,10 +1,9 @@
 import React from 'react'
 import { useEffect, useState } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
-import { fetchKanji } from '../store/features/kanjiSlice';
-
+import { setDoc, doc, collection, getDocs } from "firebase/firestore";
+import { auth, provider, db } from "../config/firebase";
 import "../styles/Test.css"
-import storageWatcher from '../store/storageWatcher';
+
 
 import joyo from "../kanjiData/joyo.json"
 const Test = () => {
@@ -66,6 +65,17 @@ const Test = () => {
     setScore(0)
     
   };
+
+  const handleSaveKanji = async (kanji: Kanji) => { 
+
+    const currentUser = auth.currentUser?.uid;
+      if (currentUser) {
+        const learnedRef = collection(db, "users", currentUser, "learned");
+        const docRef = doc(learnedRef, kanji.character);
+        await setDoc(docRef, { kanji });    
+    }  
+
+  };
       
   //quiz logic 
   const handleAnswer = (kanji: Kanji) => {
@@ -77,6 +87,7 @@ const Test = () => {
       if (prevScore) {
         localStorage.setItem(kanji.character, String(parseInt(prevScore) + 1));
         if (parseInt(prevScore) + 1 === 5) {
+          handleSaveKanji(kanji)
           localStorage.removeItem(kanji.character);
           const learnedKanjiArray = JSON.parse(localStorage.getItem('learnedKanjiArray') || '[]');
           if (!learnedKanjiArray.some((k: Kanji) => k.character === kanji.character)) {
@@ -124,106 +135,106 @@ const Test = () => {
 
   return (
     <>
-    <div className="params">
-      <div>
-        <label htmlFor="numKanji">Number of Kanji:</label>
-        <input
-        type="number"
-        name="numKanji"
-        value={numKanji}
-        onChange={(e) => setNumKanji(Number(e.target.value))}
-        />
-      </div>
-      <div>
-        <label htmlFor="minStrokes">Minimum strokes:</label>
-        <input
+      <div className="params">
+        <div>
+          <label htmlFor="numKanji">Number of Kanji:</label>
+          <input
           type="number"
-          name="minStrokes"
-          value={minStrokes}
-          onChange={(e) => setMinStrokes(Number(e.target.value))}
-        />
+          name="numKanji"
+          value={numKanji}
+          onChange={(e) => setNumKanji(Number(e.target.value))}
+          />
+        </div>
+        <div>
+          <label htmlFor="minStrokes">Minimum strokes:</label>
+          <input
+            type="number"
+            name="minStrokes"
+            value={minStrokes}
+            onChange={(e) => setMinStrokes(Number(e.target.value))}
+          />
+        </div>
+        <div>
+          <label htmlFor="maxStrokes">Maximum strokes:</label>
+          <input
+            type="number"
+            name="maxStrokes"
+            value={maxStrokes}
+            onChange={(e) => setMaxStrokes(Number(e.target.value))}
+          />
+        </div>
+        <div>
+          <label htmlFor="jlptLevel">JLPT level:</label>
+          <select
+            name="jlptLevel"
+            value={jlptLevel}
+            onChange={(e) => setJlptLevel(Number(e.target.value))}
+          >
+            <option value="">All</option>
+            <option value={1}>N1</option>
+            <option value={2}>N2</option>
+            <option value={3}>N3</option>
+            <option value={4}>N4</option>
+            <option value={5}>N5</option>
+            
+          </select>
+        </div>
+        <div>
+          <label htmlFor="minGrade">Minimum grade:</label>
+          <select
+          name="minGrade"
+          value={minGrade}
+          onChange={(e) => setMinGrade(Number(e.target.value))}
+          >
+          <option value={1}>1</option>
+          <option value={2}>2</option>
+          <option value={3}>3</option>
+          <option value={4}>4</option>
+          <option value={5}>5</option>
+          <option value={6}>6</option>
+          <option value={8}>8</option>
+          <option value={9}>9</option>
+          </select>
+        </div>
+        <button onClick={handleGenerateKanji}>Generate Kanji</button>
       </div>
-      <div>
-        <label htmlFor="maxStrokes">Maximum strokes:</label>
-        <input
-          type="number"
-          name="maxStrokes"
-          value={maxStrokes}
-          onChange={(e) => setMaxStrokes(Number(e.target.value))}
-        />
-      </div>
-      <div>
-        <label htmlFor="jlptLevel">JLPT level:</label>
-        <select
-          name="jlptLevel"
-          value={jlptLevel}
-          onChange={(e) => setJlptLevel(Number(e.target.value))}
-        >
-          <option value="">All</option>
-          <option value={1}>N1</option>
-          <option value={2}>N2</option>
-          <option value={3}>N3</option>
-          <option value={4}>N4</option>
-          <option value={5}>N5</option>
-          
-        </select>
-      </div>
-      <div>
-        <label htmlFor="minGrade">Minimum grade:</label>
-        <select
-        name="minGrade"
-        value={minGrade}
-        onChange={(e) => setMinGrade(Number(e.target.value))}
-        >
-        <option value={1}>1</option>
-        <option value={2}>2</option>
-        <option value={3}>3</option>
-        <option value={4}>4</option>
-        <option value={5}>5</option>
-        <option value={6}>6</option>
-        <option value={8}>8</option>
-        <option value={9}>9</option>
-        </select>
-      </div>
-      <button onClick={handleGenerateKanji}>Generate Kanji</button>
-  </div>
 
 
-  <div className='quiz2'>
+      <div className='quiz2'>
 
-    <div>
-      {currentQuestion &&  (
-        
-        <h1 htmlFor={currentQuestion.character}>
-          {isAnswerCorrect !== null && (
-            <div>
-              {isAnswerCorrect ? 'Correct!' : `Wrong! The correct answer was ${currentQuestion.meanings}`}
-            </div>
+        <div>
+          {currentQuestion &&  (
+            
+            <h1 htmlFor={currentQuestion.character}>
+              {isAnswerCorrect !== null && (
+                <div>
+                  {isAnswerCorrect ? 'Correct!' : `Wrong! The correct answer was ${currentQuestion.meanings}`}
+                </div>
+              )}
+              {currentQuestion.character }
+            </h1>
+              
           )}
-          {currentQuestion.character }
-        </h1>
           
-      )}
-      
-    </div>
+        </div>
 
-    <div className='questions'>
-      {questions.map((kanji) => (
-        <button 
-        key={kanji.character} 
-        onClick={() => handleAnswer(kanji)}>{kanji.meanings.join(", ")}</button>
-      ))}
-    </div>
+        <div className='questions'>
+          {questions.map((kanji) => (
+            <button 
+            key={kanji.character} 
+            onClick={() => handleAnswer(kanji)}>{kanji.meanings.join(", ")}</button>
+          ))}
+        </div>
 
-    <div className='score'>
-      {currentQuestion && (
-          <span>
-            Your score: {score}
-          </span>
-        )}
-    </div>
+        <div className='score'>
+          {currentQuestion && (
+              <span>
+                Your score: {score}
+              </span>
+            )}
+        </div>
 
-  </div>
+      </div>
     
   
   </>

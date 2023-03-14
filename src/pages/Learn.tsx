@@ -7,10 +7,10 @@ import { doc, setDoc, collection, addDoc, getDocs } from "firebase/firestore";
 //components, pages, styles
 import Modal from '../components/Modal';
 import "../styles/Learn.css"
-import storageWatcher from '../store/storageWatcher';
+
 //redux
 import { useDispatch, useSelector } from 'react-redux';
-import { fetchKanji } from '../store/features/kanjiSlice';
+
 
 import joyo from "../kanjiData/joyo.json"
 
@@ -44,25 +44,40 @@ export const Learn = () => {
     kanji: Kanji;
   }
 
-  //fetch learned kanji from sessionStorage and save them to a state variable
+  //fetch learned kanji from localStorage and save them to a state variable
   useEffect(() => {
-    const storedKanji = sessionStorage.getItem("learnedKanjiArray");
+    const storedKanji = localStorage.getItem("learnedKanjiArray");
     if (storedKanji) {
       const kanjiArray = JSON.parse(storedKanji);
       setLearnedKanjiArray(kanjiArray);
     }
   }, []);
 
-  //save learned kanji to sessionStorage
+  const handleSaveKanji = async (kanji: Kanji) => { 
+
+    const currentUser = auth.currentUser?.uid;
+      if (currentUser) {
+        const learnedRef = collection(db, "users", currentUser, "learned");
+        const docRef = doc(learnedRef, kanji.character);
+        await setDoc(docRef, { kanji });    
+    }  
+
+  };
+
+  //save learned kanji to localStorage 
   const saveKanji = (kanji: Kanji) => {
-    let learnedKanjiArray = JSON.parse(sessionStorage.getItem("learnedKanjiArray")) || [];
+    let learnedKanjiArray = JSON.parse(localStorage.getItem("learnedKanjiArray")) || [];
     if (!learnedKanjiArray.some(k => k.character === kanji.character)) {
       learnedKanjiArray.push(kanji);
-      sessionStorage.setItem("learnedKanjiArray", JSON.stringify(learnedKanjiArray));
+      localStorage.setItem("learnedKanjiArray", JSON.stringify(learnedKanjiArray));
       
     }
     setLearnedKanjiArray(learnedKanjiArray)
+    handleSaveKanji(kanji)
   };
+
+
+  
 
   //call the sorting function every time a sorting option is changed
   useEffect(() => {

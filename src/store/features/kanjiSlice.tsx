@@ -1,13 +1,6 @@
-import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
-import { database } from '../../config/firebase';
-import { get, ref } from 'firebase/database';
+import { createSlice } from '@reduxjs/toolkit';
 
-export const fetchKanji = createAsyncThunk('kanji/fetchKanji', async () => {
-  const kanjiRef = ref(database, 'jouyou');
-  const snap = await get(kanjiRef);
-  const kanjis = snap.val();
-  return kanjis;
-});
+
 
 const kanjiSlice = createSlice({
   name: 'kanji',

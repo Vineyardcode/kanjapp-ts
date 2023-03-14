@@ -17,11 +17,11 @@ const Learned: React.FC = () => {
   
   //kanji fetching
   useEffect(() => {
-    readFromSessionStorage();
+    readFromLocalStorage();
   }, []);
   
-  const readFromSessionStorage = () => {
-    const storedKanji = sessionStorage.getItem("learnedKanjiArray");
+  const readFromLocalStorage = () => {
+    const storedKanji = localStorage.getItem("learnedKanjiArray");
     if (storedKanji) {
       const kanjiArray: Kanji[] = JSON.parse(storedKanji);
       setLearnedKanjiArray(kanjiArray);
@@ -78,9 +78,9 @@ const Learned: React.FC = () => {
 
   //delete kanji from the database and from sessionStorage
   const handleForgetKanji = async (kanji: Kanji) => {
-    let learnedKanjiArray = JSON.parse(sessionStorage.getItem("learnedKanjiArray")) || [];
+    let learnedKanjiArray = JSON.parse(localStorage.getItem("learnedKanjiArray")) || [];
     learnedKanjiArray = learnedKanjiArray.filter(k => k.character !== kanji.character);
-    sessionStorage.setItem("learnedKanjiArray", JSON.stringify(learnedKanjiArray));
+    localStorage.setItem("learnedKanjiArray", JSON.stringify(learnedKanjiArray));
   
     const currentUser = auth.currentUser?.uid;
     if (currentUser) {
