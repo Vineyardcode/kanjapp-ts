@@ -7,10 +7,6 @@ import { setDoc, doc, collection, getDocs } from "firebase/firestore";
 import { signInWithPopup, onAuthStateChanged } from "firebase/auth";
 import { auth, provider, db } from "../config/firebase";
 
-//redux toolkit
-import { useDispatch } from "react-redux";
-import { loginUser } from "../store/features/authSlice";
-import { current } from "@reduxjs/toolkit";
 
 export const Login = () => {
 
@@ -27,7 +23,6 @@ export const Login = () => {
   }
 
   const navigate = useNavigate();
-  const dispatch = useDispatch();
 
   const signInWithGoogle = async () => {
     const result = await signInWithPopup(auth, provider).then(
@@ -49,15 +44,8 @@ export const Login = () => {
           const learnedKanjiArray = querySnapshot.docs.map((doc) => doc.data().kanji);
   
           // Save the "learned" kanji collection to sessionStorage
-          sessionStorage.setItem("learnedKanjiArray", JSON.stringify(learnedKanjiArray));
-
-          // Dispatch login action
-          dispatch(loginUser({
-            email: auth.currentUser?.email,
-            uid: result.user.uid,
-
-          }));
-             
+          localStorage.setItem("learnedKanjiArray", JSON.stringify(learnedKanjiArray));
+          
         } catch (e) {
           console.error("Error adding document: ", e);
         }
@@ -68,35 +56,9 @@ export const Login = () => {
   };
 
 
-  useEffect(() => {
-
-    
-
-      const saveDataBeforeUnload = () => {
-        const storedKanji = JSON.parse(sessionStorage.getItem("learnedKanjiArray") || "[]") as Kanji[];
-        storedKanji.forEach((kanji: Kanji) => {
-          handleSaveKanji(kanji);
-        });
-        
-      };
-
-      const handleSaveKanji = async (kanji: Kanji) => {
-        const currentUser = auth.currentUser?.uid;
-        if (currentUser) {
-          const learnedRef = collection(db, "users", currentUser, "learned");
-          const docRef = doc(learnedRef, kanji.character);
-          await setDoc(docRef, { kanji });
-        }
-        
-      };
-
-
-
-  }, [])
-
   return (
     <div>
-      <p> Sign In With Google To Continue </p>
+      <p> Sign In To Track Your Learning Progress</p>
       <button onClick={signInWithGoogle}> Sign In With Google </button>
     </div>
   );
