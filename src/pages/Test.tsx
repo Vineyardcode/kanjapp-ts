@@ -3,7 +3,8 @@ import { useEffect, useState } from 'react';
 import { setDoc, doc, collection, getDocs } from "firebase/firestore";
 import { auth, provider, db } from "../config/firebase";
 import "../styles/Test.css"
-
+import GuessKanjiMeaningsQuiz from '../components/TestComponents/GuessKanjiMeaningsQuiz';
+import MatchMeaningWithKanji from '../components/TestComponents/MatchMeaningWithKanji';
 
 import joyo from "../kanjiData/joyo.json"
 const Test = () => {
@@ -17,6 +18,9 @@ const Test = () => {
   
   const [currentQuestion, setCurrentQuestion] = useState<Kanji | null>(null);
   const [usedKanji, setUsedKanji] = useState<Kanji[]>([]);
+
+  const [correctAnswer, setCorrectAnswer] = useState<Kanji[]>([]);
+
 
   const [score, setScore] = useState(0);
 
@@ -37,6 +41,7 @@ const Test = () => {
     strokes?: number;
     
   }
+console.log(use);
 
   const handleGenerateKanji = () => {
 
@@ -63,7 +68,7 @@ const Test = () => {
 
     setUsedKanji([initialQuestion]);
     setScore(0)
-    
+    setCorrectAnswer(null)
   };
 
   const handleSaveKanji = async (kanji: Kanji) => { 
@@ -82,7 +87,7 @@ const Test = () => {
     if (kanji.character === currentQuestion.character) {
       setScore(score + 1);
       setIsAnswerCorrect(true);
-  
+      
       const prevScore = localStorage.getItem(kanji.character);
       if (prevScore) {
         localStorage.setItem(kanji.character, String(parseInt(prevScore) + 1));
@@ -100,9 +105,11 @@ const Test = () => {
       }
     } else {
       setIsAnswerCorrect(false);
+      setCorrectAnswer(currentQuestion)
     }
     handleNextQuestion();
   }
+
 
   const handleNextQuestion = () => {
     // Select a random kanji from the list of selected kanji that hasn't been used before
@@ -199,44 +206,28 @@ const Test = () => {
         <button onClick={handleGenerateKanji}>Generate Kanji</button>
       </div>
 
+      {currentQuestion && (
+      <GuessKanjiMeaningsQuiz
+        currentQuestion={currentQuestion}
+        questions={questions}
+        handleAnswer={handleAnswer}
+        isAnswerCorrect={isAnswerCorrect}
+        correctAnswer={correctAnswer}
+        score={score}
+      />
+        )}
 
-      <div className='quiz2'>
+      {/* {currentQuestion && (
+      <MatchMeaningWithKanji
+        currentQuestion={currentQuestion}
+        questions={questions}
+        handleAnswer={handleAnswer}
+        isAnswerCorrect={isAnswerCorrect}
+        correctAnswer={correctAnswer}
+        score={score}
+      />
+        )} */}
 
-        <div>
-          {currentQuestion &&  (
-            
-            <h1 htmlFor={currentQuestion.character}>
-              {isAnswerCorrect !== null && (
-                <div>
-                  {isAnswerCorrect ? 'Correct!' : `Wrong! The correct answer was ${currentQuestion.meanings}`}
-                </div>
-              )}
-              {currentQuestion.character }
-            </h1>
-              
-          )}
-          
-        </div>
-
-        <div className='questions'>
-          {questions.map((kanji) => (
-            <button 
-            key={kanji.character} 
-            onClick={() => handleAnswer(kanji)}>{kanji.meanings.join(", ")}</button>
-          ))}
-        </div>
-
-        <div className='score'>
-          {currentQuestion && (
-              <span>
-                Your score: {score}
-              </span>
-            )}
-        </div>
-
-      </div>
-    
-  
   </>
   );
   };

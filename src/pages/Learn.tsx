@@ -11,7 +11,6 @@ import "../styles/Learn.css"
 //redux
 import { useDispatch, useSelector } from 'react-redux';
 
-
 import joyo from "../kanjiData/joyo.json"
 
 export const Learn = () => {
