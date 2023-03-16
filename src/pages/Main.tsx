@@ -2,10 +2,6 @@
 import React from 'react'
 import { useState, useEffect } from 'react';
 
-//firestore
-import { db, auth } from '../config/firebase';
-import { doc, setDoc, collection, addDoc, getDocs } from "firebase/firestore";
-
 //components
 import ProgressBar from '../components/ProgressBar';
 import joyo from "../kanjiData/joyo.json"

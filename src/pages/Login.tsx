@@ -42,7 +42,8 @@ export const Login = () => {
           // Fetch the user's "learned" kanji collection
           const querySnapshot = await getDocs(collection(db, "users", currentUser, "learned"));
           const learnedKanjiArray = querySnapshot.docs.map((doc) => doc.data().kanji);
-  
+              console.log("kundy z googlu");
+              
           // Save the "learned" kanji collection to sessionStorage
           localStorage.setItem("learnedKanjiArray", JSON.stringify(learnedKanjiArray));
           
@@ -52,7 +53,7 @@ export const Login = () => {
       }
     );
     console.log(result);
-    navigate("/");
+    navigate("/Learn");
   };
 
 
