@@ -1,15 +1,13 @@
 //react
-import React, {useEffect, useLayoutEffect, useState, useMemo}from 'react';
+import React, {useEffect, useState}from 'react';
 //firebase
 import { database, db, auth } from '../config/firebase';
-import { onValue, orderByChild, ref, query, get, child, limitToFirst } from 'firebase/database';
-import { doc, setDoc, collection, addDoc, getDocs } from "firebase/firestore";
+
+import { doc, setDoc, collection } from "firebase/firestore";
 //components, pages, styles
 import Modal from '../components/Modal';
 import "../styles/Learn.css"
 
-//redux
-import { useDispatch, useSelector } from 'react-redux';
 
 import joyo from "../kanjiData/joyo.json"
 

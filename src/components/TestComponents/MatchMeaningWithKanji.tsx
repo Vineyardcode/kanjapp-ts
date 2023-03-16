@@ -27,6 +27,7 @@ const MatchMeaningWithKanji = ({
     isAnswerCorrect,
     score,
     correctAnswer,
+    angryQuote
   }: MatchMeaningWithKanjiProps) => {
 
 
@@ -39,11 +40,13 @@ const MatchMeaningWithKanji = ({
         <h2>Which kanji has the meaning of <strong>"{currentQuestion?.meanings.join(", ")}"</strong> ?</h2>
         {isAnswerCorrect !== null && (
           <div className="answer-feedback">
-            {isAnswerCorrect ? "Correct!" : (
-                <>
-                  What the fuck ?!
-                  <br />
-                  Kanji for "${correctAnswer.meanings}" is ${correctAnswer.character} !!!
+              {isAnswerCorrect === true ? "Correct!" : (
+                <>          
+                  <b>{angryQuote}</b>           
+                  <div>
+                  <br/>
+                  Kanji for "{correctAnswer.meanings}" is <br /> <h2>{correctAnswer.character}</h2> !!!
+                  </div>
                 </>
               )}
           </div>

@@ -28,7 +28,11 @@ const Test = () => {
 
   const [questions, setQuestions] = useState<Kanji[]>([]);
 
-  const [kanjiData, setKanjiData] = useState(joyo); 
+  const [kanjiData, setKanjiData] = useState(joyo);
+  
+  const [testType, setTestType] = useState()
+
+  const [learnedKanjiArray, setLearnedKanjiArray] = useState<Kanji[]>([]);
 
   interface Kanji {
     character?: string;
@@ -41,12 +45,28 @@ const Test = () => {
     strokes?: number;
     
   }
-console.log(use);
+
+  //fetch learned kanji from localStorage and save them to a state variable
+  useEffect(() => {
+    const storedKanji = localStorage.getItem("learnedKanjiArray");
+    if (storedKanji) {
+      const kanjiArray = JSON.parse(storedKanji);
+      setLearnedKanjiArray(kanjiArray);
+    }
+  }, []);
+
+  //question counter
+  let qNumber = ((selectedKanji.length) - (usedKanji.length)) + 1
+  let numberOfQuestions = selectedKanji.length 
 
   const handleGenerateKanji = () => {
-
-    //create list of kanji
-    let filteredKanji = kanjiData.filter(
+    // Filter out already learned kanji
+    const filteredKanjiData = kanjiData.filter(kanji => {
+      return !learnedKanjiArray.some(learnedKanji => learnedKanji.character === kanji.character);
+    });
+  
+    // Create list of kanji
+    let filteredKanji = filteredKanjiData.filter(
       (kanji) =>
         kanji.strokes >= minStrokes &&
         kanji.strokes <= maxStrokes &&
@@ -59,16 +79,16 @@ console.log(use);
     }
     const shuffledKanji = filteredKanji.sort(() => 0.5 - Math.random());
     const selected = shuffledKanji.slice(0, numKanji);
-    
+  
     setSelectedKanji(selected);
-    
+  
     const initialQuestion = selected[Math.floor(Math.random() * selected.length)];
-    
-    setCurrentQuestion(initialQuestion); 
-
+  
+    setCurrentQuestion(initialQuestion);
     setUsedKanji([initialQuestion]);
-    setScore(0)
-    setCorrectAnswer(null)
+    setScore(0);
+    setCorrectAnswer(null);
+    setIsAnswerCorrect(null);
   };
 
   const handleSaveKanji = async (kanji: Kanji) => { 
@@ -110,7 +130,6 @@ console.log(use);
     handleNextQuestion();
   }
 
-
   const handleNextQuestion = () => {
     // Select a random kanji from the list of selected kanji that hasn't been used before
     const unusedKanji = selectedKanji.filter(kanji => !usedKanji.includes(kanji));
@@ -140,8 +159,14 @@ console.log(use);
 
   };
 
+  //angry quotes from to motivate the user
+  const angryQuote = ["What in God's name?!", "What the crap?!", "What the ass?!", "What the tits?!", "What the bloody hell?!", "What the motherfucker?!", "What the shit?!", "What the cunt?!", "What the ass-hat?!", "What the ass-clown?!", "What the absolute fuck?!", "What the royal fuck?!", "What the monstrous fuck?!", "What the nuclear fuck?!", "What the unmitigated fuck?!", "What the world-ending fuck?!", "What the fucking fuck?!", "What the fucknuts?!", "What the fuckery is this?!", "What the fuckballs?!", "What the fuckbuckets?!", "What the fuckarama?!", "What the fucknutsack!?", "What the fuck me sideways?!", "What the fuck ?!", "What the fuck me gently with a chainsaw?!", "What the fuck is this bullshit!?"]
+
+  const randomAngryQuote = angryQuote[Math.floor(Math.random() * angryQuote.length)];
+
   return (
     <>
+
       <div className="params">
         <div>
           <label htmlFor="numKanji">Number of Kanji:</label>
@@ -189,9 +214,9 @@ console.log(use);
         <div>
           <label htmlFor="minGrade">Minimum grade:</label>
           <select
-          name="minGrade"
-          value={minGrade}
-          onChange={(e) => setMinGrade(Number(e.target.value))}
+            name="minGrade"
+            value={minGrade}
+            onChange={(e) => setMinGrade(Number(e.target.value))}
           >
           <option value={1}>1</option>
           <option value={2}>2</option>
@@ -203,10 +228,36 @@ console.log(use);
           <option value={9}>9</option>
           </select>
         </div>
-        <button onClick={handleGenerateKanji}>Generate Kanji</button>
+        <div>
+          <label htmlFor="testType">Type of test: </label>
+          <select
+            name="testType"
+            value={testType}
+            onChange={(e) => setTestType(Number(e.target.value))}
+          >
+          <option value={0}>-</option>
+          <option value={1}>Match Meaning With Kanji</option>
+          <option value={2}>Guess Kanji Meanings</option>     
+          </select>
+        </div>
+        
+        <button onClick={handleGenerateKanji}>Generate Test</button>
+        
       </div>
 
-      {currentQuestion && (
+      {testType === 1 && currentQuestion !== null && (
+        <MatchMeaningWithKanji
+          currentQuestion={currentQuestion}
+          questions={questions}
+          handleAnswer={handleAnswer}
+          isAnswerCorrect={isAnswerCorrect}
+          correctAnswer={correctAnswer}   
+          score={score}
+          angryQuote={randomAngryQuote}
+          />
+        )}
+
+      {testType === 2 && currentQuestion !== null && (
       <GuessKanjiMeaningsQuiz
         currentQuestion={currentQuestion}
         questions={questions}
@@ -214,19 +265,19 @@ console.log(use);
         isAnswerCorrect={isAnswerCorrect}
         correctAnswer={correctAnswer}
         score={score}
-      />
+        angryQuote={randomAngryQuote}
+        />
         )}
 
-      {/* {currentQuestion && (
-      <MatchMeaningWithKanji
-        currentQuestion={currentQuestion}
-        questions={questions}
-        handleAnswer={handleAnswer}
-        isAnswerCorrect={isAnswerCorrect}
-        correctAnswer={correctAnswer}
-        score={score}
-      />
-        )} */}
+      {currentQuestion && testType !== null &&(
+
+        <div className="counter">
+          {"Question" + " " + qNumber + "/" + numberOfQuestions}
+        </div>
+
+      )}
+
+
 
   </>
   );

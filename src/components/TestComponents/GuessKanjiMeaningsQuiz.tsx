@@ -27,7 +27,10 @@ const GuessKanjiMeaningsQuiz = ({
     isAnswerCorrect,
     score,
     correctAnswer,
+    angryQuote
   }: GuessKanjiMeaningsQuizProps) => {
+
+
 
   return (
     <div className="quiz2">
@@ -35,11 +38,13 @@ const GuessKanjiMeaningsQuiz = ({
         <h2>What is the meaning of {currentQuestion?.character}?</h2>
         {isAnswerCorrect !== null && (
           <div className="answer-feedback">
-            {isAnswerCorrect ? "Correct!" : (
-                <>
-                  What the fuck ?!
-                  <br />
-                  {correctAnswer.character} has the meaning of "{correctAnswer.meanings?.join(", ")}" !!!
+            {isAnswerCorrect === true ? "Correct!" : (
+                <>          
+                  <b>{angryQuote}</b>           
+                  <div>
+                  <br/>
+                  {correctAnswer?.character} has the meaning of "{correctAnswer?.meanings?.join(", ")}" !!!
+                  </div>
                 </>
               )}
           </div>
@@ -52,9 +57,11 @@ const GuessKanjiMeaningsQuiz = ({
             onClick={() => handleAnswer(kanji)}>{kanji.meanings.join(", ")}</button>
           ))}
         </div>
+
       <div className="score">
         <p>Score: {score}</p>
       </div>
+      
     </div>
   );
 };
