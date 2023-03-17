@@ -7,6 +7,10 @@ import { useState, useEffect } from "react";
   isAnswerCorrect: boolean;
   score: number;
   correctAnswer: Kanji;
+  isFinished: boolean;
+  angryQuote: string;
+  numberOfQuestions: number;
+  handleGenerateKanji: Event;
   }
 
   interface Kanji {
@@ -27,7 +31,10 @@ const MatchMeaningWithKanji = ({
     isAnswerCorrect,
     score,
     correctAnswer,
-    angryQuote
+    angryQuote,
+    isFinished,
+    numberOfQuestions,
+    handleGenerateKanji,
   }: MatchMeaningWithKanjiProps) => {
 
 
@@ -35,6 +42,16 @@ const MatchMeaningWithKanji = ({
 
 
   return (
+
+    <div>
+    {isFinished ? (
+      <div>
+        <h2>You answered correctly {score} out of {numberOfQuestions} questions</h2>
+        {/* <h1>{}</h1> */}
+        {/* <button onClick={handleGenerateKanji}>Restart test</button> */}
+      </div>
+    ) : (
+
     <div className="quiz2">
       <div className="question">
         <h2>Which kanji has the meaning of <strong>"{currentQuestion?.meanings.join(", ")}"</strong> ?</h2>
@@ -58,10 +75,9 @@ const MatchMeaningWithKanji = ({
             key={kanji.character} 
             onClick={() => handleAnswer(kanji)}><h1>{kanji.character}</h1></button>
           ))}
-        </div>
-      <div className="score">
-        <p>Score: {score}</p>
       </div>
+    </div>
+      )}
     </div>
   );
 };

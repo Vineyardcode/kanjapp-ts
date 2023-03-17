@@ -7,11 +7,14 @@ import GuessKanjiMeaningsQuiz from '../components/TestComponents/GuessKanjiMeani
 import MatchMeaningWithKanji from '../components/TestComponents/MatchMeaningWithKanji';
 
 import joyo from "../kanjiData/joyo.json"
+
+
+
 const Test = () => {
 
   const [numKanji, setNumKanji] = useState(9999);
   const [minStrokes, setMinStrokes] = useState(1);
-  const [maxStrokes, setMaxStrokes] = useState(3);
+  const [maxStrokes, setMaxStrokes] = useState(2);
   const [jlptLevel, setJlptLevel] = useState<string | number>('All');
   const [minGrade, setMinGrade] = useState(1);
   const [selectedKanji, setSelectedKanji] = useState<Kanji[]>([]);
@@ -20,7 +23,6 @@ const Test = () => {
   const [usedKanji, setUsedKanji] = useState<Kanji[]>([]);
 
   const [correctAnswer, setCorrectAnswer] = useState<Kanji[]>([]);
-
 
   const [score, setScore] = useState(0);
 
@@ -33,6 +35,8 @@ const Test = () => {
   const [testType, setTestType] = useState()
 
   const [learnedKanjiArray, setLearnedKanjiArray] = useState<Kanji[]>([]);
+
+  const [isFinished, setIsFinished] = useState(false);
 
   interface Kanji {
     character?: string;
@@ -58,7 +62,7 @@ const Test = () => {
   //question counter
   let qNumber = ((selectedKanji.length) - (usedKanji.length)) + 1
   let numberOfQuestions = selectedKanji.length 
-
+  
   const handleGenerateKanji = () => {
     // Filter out already learned kanji
     const filteredKanjiData = kanjiData.filter(kanji => {
@@ -89,6 +93,7 @@ const Test = () => {
     setScore(0);
     setCorrectAnswer(null);
     setIsAnswerCorrect(null);
+    setIsFinished(false)
   };
 
   const handleSaveKanji = async (kanji: Kanji) => { 
@@ -131,6 +136,11 @@ const Test = () => {
   }
 
   const handleNextQuestion = () => {
+    
+    if (usedKanji.length === selectedKanji.length) {
+      setIsFinished(true);
+    } else {
+
     // Select a random kanji from the list of selected kanji that hasn't been used before
     const unusedKanji = selectedKanji.filter(kanji => !usedKanji.includes(kanji));
     const nextKanji = unusedKanji[Math.floor(Math.random() * unusedKanji.length)];
@@ -138,7 +148,8 @@ const Test = () => {
     // Add the new kanji to the list of used kanji and set it as the new current question
     setUsedKanji([...usedKanji, nextKanji]);
     setCurrentQuestion(nextKanji);
-    
+    setIsFinished(false);
+    }
   };
 
   useEffect(() => {
@@ -159,8 +170,8 @@ const Test = () => {
 
   };
 
-  //angry quotes from to motivate the user
-  const angryQuote = ["What in God's name?!", "What the crap?!", "What the ass?!", "What the tits?!", "What the bloody hell?!", "What the motherfucker?!", "What the shit?!", "What the cunt?!", "What the ass-hat?!", "What the ass-clown?!", "What the absolute fuck?!", "What the royal fuck?!", "What the monstrous fuck?!", "What the nuclear fuck?!", "What the unmitigated fuck?!", "What the world-ending fuck?!", "What the fucking fuck?!", "What the fucknuts?!", "What the fuckery is this?!", "What the fuckballs?!", "What the fuckbuckets?!", "What the fuckarama?!", "What the fucknutsack!?", "What the fuck me sideways?!", "What the fuck ?!", "What the fuck me gently with a chainsaw?!", "What the fuck is this bullshit!?"]
+  //angry quotes to motivate the user
+  const angryQuote = ["What in Dog's name?!", "What?!", "NO !", "WRONG !", "Excuse me?!"]
 
   const randomAngryQuote = angryQuote[Math.floor(Math.random() * angryQuote.length)];
 
@@ -254,8 +265,11 @@ const Test = () => {
           correctAnswer={correctAnswer}   
           score={score}
           angryQuote={randomAngryQuote}
+          isFinished={isFinished}
+          numberOfQuestions={numberOfQuestions}
+          handleGenerateKanji={handleGenerateKanji}
           />
-        )}
+          )}
 
       {testType === 2 && currentQuestion !== null && (
       <GuessKanjiMeaningsQuiz
@@ -266,20 +280,19 @@ const Test = () => {
         correctAnswer={correctAnswer}
         score={score}
         angryQuote={randomAngryQuote}
+        isFinished={isFinished}
+        numberOfQuestions={numberOfQuestions}
+        handleGenerateKanji={handleGenerateKanji}
         />
-        )}
+          )}
 
-      {currentQuestion && testType !== null &&(
-
+      {isFinished === false && currentQuestion !== null && (
         <div className="counter">
           {"Question" + " " + qNumber + "/" + numberOfQuestions}
         </div>
+          )}
 
-      )}
-
-
-
-  </>
+    </>
   );
   };
   

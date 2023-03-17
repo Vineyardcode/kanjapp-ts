@@ -18,7 +18,7 @@ export const Learn = () => {
   
   const [learnedKanjiArray, setLearnedKanjiArray] = useState<Kanji[]>([]);
 
-  const [selectedLevels, setSelectedLevels] = useState([5, 4, 3, 2, 1]);
+  const [selectedLevels, setSelectedLevels] = useState([5,4,3,2,1]);
 
   const [sortByFreq, setSortByFreq] = useState(false);
   const [sortByGrade, setSortByGrade] = useState(false);
@@ -40,6 +40,8 @@ export const Learn = () => {
     show: boolean;
     kanji: Kanji;
   }
+  console.log(kanji);
+  
 
   //fetch learned kanji from localStorage and save them to a state variable
   useEffect(() => {
@@ -72,9 +74,6 @@ export const Learn = () => {
     setLearnedKanjiArray(learnedKanjiArray)
     handleSaveKanji(kanji)
   };
-
-
-  
 
   //call the sorting function every time a sorting option is changed
   useEffect(() => {
@@ -129,37 +128,7 @@ export const Learn = () => {
     setSortByStrokes(!sortByStrokes);
   };
 
-  //create anki flash cards out of selected kanji
-  const createAnkiCard = (kanjiData: Kanji) => {
-    const api = new XMLHttpRequest();
-    api.open("POST", "http://localhost:8765");
-  
-    const note = {
-      deckName: "Default",
-      modelName: "Basic",
-      fields: {
-        Front: kanjiData.character,
-        Back: kanjiData.meanings+' ',
 
-      },
-      tags: []
-    };
-  
-    api.send(JSON.stringify({
-      action: "addNote",
-      version: 6,
-      params: {
-        note: note
-      }
-    }));
-  
-    api.onreadystatechange = function() {
-      if (this.readyState === XMLHttpRequest.DONE && this.status === 200) {
-        console.log(`Kanji ${kanjiData.character} was added to Anki successfully!`);
-        
-      }
-    };
-  };
 
   //modal options
   const showModal = (kanji: Kanji) => setModal({ show: true, kanji });
@@ -200,9 +169,43 @@ export const Learn = () => {
 
     if (index === -1) {
       setSelectedLevels([...selectedLevels, level]);
+      
     } else {
       setSelectedLevels(selectedLevels.filter((l) => l !== level));
     }
+    
+  };
+
+  //create anki flash cards out of selected kanji
+  const createAnkiCard = (kanjiData: Kanji) => {
+    const api = new XMLHttpRequest();
+    api.open("POST", "http://localhost:8765");
+  
+    const note = {
+      deckName: "Default",
+      modelName: "Basic",
+      fields: {
+        Front: kanjiData.character,
+        Back: kanjiData.meanings+' ',
+
+      },
+      tags: []
+    };
+  
+    api.send(JSON.stringify({
+      action: "addNote",
+      version: 6,
+      params: {
+        note: note
+      }
+    }));
+  
+    api.onreadystatechange = function() {
+      if (this.readyState === XMLHttpRequest.DONE && this.status === 200) {
+        console.log(`Kanji ${kanjiData.character} was added to Anki successfully!`);
+        
+      }
+    };
   };
 
   return (
