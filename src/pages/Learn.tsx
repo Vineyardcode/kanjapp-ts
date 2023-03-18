@@ -40,7 +40,7 @@ export const Learn = () => {
     show: boolean;
     kanji: Kanji;
   }
-  console.log(kanji);
+  console.log(kanji.map((kanji) => (kanji.character)));
   
 
   //fetch learned kanji from localStorage and save them to a state variable
@@ -76,9 +76,9 @@ export const Learn = () => {
   };
 
   //call the sorting function every time a sorting option is changed
-  useEffect(() => {
-    sortKanji();
-  }, [sortByFreq, sortByGrade, sortByStrokes]);
+  // useEffect(() => {
+  //   sortKanji();
+  // }, [sortByFreq, sortByGrade, sortByStrokes]);
 
   //functions for sorting the kanji
   const sortKanji = () => {
@@ -244,28 +244,28 @@ export const Learn = () => {
         ))}
       </div>
 
-      <div>
-        {sortedKanji.map((group) => (
-          <div key={group.level}>
-            <h2>JLPT Level {group.level}</h2>
-                {modal.show && (
-                  <Modal
-                    show={modal.show}
-                    kanji={modal.kanji}
-                    hideModal={hideModal}
-                    handleSaveKanji={saveKanji}
-                    createAnkiCard={createAnkiCard}
-                  />
-                )}
-              <div id="container">
-                {group.kanji.map((item, index) => (
-                  <button key={item.character} onClick={() => showModal(item)} className="kanji-button" style={{ backgroundColor: colorScale(item.freq) }}>
-                    {item.character}
-                  </button>
-                ))}
-              </div>
-          </div>          
-          ))}
+        <div>
+          {sortedKanji.map((group) => (
+            <div key={group.level}>
+              <h2>JLPT Level {group.level}</h2>
+                  {modal.show && (
+                    <Modal
+                      show={modal.show}
+                      kanji={modal.kanji}
+                      hideModal={hideModal}
+                      handleSaveKanji={saveKanji}
+                      createAnkiCard={createAnkiCard}
+                    />
+                  )}
+                <div id="container">
+                  {group.kanji.map((item, index) => (
+                    <button key={item.character} onClick={() => showModal(item)} className="kanji-button" style={{ backgroundColor: colorScale(item.freq) }}>
+                      {item.character}
+                    </button>
+                  ))}
+                </div>
+            </div>          
+            ))}
         </div>
 
       </div>
