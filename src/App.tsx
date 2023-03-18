@@ -1,20 +1,15 @@
 import React from 'react';
 import {BrowserRouter, Route, Routes} from 'react-router-dom'
-import  { Main }  from './pages/Main';
+import  { Home }  from './pages/Home';
 import { Login } from "./pages/Login";
 import { Navbar } from "./components/navbar";
 import './styles/App.css'
 import { Learn } from './pages/Learn';
-import Learned from './pages/Learned';
 import Test from './pages/Test';
 
 
 
 function App() {
-
-
-
-
 
   return (
     
@@ -24,10 +19,9 @@ function App() {
         <Navbar />
 
         <Routes>
-          <Route path="/" element={<Main />} />
+          <Route path="/" element={<Home />} />
           <Route path="/Login" element={<Login />} />
           <Route path="/Learn" element={<Learn />} />
-          <Route path="/Learned" element={<Learned />} />
           <Route path="/Test" element={<Test />} />
         </Routes>
       

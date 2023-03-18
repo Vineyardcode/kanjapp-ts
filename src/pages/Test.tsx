@@ -170,7 +170,7 @@ const Test = () => {
 
   };
 
-  //angry quotes to motivate the user
+  //wrong answer reactions
   const angryQuote = ["What in Dog's name?!", "What?!", "NO !", "WRONG !", "Excuse me?!"]
 
   const randomAngryQuote = angryQuote[Math.floor(Math.random() * angryQuote.length)];
@@ -272,18 +272,18 @@ const Test = () => {
           )}
 
       {testType === 2 && currentQuestion !== null && (
-      <GuessKanjiMeaningsQuiz
-        currentQuestion={currentQuestion}
-        questions={questions}
-        handleAnswer={handleAnswer}
-        isAnswerCorrect={isAnswerCorrect}
-        correctAnswer={correctAnswer}
-        score={score}
-        angryQuote={randomAngryQuote}
-        isFinished={isFinished}
-        numberOfQuestions={numberOfQuestions}
-        handleGenerateKanji={handleGenerateKanji}
-        />
+        <GuessKanjiMeaningsQuiz
+          currentQuestion={currentQuestion}
+          questions={questions}
+          handleAnswer={handleAnswer}
+          isAnswerCorrect={isAnswerCorrect}
+          correctAnswer={correctAnswer}
+          score={score}
+          angryQuote={randomAngryQuote}
+          isFinished={isFinished}
+          numberOfQuestions={numberOfQuestions}
+          handleGenerateKanji={handleGenerateKanji}
+          />
           )}
 
       {isFinished === false && currentQuestion !== null && (

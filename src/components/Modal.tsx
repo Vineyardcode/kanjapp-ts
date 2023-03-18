@@ -40,6 +40,7 @@ const Modal: React.FC<ModalProps> = ({ show, kanji, hideModal, handleSaveKanji, 
           <p>Strokes: {kanji.strokes}</p>
           <button onClick={() => handleSaveKanji(kanji)}>Move to learned</button>
           <button onClick={() => createAnkiCard(kanji)}>Create anki card</button>
+          
           <button onClick={hideModal}>Close</button>
         </div>
       </div>
