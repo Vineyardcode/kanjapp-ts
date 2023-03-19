@@ -40,7 +40,7 @@ export const Learn = () => {
     show: boolean;
     kanji: Kanji;
   }
-  console.log(kanji.map((kanji) => (kanji.character)));
+  // console.log(kanji.map((kanji) => (kanji.character)));
   
 
   //fetch learned kanji from localStorage and save them to a state variable
