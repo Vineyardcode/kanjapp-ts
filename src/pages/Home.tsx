@@ -7,11 +7,10 @@ import { doc, setDoc, collection, deleteDoc, getDocs, } from "firebase/firestore
 //components & data
 import ProgressBar from '../components/ProgressBar';
 import joyo from "../kanjiData/joyo.json"
+import StrokeOrder from '../components/StrokeOrder';
 
-import xml2js from 'xml-js';
 
 
-// import data from '../kanjiData/joyo_kanji_vg.xml'
 
 //style
 import "../styles/Home.css"
@@ -33,10 +32,20 @@ export const Home = () => {
     show: boolean;
     kanji: Kanji;
   }
-  const [kanjiDatai, setKanjiDatai] = useState(null);
+
+
+  const [selectedKanji, setSelectedKanji] = useState('');
+
+
+  
   const [kanjiData, setKanjiData] = useState(joyo);
   const [learnedKanjiArray, setLearnedKanjiArray] = useState<Kanji[]>([]);
   const [modal, setModal] = useState<Modal>({ show: false, kanji: {} });
+
+
+  const handleKanjiClick = (kanji) => {
+    setSelectedKanji(kanji);
+  };
 
   //fetch kanji from localStorage
   const readFromLocalStorage = () => {
@@ -103,29 +112,15 @@ export const Home = () => {
   const showModal = (kanji: Kanji) => setModal({ show: true, kanji });
   const hideModal = () => setModal({ ...modal, show: false });
 
-
-
-  useEffect(() => {
-    async function fetchData() {
-      const response = await fetch('src/kanjiData/joyo_kanji_vg.xml');
-      const xmlString = await response.text();
-  
-      const xmlDoc = new DOMParser().parseFromString(xmlString, "text/xml");
-      const test = xmlDoc.getElementById('kvg:kanji_09f62')
-  
-      
-      console.log(test);
-    }
-  
-    fetchData();
-  }, []);
-
-
-
 return(
   <>
     <div className="stats">
       <h1>Kanji you learned so far:</h1>
+
+      <div className="kanji-display">
+        {selectedKanji && <StrokeOrder kanji={selectedKanji} />}
+      </div>
+
       {modal.show && (
           <div>
             <div>Character: {modal.kanji.character}</div>
@@ -136,6 +131,7 @@ return(
             <div>Strokes: {modal.kanji.strokes}</div>
             <button onClick={() => handleForgetKanji(modal.kanji)}>Forget this kanji</button>
             <button onClick={hideModal}>Close</button>
+            <button onClick={() => handleKanjiClick(modal.kanji.character)}> test aaa</button>
             
             
           </div>
@@ -165,7 +161,6 @@ return(
     </div>  
 
 
-    
   </>
 );
 };
