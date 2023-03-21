@@ -7,11 +7,6 @@ import { doc, setDoc, collection, deleteDoc, getDocs, } from "firebase/firestore
 //components & data
 import ProgressBar from '../components/ProgressBar';
 import joyo from "../kanjiData/joyo.json"
-import StrokeOrder from '../components/StrokeOrder';
-
-
-
-
 //style
 import "../styles/Home.css"
 
@@ -33,19 +28,9 @@ export const Home = () => {
     kanji: Kanji;
   }
 
-
-  const [selectedKanji, setSelectedKanji] = useState('');
-
-
-  
   const [kanjiData, setKanjiData] = useState(joyo);
   const [learnedKanjiArray, setLearnedKanjiArray] = useState<Kanji[]>([]);
   const [modal, setModal] = useState<Modal>({ show: false, kanji: {} });
-
-
-  const handleKanjiClick = (kanji) => {
-    setSelectedKanji(kanji);
-  };
 
   //fetch kanji from localStorage
   const readFromLocalStorage = () => {
@@ -117,10 +102,6 @@ return(
     <div className="stats">
       <h1>Kanji you learned so far:</h1>
 
-      <div className="kanji-display">
-        {selectedKanji && <StrokeOrder kanji={selectedKanji} />}
-      </div>
-
       {modal.show && (
           <div>
             <div>Character: {modal.kanji.character}</div>
@@ -131,9 +112,7 @@ return(
             <div>Strokes: {modal.kanji.strokes}</div>
             <button onClick={() => handleForgetKanji(modal.kanji)}>Forget this kanji</button>
             <button onClick={hideModal}>Close</button>
-            <button onClick={() => handleKanjiClick(modal.kanji.character)}> test aaa</button>
-            
-            
+            {/* <button onClick={() => handleKanjiClick(modal.kanji.character)}> test aaa</button> */}          
           </div>
         )}
       {Object.keys(percentByJlpt).map((jlpt) => {

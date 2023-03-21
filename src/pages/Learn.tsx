@@ -2,27 +2,36 @@
 import React, {useEffect, useState}from 'react';
 //firebase
 import { database, db, auth } from '../config/firebase';
-
 import { doc, setDoc, collection } from "firebase/firestore";
 //components, pages, styles
 import Modal from '../components/Modal';
 import "../styles/Learn.css"
-
-
 import joyo from "../kanjiData/joyo.json"
-
 export const Learn = () => {
-
+  
   const [kanji, setKanji] = useState(joyo); 
   const [modal, setModal] = useState<Modal>({ show: false, kanji: {} })
-  
   const [learnedKanjiArray, setLearnedKanjiArray] = useState<Kanji[]>([]);
-
-  const [selectedLevels, setSelectedLevels] = useState([5,4,3,2,1]);
-
+  const [selectedLevels, setSelectedLevels] = useState([]);
   const [sortByFreq, setSortByFreq] = useState(false);
   const [sortByGrade, setSortByGrade] = useState(false);
   const [sortByStrokes, setSortByStrokes] = useState(false);
+
+  // fetch kanjis
+  const fetchData = async () => {
+    try {
+      const response = await fetch('src/kanjiData/joyo.json');
+      const json = await response.json();
+      setKanji(json);
+    } catch (error) {
+      console.error(error);
+      
+    }
+  }
+
+  useEffect(() => {
+    fetchData()
+  }, [selectedLevels])
 
   interface Kanji {
     character?: string;
@@ -40,9 +49,7 @@ export const Learn = () => {
     show: boolean;
     kanji: Kanji;
   }
-  // console.log(kanji.map((kanji) => (kanji.character)));
   
-
   //fetch learned kanji from localStorage and save them to a state variable
   useEffect(() => {
     const storedKanji = localStorage.getItem("learnedKanjiArray");
@@ -52,6 +59,7 @@ export const Learn = () => {
     }
   }, []);
 
+  //
   const handleSaveKanji = async (kanji: Kanji) => { 
 
     const currentUser = auth.currentUser?.uid;
@@ -75,10 +83,10 @@ export const Learn = () => {
     handleSaveKanji(kanji)
   };
 
-  //call the sorting function every time a sorting option is changed
-  // useEffect(() => {
-  //   sortKanji();
-  // }, [sortByFreq, sortByGrade, sortByStrokes]);
+  // call the sorting function every time a sorting option is changed
+  useEffect(() => {
+    sortKanji();
+  }, [sortByFreq, sortByGrade, sortByStrokes]);
 
   //functions for sorting the kanji
   const sortKanji = () => {
@@ -104,10 +112,13 @@ export const Learn = () => {
         return a.strokes - b.strokes;
       }
   
-      // sort items with undefined jlpt_new property to the end of the list
+      // sort items with some undefined property to the end of the list
       const aJlpt = a.jlpt_new || Infinity;
       const bJlpt = b.jlpt_new || Infinity;
       return aJlpt - bJlpt;
+      const aStrokes = a.strokes || Infinity;
+      const bStrokes = b.strokes || Infinity;
+      return aStrokes - bStrokes;
     });
   
     setKanji(sortedKanji);
@@ -127,8 +138,6 @@ export const Learn = () => {
   const handleSortByStrokesChange = () => {
     setSortByStrokes(!sortByStrokes);
   };
-
-
 
   //modal options
   const showModal = (kanji: Kanji) => setModal({ show: true, kanji });
@@ -255,12 +264,15 @@ export const Learn = () => {
                       hideModal={hideModal}
                       handleSaveKanji={saveKanji}
                       createAnkiCard={createAnkiCard}
+                      fetchData={modal.kanji.character}
                     />
+                    
                   )}
                 <div id="container">
                   {group.kanji.map((item, index) => (
                     <button key={item.character} onClick={() => showModal(item)} className="kanji-button" style={{ backgroundColor: colorScale(item.freq) }}>
                       {item.character}
+                      
                     </button>
                   ))}
                 </div>
@@ -268,6 +280,10 @@ export const Learn = () => {
             ))}
         </div>
 
+        {/* <StrokeOrder kanji={} /> */}
+
+    
+{/* <button onClick={() => fetchData()}>test</button> */}
       </div>
       
     </>

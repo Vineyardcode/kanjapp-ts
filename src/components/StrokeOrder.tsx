@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 
-
+import šudliky from "../kanjiData/kvg-index.json"
 interface Kanji {
   character?: string;
   meanings?: string[];
@@ -15,33 +15,27 @@ interface Kanji {
 
 const StrokeOrder = ({kanji}: Kanji) => {
 
-  const [kanjiDatai, setKanjiDatai] = useState<SVGSVGElement | null>(null);
-  const [response, setResponse] = useState(null);
-
+  const [strokes, setStrokes] = useState<SVGSVGElement | null>(null);
+  
   useEffect(() => {
     const fetchData = async (kanji: Kanji) => {
-        // Load the kanji VG indexes
-        const response1 = await fetch('../kanjiData/kanjiVG_indexes.json');
-        const kanjiIndexes = await response1.json();
-        setResponse(kanjiIndexes)
-        // Look up the kanji VG index for the given kanji
-        const kanjiIndex = response[kanji].find(index => index.length === 9).slice(0, -4);
 
-        // Load the joyo_kanji_vg.xml file
+        // look up the kanjiVG index for the given kanji
+        const kanjiIndex = šudliky[kanji].find(index => index.length === 9).slice(0, -4);
         const response2 = await fetch('src/kanjiData/joyo_kanji_vg.xml');
         const xmlString = await response2.text();
         const xmlDoc = new DOMParser().parseFromString(xmlString, "text/xml");
       
-        // Look up the kanji element in the XML file using the kanji VG index
+        // look up the kanji svg in the XML file using the kanji VG index
         const kanjiElement = xmlDoc.querySelector(`[id="kvg:${kanjiIndex}"]`);
       
         
-        setKanjiDatai(kanjiElement)
+        setStrokes(kanjiElement)
       }
 
     fetchData(kanji);
   }, [kanji]);
-console.log(response);
+
   return (
     <div className="kanji">
       <svg
@@ -54,7 +48,7 @@ console.log(response);
         version="1.1"
         baseProfile="full"
       >
-        {kanjiDatai && <g dangerouslySetInnerHTML={{ __html: kanjiDatai.outerHTML }} />}
+        {strokes && <g dangerouslySetInnerHTML={{ __html: strokes.outerHTML }} />}
       </svg>
     </div>
   );
