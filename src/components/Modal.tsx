@@ -28,6 +28,10 @@ const Modal: React.FC<ModalProps> = ({ show, kanji, hideModal, handleSaveKanji, 
   const [strokes, setStrokes] = useState<SVGSVGElement | null>(null);
   const [kvgIndex, setKvgIndex] = useState();
 
+  
+
+
+
   const fetchData = async (kanji: Kanji) => {
 
     // look up the kanjiVG index for the given kanji
@@ -44,40 +48,44 @@ const Modal: React.FC<ModalProps> = ({ show, kanji, hideModal, handleSaveKanji, 
     setKvgIndex(kanjiIndex)
   }
 
-  const kvgPaths = (kanjiIndex) => {
+    useEffect(() => {
+    if(show){
+      fetchData(kanji.character);
+      kvgPaths(kvgIndex)
+    }
+  }, [kvgIndex]);
+
+  const kvgPaths = (vgIndex) => {
    
-    const strokes = document.querySelectorAll(`#kvg\\:${kanjiIndex} path`);
+    const strokePaths = document.querySelectorAll(`#kvg\\:${vgIndex} path`);
     
     let hue = 200
+    // console.log(strokePaths);
 
-    for (let i = 0; i < strokes.length; i++) {
-      // create consecutive stroke strokes
-      strokes[i].style.stroke = 'hsl(' + hue + ', 100%, 50%)';
-      hue+=35
+    
+    strokePaths.forEach((path, i) => {
+      // create consecutive stroke paths
+      path.style.stroke = `hsl(${hue}, 100%, 50%)`;
+      hue += 35;
 
-      const start = strokes[i].getPointAtLength(0);
+      const start = path.getPointAtLength(0);
       const number = document.createElementNS("http://www.w3.org/2000/svg", "text");
       number.setAttribute("x", start.x);
       number.setAttribute("y", start.y);
       number.textContent = i + 1;
-      number.setAttribute("font-size", "8px");
+      number.setAttribute("font-size", "5px");
       const strokesSVG = document.querySelector('svg');
       strokesSVG.appendChild(number);
 
       const dot = document.createElementNS("http://www.w3.org/2000/svg", "circle");
       dot.setAttribute("cx", start.x);
       dot.setAttribute("cy", start.y);
-      dot.setAttribute("r", "2");
+      dot.setAttribute("r", "1.5");
       dot.setAttribute("fill", "rgba(0,0,0,0.5)");
       strokesSVG.appendChild(dot);
-      
-    }
+    });
   }
 
-  useEffect(() => {
-    fetchData(kanji.character)
-    kvgPaths(kvgIndex);
-  }, [strokes]) 
 
 
   return show ? (

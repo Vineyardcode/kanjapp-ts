@@ -7,8 +7,22 @@ import { doc, setDoc, collection } from "firebase/firestore";
 import Modal from '../components/Modal';
 import "../styles/Learn.css"
 import joyo from "../kanjiData/joyo.json"
-export const Learn = () => {
+
+interface Kanji {
+  character?: string;
+  meanings?: string[];
+  freq?: number;
+  grade?: number;
+  jlpt_new?: number;
+  jlpt_old?: number;
+  category?: string;
+  strokes?: number;
   
+}
+
+export const Learn = () => {
+
+  //info management
   const [kanji, setKanji] = useState(joyo); 
   const [modal, setModal] = useState<Modal>({ show: false, kanji: {} })
   const [learnedKanjiArray, setLearnedKanjiArray] = useState<Kanji[]>([]);
@@ -16,6 +30,13 @@ export const Learn = () => {
   const [sortByFreq, setSortByFreq] = useState(false);
   const [sortByGrade, setSortByGrade] = useState(false);
   const [sortByStrokes, setSortByStrokes] = useState(false);
+  //selector
+  const [selectedKanji, setSelectedKanji] = useState<Kanji[]>([]);
+  const [numKanji, setNumKanji] = useState(9999);
+  const [minStrokes, setMinStrokes] = useState(1);
+  const [maxStrokes, setMaxStrokes] = useState(2);
+  const [jlptLevel, setJlptLevel] = useState<string | number>('All');
+  const [minGrade, setMinGrade] = useState(1);
 
   // fetch kanjis
   const fetchData = async () => {
@@ -33,22 +54,7 @@ export const Learn = () => {
     fetchData()
   }, [selectedLevels])
 
-  interface Kanji {
-    character?: string;
-    meanings?: string[];
-    freq?: number;
-    grade?: number;
-    jlpt_new?: number;
-    jlpt_old?: number;
-    category?: string;
-    strokes?: number;
-    
-  }
-  
-  interface Modal {
-    show: boolean;
-    kanji: Kanji;
-  }
+
   
   //fetch learned kanji from localStorage and save them to a state variable
   useEffect(() => {
@@ -195,7 +201,7 @@ export const Learn = () => {
       modelName: "Basic",
       fields: {
         Front: kanjiData.character,
-        Back: kanjiData.meanings+' ',
+        Back: kanjiData.meanings.join(", "),
 
       },
       tags: []
@@ -217,57 +223,150 @@ export const Learn = () => {
     };
   };
 
+
+
+
+
+
+
+
+
+
+  const handleGenerateKanji = () => {
+    // Filter out already learned kanji
+    const filteredKanjiData = kanji.filter(kanji => {
+      return !learnedKanjiArray.some(learnedKanji => learnedKanji.character === kanji.character);
+    });
+  
+    // Create list of kanji
+    let filteredKanji = filteredKanjiData.filter(
+      (kanji) =>
+        kanji.strokes >= minStrokes &&
+        kanji.strokes <= maxStrokes &&
+        kanji.grade >= minGrade
+    );
+    if (jlptLevel !== "All") {
+      filteredKanji = filteredKanji.filter(
+        (kanji) => kanji.jlpt_new === jlptLevel
+      );
+    }
+
+    setSelectedKanji(filteredKanji);
+
+  };
+  console.log(selectedKanji);
+  
+
   return (
-    <>
-
-    <div>
-
-      <section>
-        <h3>Sort</h3>
-            <label>
-                <input type="checkbox" checked={sortByFreq} onChange={handleSortByFreqChange} />
-                Sort by frequency
-              </label>
-              <label>
-                <input type="checkbox" checked={sortByGrade} onChange={handleSortByGradeChange} />
-                Sort by grade
-              </label>
-              <label>
-                <input type="checkbox" checked={sortByStrokes} onChange={handleSortByStrokesChange} />
-                Sort by strokes
-            </label>
-      </section>
+      <>
 
       <div>
-        <h3>Select JLPT levels:</h3>
-        {[5, 4, 3, 2, 1].map((level) => (
-          <label key={level}>
+
+        <div className="selector">
+          <div className="params">
+          <div>
+            <label htmlFor="numKanji">Number of Kanji:</label>
             <input
-              type="checkbox"
-              value={level}
-              checked={selectedLevels.includes(level)}
-              onChange={handleLevelSelection}
+            type="number"
+            name="numKanji"
+            value={numKanji}
+            onChange={(e) => setNumKanji(Number(e.target.value))}
             />
-            N{level}
-          </label>
-        ))}
-      </div>
+          </div>
+          <div>
+            <label htmlFor="minStrokes">Minimum strokes:</label>
+            <input
+              type="number"
+              name="minStrokes"
+              value={minStrokes}
+              onChange={(e) => setMinStrokes(Number(e.target.value))}
+            />
+          </div>
+          <div>
+            <label htmlFor="maxStrokes">Maximum strokes:</label>
+            <input
+              type="number"
+              name="maxStrokes"
+              value={maxStrokes}
+              onChange={(e) => setMaxStrokes(Number(e.target.value))}
+            />
+          </div>
+          <div>
+            <label htmlFor="jlptLevel">JLPT level:</label>
+            <select
+              name="jlptLevel"
+              value={jlptLevel}
+              onChange={(e) => setJlptLevel(Number(e.target.value))}
+            >
+              <option value="">All</option>
+              <option value={1}>N1</option>
+              <option value={2}>N2</option>
+              <option value={3}>N3</option>
+              <option value={4}>N4</option>
+              <option value={5}>N5</option>
+              
+            </select>
+          </div>
+          <div>
+            <label htmlFor="minGrade">Minimum grade:</label>
+            <select
+              name="minGrade"
+              value={minGrade}
+              onChange={(e) => setMinGrade(Number(e.target.value))}
+            >
+            <option value={1}>1</option>
+            <option value={2}>2</option>
+            <option value={3}>3</option>
+            <option value={4}>4</option>
+            <option value={5}>5</option>
+            <option value={6}>6</option>
+            <option value={8}>8</option>
+            <option value={9}>9</option>
+            </select>
+          </div>
+
+      
+          <button onClick={handleGenerateKanji}>Create</button>
+          
+          </div>
+        </div>
+
+        <section>
+          <h3>Sort</h3>
+              <label>
+                  <input type="checkbox" checked={sortByFreq} onChange={handleSortByFreqChange} />
+                  Sort by frequency
+                </label>
+                <label>
+                  <input type="checkbox" checked={sortByGrade} onChange={handleSortByGradeChange} />
+                  Sort by grade
+                </label>
+                <label>
+                  <input type="checkbox" checked={sortByStrokes} onChange={handleSortByStrokesChange} />
+                  Sort by strokes
+              </label>
+        </section>
+
+        <div>
+          <h3>Select JLPT levels:</h3>
+          {[5, 4, 3, 2, 1].map((level) => (
+            <label key={level}>
+              <input
+                type="checkbox"
+                value={level}
+                checked={selectedLevels.includes(level)}
+                onChange={handleLevelSelection}
+              />
+              N{level}
+            </label>
+          ))}
+        </div>
 
         <div>
           {sortedKanji.map((group) => (
             <div key={group.level}>
               <h2>JLPT Level {group.level}</h2>
-                  {modal.show && (
-                    <Modal
-                      show={modal.show}
-                      kanji={modal.kanji}
-                      hideModal={hideModal}
-                      handleSaveKanji={saveKanji}
-                      createAnkiCard={createAnkiCard}
-                      fetchData={modal.kanji.character}
-                    />
-                    
-                  )}
+
                 <div id="container">
                   {group.kanji.map((item, index) => (
                     <button key={item.character} onClick={() => showModal(item)} className="kanji-button" style={{ backgroundColor: colorScale(item.freq) }}>
@@ -278,14 +377,22 @@ export const Learn = () => {
                 </div>
             </div>          
             ))}
+
+            {modal.show && (
+                <Modal
+                  show={modal.show}
+                  kanji={modal.kanji}
+                  hideModal={hideModal}
+                  handleSaveKanji={saveKanji}
+                  createAnkiCard={createAnkiCard}
+                  
+                />
+                
+              )}
         </div>
 
-        {/* <StrokeOrder kanji={} /> */}
-
-    
-{/* <button onClick={() => fetchData()}>test</button> */}
       </div>
-      
+        
     </>
   );
   
