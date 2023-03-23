@@ -26,7 +26,7 @@ export const Learn = () => {
   const [kanji, setKanji] = useState(joyo); 
   const [modal, setModal] = useState<Modal>({ show: false, kanji: {} })
   const [learnedKanjiArray, setLearnedKanjiArray] = useState<Kanji[]>([]);
-  const [selectedLevels, setSelectedLevels] = useState([5]);
+  const [selectedLevels, setSelectedLevels] = useState([]);
   const [sortByFreq, setSortByFreq] = useState(false);
   const [sortByGrade, setSortByGrade] = useState(false);
   const [sortByStrokes, setSortByStrokes] = useState(false);
@@ -55,7 +55,7 @@ export const Learn = () => {
   }, [selectedLevels])
 
 
-  
+
   //fetch learned kanji from localStorage and save them to a state variable
   useEffect(() => {
     const storedKanji = localStorage.getItem("learnedKanjiArray");
@@ -193,9 +193,6 @@ export const Learn = () => {
 
 
 
-
-
-
 // create anki flash cards out of selected kanji
 const createAnkiCard = (kanjiData: Kanji, kanjiVGID, svgPaths) => {
   const api = new XMLHttpRequest();
@@ -210,45 +207,8 @@ const createAnkiCard = (kanjiData: Kanji, kanjiVGID, svgPaths) => {
       fill:none;
       stroke: black;
       stroke-width:1;
-      
     }
-    
-    .kanji path {
-      stroke-dasharray: 1000;
-      stroke-dashoffset: 1000;
-      animation: stroke 3s ease-in-out forwards;
-      
-    }
-    
-    @keyframes stroke {
-      to {
-        stroke-dashoffset: 0;
-      }
-    }
-    
-    svg {
-      border: 3px solid black;
-      margin: 1px;
-    }
-    
-    .animated {
-      display: inline-block;
-    }
-    
-    
-    .container {
-      position: relative;
-      display: flex;
-      flex-direction: row;
-    }
-    
-    
-    .empty {
-      margin: 1px;
-      width: 100px;
-      height: 100px;
-      border: 3px solid black;
-    }`,
+    `,
     cardTemplates: [
       {
         Name: "Recognition",
@@ -268,23 +228,15 @@ const createAnkiCard = (kanjiData: Kanji, kanjiVGID, svgPaths) => {
           version="1.1"
           baseProfile="full"
         >
-
-       
         ${svgPaths.outerHTML}
-        
         </svg>
       </div>
-
         <script>
-        const prdel = "${kanjiVGID}"
-        const prdel1 = "#kvg\\\\:" + prdel + " path"
-                const path = document.querySelectorAll(prdel1);
-                
-                
+        const kanjiVG = "${kanjiVGID}"
+        const kanjiVG1 = "#kvg\\\\:" + kanjiVG + " path"
+                const path = document.querySelectorAll(kanjiVG1);               
                         let hue = 200
-                
                         for (let i = 0; i < path.length; i++) {
-                          // clone the original element
                               path[i].style.stroke = "hsl(" + hue + ", 100%, 50%)";
                               hue += 35;
                         
@@ -306,7 +258,6 @@ const createAnkiCard = (kanjiData: Kanji, kanjiVGID, svgPaths) => {
                             }
         </script>`,
       }
-
     ]
   };
 
@@ -328,7 +279,7 @@ const createAnkiCard = (kanjiData: Kanji, kanjiVGID, svgPaths) => {
         fields: {
           Character: kanjiData.character,
           Meaning: kanjiData.meanings.join(", "),
-          "Stroke Order": kanjiData.strokeOrderSvg
+          
         },
         tags: []
       };
@@ -353,12 +304,6 @@ const createAnkiCard = (kanjiData: Kanji, kanjiVGID, svgPaths) => {
 
   
 
-
-
-
-
-
-
   const handleGenerateKanji = () => {
     // Filter out already learned kanji
     const filteredKanjiData = kanji.filter(kanji => {
@@ -381,8 +326,8 @@ const createAnkiCard = (kanjiData: Kanji, kanjiVGID, svgPaths) => {
     setSelectedKanji(filteredKanji);
 
   };
-  // console.log(selectedKanji);
   
+
 
   return (
       <>
