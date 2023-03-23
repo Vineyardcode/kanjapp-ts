@@ -26,7 +26,7 @@ export const Learn = () => {
   const [kanji, setKanji] = useState(joyo); 
   const [modal, setModal] = useState<Modal>({ show: false, kanji: {} })
   const [learnedKanjiArray, setLearnedKanjiArray] = useState<Kanji[]>([]);
-  const [selectedLevels, setSelectedLevels] = useState([]);
+  const [selectedLevels, setSelectedLevels] = useState([5]);
   const [sortByFreq, setSortByFreq] = useState(false);
   const [sortByGrade, setSortByGrade] = useState(false);
   const [sortByStrokes, setSortByStrokes] = useState(false);
@@ -191,40 +191,75 @@ export const Learn = () => {
     
   };
 
-  //create anki flash cards out of selected kanji
-  const createAnkiCard = (kanjiData: Kanji) => {
-    const api = new XMLHttpRequest();
-    api.open("POST", "http://localhost:8765");
-  
-    const note = {
-      deckName: "Default",
-      modelName: "Basic",
-      fields: {
-        Front: kanjiData.character,
-        Back: kanjiData.meanings.join(", "),
 
+
+
+
+
+// create anki flash cards out of selected kanji
+const createAnkiCard = (kanjiData: Kanji) => {
+  const api = new XMLHttpRequest();
+
+  // create a new model for the flashcards
+  const model = {
+    modelName: "Japanese Kanji",
+    inOrderFields: ["Character", "Meaning", "Stroke Order"],
+    cardTemplates: [
+      {
+        Name: "Recognition",
+        Front: "{{Character}}",
+        Back: "<div>{{Meaning}}</div><div id='stroke-order'></div><script src='stroke-order.js'></script>",
       },
-      tags: []
-    };
-  
-    api.send(JSON.stringify({
-      action: "addNote",
-      version: 6,
-      params: {
-        note: note
+      {
+        Name: "Production",
+        Front: "{{Meaning}}",
+        Back: "<div>{{Character}}</div><div id='stroke-order'></div><script src='stroke-order.js'></script>"
       }
-    }));
-  
-    api.onreadystatechange = function() {
-      if (this.readyState === XMLHttpRequest.DONE && this.status === 200) {
-        console.log(`Kanji ${kanjiData.character} was added to Anki successfully!`);
-        
-      }
-    };
+    ]
   };
 
+  api.open("POST", "http://localhost:8765");
+  api.send(JSON.stringify({
+    action: "createModel",
+    version: 6,
+    params: model
+  }));
 
+  api.onreadystatechange = function() {
+    if (this.readyState === XMLHttpRequest.DONE && this.status === 200) {
+      console.log(`Model ${model.modelName} was created successfully!`);
 
+      // add a new note to the Default deck using the newly created model
+      const note = {
+        deckName: "Default",
+        modelName: model.modelName,
+        fields: {
+          Character: kanjiData.character,
+          Meaning: kanjiData.meanings.join(", "),
+          "Stroke Order": kanjiData.strokeOrderSvg
+        },
+        tags: []
+      };
+
+      api.open("POST", "http://localhost:8765");
+      api.send(JSON.stringify({
+        action: "addNote",
+        version: 6,
+        params: {
+          note: note
+        }
+      }));
+
+      api.onreadystatechange = function() {
+        if (this.readyState === XMLHttpRequest.DONE && this.status === 200) {
+          console.log(`Kanji ${kanjiData.character} was added to Anki successfully!`);
+        }
+      };
+    }
+  };
+};
+
+  
 
 
 
@@ -254,7 +289,7 @@ export const Learn = () => {
     setSelectedKanji(filteredKanji);
 
   };
-  console.log(selectedKanji);
+  // console.log(selectedKanji);
   
 
   return (
