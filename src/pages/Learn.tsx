@@ -197,24 +197,116 @@ export const Learn = () => {
 
 
 // create anki flash cards out of selected kanji
-const createAnkiCard = (kanjiData: Kanji) => {
+const createAnkiCard = (kanjiData: Kanji, kanjiVGID, svgPaths) => {
   const api = new XMLHttpRequest();
+
 
   // create a new model for the flashcards
   const model = {
-    modelName: "Japanese Kanji",
+    modelName: "Japanese AAA",
     inOrderFields: ["Character", "Meaning", "Stroke Order"],
+    css: `
+    path {
+      fill:none;
+      stroke: black;
+      stroke-width:1;
+      
+    }
+    
+    .kanji path {
+      stroke-dasharray: 1000;
+      stroke-dashoffset: 1000;
+      animation: stroke 3s ease-in-out forwards;
+      
+    }
+    
+    @keyframes stroke {
+      to {
+        stroke-dashoffset: 0;
+      }
+    }
+    
+    svg {
+      border: 3px solid black;
+      margin: 1px;
+    }
+    
+    .animated {
+      display: inline-block;
+    }
+    
+    
+    .container {
+      position: relative;
+      display: flex;
+      flex-direction: row;
+    }
+    
+    
+    .empty {
+      margin: 1px;
+      width: 100px;
+      height: 100px;
+      border: 3px solid black;
+    }`,
     cardTemplates: [
       {
         Name: "Recognition",
         Front: "{{Character}}",
-        Back: "<div>{{Meaning}}</div><div id='stroke-order'></div><script src='stroke-order.js'></script>",
-      },
-      {
-        Name: "Production",
-        Front: "{{Meaning}}",
-        Back: "<div>{{Character}}</div><div id='stroke-order'></div><script src='stroke-order.js'></script>"
+        Back: `
+        
+        <div>{{Meaning}}</div>
+        
+        <div className="kanji">
+        <svg
+          width="100%"
+          height="100%"
+          viewBox="0 0 100 100"
+          xmlns="http://www.w3.org/2000/svg"
+          xmlnsXlink="http://www.w3.org/1999/xlink"
+          xmlSpace="preserve"
+          version="1.1"
+          baseProfile="full"
+        >
+
+       
+        ${svgPaths.outerHTML}
+        
+        </svg>
+      </div>
+
+        <script>
+        const prdel = "${kanjiVGID}"
+        const prdel1 = "#kvg\\\\:" + prdel + " path"
+                const path = document.querySelectorAll(prdel1);
+                
+                
+                        let hue = 200
+                
+                        for (let i = 0; i < path.length; i++) {
+                          // clone the original element
+                              path[i].style.stroke = "hsl(" + hue + ", 100%, 50%)";
+                              hue += 35;
+                        
+                              const start = path[i].getPointAtLength(0);
+                              const number = document.createElementNS("http://www.w3.org/2000/svg", "text");
+                              number.setAttribute("x", start.x);
+                              number.setAttribute("y", start.y);
+                              number.textContent = i + 1;
+                              number.setAttribute("font-size", "5px");
+                              const strokesSVG = document.querySelector('svg');
+                              strokesSVG.appendChild(number);
+                        
+                              const dot = document.createElementNS("http://www.w3.org/2000/svg", "circle");
+                              dot.setAttribute("cx", start.x);
+                              dot.setAttribute("cy", start.y);
+                              dot.setAttribute("r", "1.5");
+                              dot.setAttribute("fill", "rgba(0,0,0,0.5)");
+                              strokesSVG.appendChild(dot);
+                            }
+        </script>`,
       }
+
     ]
   };
 

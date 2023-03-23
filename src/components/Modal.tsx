@@ -62,10 +62,9 @@ const Modal: React.FC<ModalProps> = ({ show, kanji, hideModal, handleSaveKanji, 
     let hue = 200
     // console.log(strokePaths);
 
-    
     strokePaths.forEach((path, i) => {
       // create consecutive stroke paths
-      path.style.stroke = `hsl(${hue}, 100%, 50%)`;
+      path.style.stroke = `hsl( ${hue}, 100%, 50%)`;
       hue += 35;
 
       const start = path.getPointAtLength(0);
@@ -85,6 +84,7 @@ const Modal: React.FC<ModalProps> = ({ show, kanji, hideModal, handleSaveKanji, 
       strokesSVG.appendChild(dot);
     });
   }
+
 
 
 
@@ -114,7 +114,7 @@ const Modal: React.FC<ModalProps> = ({ show, kanji, hideModal, handleSaveKanji, 
           <p>On'yomi: {kanji.readings_on || "N/A" }</p>
           <p>Strokes: {kanji.strokes}</p>
           <button onClick={() => handleSaveKanji(kanji)}>Move to learned</button>
-          <button onClick={() => createAnkiCard(kanji)}>Create anki card</button>
+          <button onClick={() => createAnkiCard(kanji, `${kvgIndex}`, strokes)}>Create anki card</button>
           
           <button onClick={hideModal}>Close</button>
         </div>
