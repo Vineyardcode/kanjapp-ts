@@ -26,9 +26,6 @@
         </svg>
       </div>
 
-    
-
-
 <script>
   const kvgPaths = (vgIndex) => {
     const strokePaths = document.querySelectorAll(`#kvg\\:${vgIndex} path`);
@@ -58,3 +55,35 @@
     });
   }
 </script>
+
+
+
+
+
+
+const clone = original.cloneNode(true);
+document.body.appendChild(clone);
+clone.classList.add('animated');
+
+// create empty div
+const emptyDiv = document.createElement('div');
+emptyDiv.classList.add('empty');
+clone.appendChild(emptyDiv)
+
+//select clone stroke paths
+const clonePaths = clone.querySelectorAll('#kvg\\:09b31 path');
+
+// create consecutive stroke paths
+paths[i].style.stroke = 'black';
+clonePaths[i].style.stroke = 'blue';
+
+// create a red dot at the start of each stroke
+const circle = document.createElementNS("http://www.w3.org/2000/svg", "circle");
+const start = clonePaths[i].getPointAtLength(0)
+circle.setAttribute("fill", "red");
+circle.setAttribute("r", "1");
+circle.setAttribute("cx", start.x);
+circle.setAttribute("cy", start.y);
+
+const cloneSVG = clone.querySelector('svg');
+cloneSVG.appendChild(circle);
