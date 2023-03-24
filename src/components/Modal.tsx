@@ -29,7 +29,7 @@ const Modal: React.FC<ModalProps> = ({ show, kanji, hideModal, handleSaveKanji, 
   const [kvgIndex, setKvgIndex] = useState();
 
   
-
+  
 
 
   const fetchData = async (kanji: Kanji) => {

@@ -7,6 +7,7 @@ import { doc, setDoc, collection } from "firebase/firestore";
 import Modal from '../components/Modal';
 import "../styles/Learn.css"
 import joyo from "../kanjiData/joyo.json"
+import KVGindex from "../kanjiData/kvg-index.json"
 
 interface Kanji {
   character?: string;
@@ -38,6 +39,7 @@ export const Learn = () => {
   const [jlptLevel, setJlptLevel] = useState<string | number>('All');
   const [minGrade, setMinGrade] = useState(1);
 
+
   // fetch kanjis
   const fetchData = async () => {
     try {
@@ -53,8 +55,6 @@ export const Learn = () => {
   useEffect(() => {
     fetchData()
   }, [selectedLevels])
-
-
 
   //fetch learned kanji from localStorage and save them to a state variable
   useEffect(() => {
@@ -191,119 +191,109 @@ export const Learn = () => {
     
   };
 
-
-
-// create anki flash cards out of selected kanji
-const createAnkiCard = (kanjiData: Kanji, kanjiVGID, svgPaths) => {
-  const api = new XMLHttpRequest();
-
-
-  // create a new model for the flashcards
-  const model = {
-    modelName: "Japanese AAA",
-    inOrderFields: ["Character", "Meaning", "Stroke Order"],
-    css: `
-    path {
-      fill:none;
-      stroke: black;
-      stroke-width:1;
-    }
-    `,
-    cardTemplates: [
-      {
-        Name: "Recognition",
-        Front: "{{Character}}",
-        Back: `
-        
-        <div>{{Meaning}}</div>
-        
-        <div className="kanji">
-        <svg
-          width="100%"
-          height="100%"
-          viewBox="0 0 100 100"
-          xmlns="http://www.w3.org/2000/svg"
-          xmlnsXlink="http://www.w3.org/1999/xlink"
-          xmlSpace="preserve"
-          version="1.1"
-          baseProfile="full"
-        >
-        ${svgPaths.outerHTML}
-        </svg>
-      </div>
+  // create anki flash cards out of selected kanji
+  const createAnkiCard = (kanjiData, kanjiVGID, svgPaths) => {
+    const api = new XMLHttpRequest();
+    const model = {
+      modelName: kanjiData.character,
+      inOrderFields: ["Character", "Meaning"],
+      css: `
+      path {
+        fill:none;
+        stroke: black;
+        stroke-width:1;
+      }`,
+      cardTemplates: [
+        {
+          Name: "Recognition",
+          Front: "{{Character}}",
+          Back: `      
+          <div>{{Meaning}}</div> 
+          <div className="kanji">
+          <svg
+            width="100%"
+            height="100%"
+            viewBox="0 0 100 100"
+            xmlns="http://www.w3.org/2000/svg"
+            xmlnsXlink="http://www.w3.org/1999/xlink"
+            xmlSpace="preserve"
+            version="1.1"
+            baseProfile="full"
+          >
+          ${svgPaths.outerHTML}
+          </svg>
+        </div>
         <script>
-        const kanjiVG = "${kanjiVGID}"
-        const kanjiVG1 = "#kvg\\\\:" + kanjiVG + " path"
-                const path = document.querySelectorAll(kanjiVG1);               
-                        let hue = 200
-                        for (let i = 0; i < path.length; i++) {
-                              path[i].style.stroke = "hsl(" + hue + ", 100%, 50%)";
-                              hue += 35;
-                        
-                              const start = path[i].getPointAtLength(0);
-                              const number = document.createElementNS("http://www.w3.org/2000/svg", "text");
-                              number.setAttribute("x", start.x);
-                              number.setAttribute("y", start.y);
-                              number.textContent = i + 1;
-                              number.setAttribute("font-size", "5px");
-                              const strokesSVG = document.querySelector('svg');
-                              strokesSVG.appendChild(number);
-                        
-                              const dot = document.createElementNS("http://www.w3.org/2000/svg", "circle");
-                              dot.setAttribute("cx", start.x);
-                              dot.setAttribute("cy", start.y);
-                              dot.setAttribute("r", "1.5");
-                              dot.setAttribute("fill", "rgba(0,0,0,0.5)");
-                              strokesSVG.appendChild(dot);
-                            }
-        </script>`,
+        function waitForStroke() {
+          const kanjiVG = "${kanjiVGID}"
+          const kanjiVG1 = "#kvg\\\\:" + kanjiVG + " path"
+          const path = document.querySelectorAll(kanjiVG1);               
+          let hue = 200
+          for (let i = 0; i < path.length; i++) {
+            path[i].style.stroke = "hsl(" + hue + ", 100%, 50%)";
+            hue += 35;
+            const start = path[i].getPointAtLength(0);
+            const number = document.createElementNS("http://www.w3.org/2000/svg", "text");
+            number.setAttribute("x", start.x);
+            number.setAttribute("y", start.y);
+            number.textContent = i + 1;
+            number.setAttribute("font-size", "5px");
+            const strokesSVG = document.querySelector('svg');
+            strokesSVG.appendChild(number);  
+            const dot = document.createElementNS("http://www.w3.org/2000/svg", "circle");
+            dot.setAttribute("cx", start.x);
+            dot.setAttribute("cy", start.y);
+            dot.setAttribute("r", "1.5");
+            dot.setAttribute("fill", "rgba(0,0,0,0.5)");
+            strokesSVG.appendChild(dot);
+          }
+        }    
+        new Promise(resolve => {
+          if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', resolve);
+          } else {
+            resolve();
+          }
+        }).then(waitForStroke);
+      </script>`,
+        }
+      ]
+    };
+    api.open("POST", "http://localhost:8765");
+    api.send(JSON.stringify({
+      action: "createModel",
+      version: 6,
+      params: model
+    }));
+    api.onreadystatechange = function() {
+      if (this.readyState === XMLHttpRequest.DONE && this.status === 200) {
+        console.log(`Model ${model.modelName} was created successfully!`);
+        const note = {
+          deckName: "Default",
+          modelName: model.modelName,
+          fields: {
+            Character: kanjiData.character,
+            Meaning: kanjiData.meanings.join(", "),  
+          },
+          tags: []
+        };
+        api.open("POST", "http://localhost:8765");
+        api.send(JSON.stringify({
+          action: "addNote",
+          version: 6,
+          params: {
+            note: note
+          }
+        }));
+        api.onreadystatechange = function() {
+          if (this.readyState === XMLHttpRequest.DONE && this.status === 200) {
+            console.log(`Kanji ${kanjiData.character} was added to Anki successfully!`);
+          }
+        };
       }
-    ]
+    };
   };
-
-  api.open("POST", "http://localhost:8765");
-  api.send(JSON.stringify({
-    action: "createModel",
-    version: 6,
-    params: model
-  }));
-
-  api.onreadystatechange = function() {
-    if (this.readyState === XMLHttpRequest.DONE && this.status === 200) {
-      console.log(`Model ${model.modelName} was created successfully!`);
-
-      // add a new note to the Default deck using the newly created model
-      const note = {
-        deckName: "Default",
-        modelName: model.modelName,
-        fields: {
-          Character: kanjiData.character,
-          Meaning: kanjiData.meanings.join(", "),
-          
-        },
-        tags: []
-      };
-
-      api.open("POST", "http://localhost:8765");
-      api.send(JSON.stringify({
-        action: "addNote",
-        version: 6,
-        params: {
-          note: note
-        }
-      }));
-
-      api.onreadystatechange = function() {
-        if (this.readyState === XMLHttpRequest.DONE && this.status === 200) {
-          console.log(`Kanji ${kanjiData.character} was added to Anki successfully!`);
-        }
-      };
-    }
-  };
-};
-
   
-
   const handleGenerateKanji = () => {
     // Filter out already learned kanji
     const filteredKanjiData = kanji.filter(kanji => {
@@ -323,12 +313,48 @@ const createAnkiCard = (kanjiData: Kanji, kanjiVGID, svgPaths) => {
       );
     }
 
-    setSelectedKanji(filteredKanji);
-
+    const selected = filteredKanji.slice(0, numKanji);
+    setSelectedKanji(selected);
+    
   };
   
+  const createBatch = async (kanjiBatch: Kanji[]) => {
+    for (const kanji of kanjiBatch) {
+      try {
+        // look up the kanjiVG index for the given kanji
+        const kanjiIndex = KVGindex[kanji.character].find(index => index.length === 9).slice(0, -4);
+        const response2 = await fetch('src/kanjiData/joyo_kanji_vg.xml');
+        const xmlString = await response2.text();
+        const xmlDoc = new DOMParser().parseFromString(xmlString, "text/xml");
+      
+        // look up the kanji svg in the XML file using the kanji VG index
+        const kanjiElement = xmlDoc.querySelector(`[id="kvg:${kanjiIndex}"]`);
+      
+        await createAnkiCard(kanji, `${kanjiIndex}`, kanjiElement);
+      } catch (error) {
+        console.error(error);
+      }
+    }
+  };
+  
+  const create = async () => {
+    const batchSize = 10; // set the batch size here
+    const numBatches = Math.ceil(selectedKanji.length / batchSize);
+    for (let i = 0; i < numBatches; i++) {
+      const start = i * batchSize;
+      const end = Math.min((i + 1) * batchSize, selectedKanji.length);
+      const kanjiBatch = selectedKanji.slice(start, end);
+      await createBatch(kanjiBatch);
+    }
+  };
+  
+  useEffect(() => {
+    console.log(selectedKanji);
+    console.log(numKanji);
+    
+  }, [selectedKanji]);
 
-
+ 
   return (
       <>
 
