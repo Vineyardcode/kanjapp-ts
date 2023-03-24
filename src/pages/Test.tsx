@@ -288,7 +288,7 @@ const Test = () => {
 
       {isFinished === false && currentQuestion !== null && (
         <div className="counter">
-          {"Question" + " " + qNumber + "/" + numberOfQuestions}
+          {qNumber + " " + "question's left"}
         </div>
           )}
 
