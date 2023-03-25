@@ -198,37 +198,59 @@ export const Learn = () => {
       modelName: kanjiData.character,
       inOrderFields: ["Character", "Meaning"],
       css: `
-      path {
-        fill:none;
+      .container {
+        width: 100%;
+        height: 100%;
+      }   
+      .kanji path {
         stroke: black;
-        stroke-width:1;
-      }`,
+        fill: none;
+        stroke-width: 2;
+      }     
+      @keyframes draw {
+        to {
+          stroke-dashoffset: 0;
+        }
+      }   
+      svg {
+        border: 3px solid black;
+        margin: 1px;
+      }
+      .container {
+        position: relative;
+        display: flex;
+        flex-direction: row;
+      }
+      `,
       cardTemplates: [
         {
           Name: "Recognition",
           Front: "{{Character}}",
           Back: `      
           <div>{{Meaning}}</div> 
-          <div className="kanji">
-          <svg
-            width="100%"
-            height="100%"
-            viewBox="0 0 100 100"
-            xmlns="http://www.w3.org/2000/svg"
-            xmlnsXlink="http://www.w3.org/1999/xlink"
-            xmlSpace="preserve"
-            version="1.1"
-            baseProfile="full"
-          >
+          <div class="container">
+          <div class="kanji">
+            <svg
+                width="100%"
+                height="100%"
+                viewBox="0 0 100 100"
+                xmlns="http://www.w3.org/2000/svg"
+                xmlnsXlink="http://www.w3.org/1999/xlink"
+                xmlSpace="preserve"
+                version="1.1"
+                baseProfile="full"
+              >
           ${svgPaths.outerHTML}
           </svg>
-        </div>
+          <button onclick="fun()">Draw</button>
+         </div>     
+       </div>
         <script>
         function waitForStroke() {
           const kanjiVG = "${kanjiVGID}"
           const kanjiVG1 = "#kvg\\\\:" + kanjiVG + " path"
-          const path = document.querySelectorAll(kanjiVG1);               
-          let hue = 200
+          const path = document.querySelectorAll(kanjiVG1);
+          let hue = 200;
           for (let i = 0; i < path.length; i++) {
             path[i].style.stroke = "hsl(" + hue + ", 100%, 50%)";
             hue += 35;
@@ -239,7 +261,7 @@ export const Learn = () => {
             number.textContent = i + 1;
             number.setAttribute("font-size", "5px");
             const strokesSVG = document.querySelector('svg');
-            strokesSVG.appendChild(number);  
+            strokesSVG.appendChild(number);
             const dot = document.createElementNS("http://www.w3.org/2000/svg", "circle");
             dot.setAttribute("cx", start.x);
             dot.setAttribute("cy", start.y);
@@ -247,14 +269,42 @@ export const Learn = () => {
             dot.setAttribute("fill", "rgba(0,0,0,0.5)");
             strokesSVG.appendChild(dot);
           }
-        }    
-        new Promise(resolve => {
-          if (document.readyState === 'loading') {
-            document.addEventListener('DOMContentLoaded', resolve);
+        }
+        
+        function fun() {
+          const kanjiVG = "${kanjiVGID}"
+          const kanjiVG1 = "#kvg\\\\:" + kanjiVG + " path"
+          const paths = document.querySelectorAll(kanjiVG1);
+          let delay = 0.5;
+          paths.forEach((path) => {
+            path.style.strokeDasharray = null;
+            path.style.strokeDashoffset = null;
+            path.style.animation = null;
+            const length = path.getTotalLength();
+            path.style.strokeDasharray = length;
+            path.style.strokeDashoffset = length;
+            path.style.animation = "draw 1s forwards " + delay + "s";
+            delay += 1;
+          });
+        }
+        
+        new Promise((resolve) => {
+          if (document.readyState === "loading") {
+            document.addEventListener("DOMContentLoaded", resolve);
           } else {
             resolve();
           }
-        }).then(waitForStroke);
+        })
+          .then(() => {
+            waitForStroke();
+            const button = document.querySelector('button[onclick="fun()"]');
+            if (button) {
+              button.addEventListener("click", fun);
+            }
+          })
+          .catch((error) => console.error(error));
+        
+        
       </script>`,
         }
       ]
@@ -349,8 +399,8 @@ export const Learn = () => {
   };
   
   useEffect(() => {
-    console.log(selectedKanji);
-    console.log(numKanji);
+
+    create()
     
   }, [selectedKanji]);
 
