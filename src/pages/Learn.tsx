@@ -198,39 +198,60 @@ export const Learn = () => {
       modelName: kanjiData.character,
       inOrderFields: ["Character", "Meaning"],
       css: `
-      .container {
-        width: 100%;
-        height: 100%;
-      }   
       .kanji path {
         stroke: black;
         fill: none;
         stroke-width: 2;
-      }     
+      }
       @keyframes draw {
         to {
           stroke-dashoffset: 0;
         }
-      }   
+      }
       svg {
         border: 3px solid black;
-        margin: 1px;
+        margin: 1px; 
       }
       .container {
         position: relative;
         display: flex;
         flex-direction: row;
+        width: 90%;
+        height: 90%;
       }
+
+      .frontOfCard {
+        text-align: center;
+        font-size: 1313%;
+        }
+        .stroke-btn {
+          width: 22.5%;
+          height: 3rem;
+        }
+        #fun {
+          width: 5%;
+        }
+        button, #checkbox {
+          height: 3rem; 
+        }
+        .top-btns{
+          width: 100%;
+        }
+        .bot-btns{
+          width: 100%;
+        }
       `,
       cardTemplates: [
         {
           Name: "Recognition",
-          Front: "{{Character}}",
+          Front: "<h1 class='frontOfCard'>{{Character}}</h1>",
           Back: `      
-          <div>{{Meaning}}</div> 
+          <h2>{{Meaning}}</h2>
+          <h3>Kun'yomi: ${kanjiData.readings_kun}</h3>
+          <h3>On'yomi: ${kanjiData.readings_on}</h3>
           <div class="container">
-          <div class="kanji">
-            <svg
+          <div class="kanji">            
+          <svg
                 width="100%"
                 height="100%"
                 viewBox="0 0 100 100"
@@ -242,69 +263,113 @@ export const Learn = () => {
               >
           ${svgPaths.outerHTML}
           </svg>
-          <button onclick="fun()">Draw</button>
-         </div>     
-       </div>
+          </div>
+          </div>
+          <div class="top-btns">
+          <button id="minus" class="stroke-btn"><h1> < </h1></button>
+          <button onclick="fun()" id="fun">Draw</button> 
+          <button id="plus" class="stroke-btn"><h1> > </h1></button>
+          </div>
+          <div class="bot-btns">
+          <input type="checkbox" id="hardModeCheckbox">
+          <label for="hardModeCheckbox">Hard mode</label>
+          <button onclick="deleteStrokes()" id="delete-btn">Delete strokes</button>  
+          </div>
         <script>
-        function waitForStroke() {
-          const kanjiVG = "${kanjiVGID}"
-          const kanjiVG1 = "#kvg\\\\:" + kanjiVG + " path"
-          const path = document.querySelectorAll(kanjiVG1);
-          let hue = 200;
-          for (let i = 0; i < path.length; i++) {
-            path[i].style.stroke = "hsl(" + hue + ", 100%, 50%)";
-            hue += 35;
-            const start = path[i].getPointAtLength(0);
-            const number = document.createElementNS("http://www.w3.org/2000/svg", "text");
-            number.setAttribute("x", start.x);
-            number.setAttribute("y", start.y);
-            number.textContent = i + 1;
-            number.setAttribute("font-size", "5px");
-            const strokesSVG = document.querySelector('svg');
-            strokesSVG.appendChild(number);
-            const dot = document.createElementNS("http://www.w3.org/2000/svg", "circle");
-            dot.setAttribute("cx", start.x);
-            dot.setAttribute("cy", start.y);
-            dot.setAttribute("r", "1.5");
-            dot.setAttribute("fill", "rgba(0,0,0,0.5)");
-            strokesSVG.appendChild(dot);
-          }
-        }
-        
-        function fun() {
-          const kanjiVG = "${kanjiVGID}"
-          const kanjiVG1 = "#kvg\\\\:" + kanjiVG + " path"
-          const paths = document.querySelectorAll(kanjiVG1);
-          let delay = 0.5;
-          paths.forEach((path) => {
-            path.style.strokeDasharray = null;
-            path.style.strokeDashoffset = null;
-            path.style.animation = null;
-            const length = path.getTotalLength();
-            path.style.strokeDasharray = length;
-            path.style.strokeDashoffset = length;
-            path.style.animation = "draw 1s forwards " + delay + "s";
-            delay += 1;
-          });
-        }
-        
-        new Promise((resolve) => {
-          if (document.readyState === "loading") {
-            document.addEventListener("DOMContentLoaded", resolve);
-          } else {
-            resolve();
-          }
-        })
-          .then(() => {
-            waitForStroke();
-            const button = document.querySelector('button[onclick="fun()"]');
-            if (button) {
-              button.addEventListener("click", fun);
-            }
-          })
-          .catch((error) => console.error(error));
-        
-        
+        var kanjiVG = "${kanjiVGID}"
+        var kanjiVG1 = "#kvg\\\\:" + kanjiVG + " path"
+        var paths1 = document.querySelectorAll(kanjiVG1);
+var currentPathIndex = -1;
+function displayPath() {
+let delay = 0.1
+paths1.forEach((path, index) => {
+  if (index <= currentPathIndex) {
+    path.style.display = 'block';
+    const length = path.getTotalLength();
+    path.style.strokeDasharray = length;
+    path.style.strokeDashoffset = length;
+    path.style.animation = "draw 1s forwards " + delay + "s";
+    
+  } else {
+    path.style.display = 'none';
+    path.style.strokeDasharray = null;
+    path.style.strokeDashoffset = null;
+    path.style.animation = null;
+  }
+});
+}
+displayPath();
+document.getElementById('minus').addEventListener('click', () => {
+if (currentPathIndex > -1) {
+  currentPathIndex--;
+  displayPath();
+}
+});
+
+document.getElementById('plus').addEventListener('click', () => {
+if (currentPathIndex < paths1.length -1) {
+  currentPathIndex++;
+  displayPath();
+}
+});
+var hardModeCheckbox = document.getElementById("hardModeCheckbox");
+hardModeCheckbox.addEventListener('change', function() {
+if (this.checked) {
+  const text = document.querySelectorAll('.text');
+  const dot = document.querySelectorAll('.dot'); 
+  dot.forEach((dot) => (dot.style.display = 'none'));
+  text.forEach((text) => (text.style.display = 'none'));
+} else {
+  const text = document.querySelectorAll('.text');
+  const dot = document.querySelectorAll('.dot'); 
+  dot.forEach((dot) => (dot.style.display = 'block'));
+  text.forEach((text) => (text.style.display = 'block'));
+}
+});
+var kanjiVG1 = "${kanjiVGID}";
+var kanjiVG11 = "#kvg\\\\:" + kanjiVG + " path";
+var paths = document.querySelectorAll(kanjiVG11);
+function fun() {
+let delay = 0.3;
+for (let i = 0; i < paths.length; i++) {
+  const path = paths[i];
+  path.style.strokeDasharray = null;
+  path.style.strokeDashoffset = null;
+  path.style.animation = null;
+  const length = path.getTotalLength();
+  path.style.strokeDasharray = length;
+  path.style.strokeDashoffset = length;
+  path.style.animation = "draw 1s forwards " + delay + "s";
+  path.style.display = 'block';
+  delay += 1;
+  currentPathIndex++
+}
+}
+var hue = 200;
+for (let i = 0; i < paths.length; i++) {
+  paths[i].style.stroke = "hsl(" + hue + ", 100%, 50%)";
+  hue += 25;
+  const start = paths[i].getPointAtLength(0);
+  const number = document.createElementNS("http://www.w3.org/2000/svg", "text");
+  number.setAttribute("x", start.x);
+  number.setAttribute("y", start.y);
+  number.textContent = i + 1;
+  number.setAttribute("font-size", "5px");
+  number.classList.add("text");
+  const strokesSVG = document.querySelector('svg');
+  strokesSVG.appendChild(number);
+  const dot = document.createElementNS("http://www.w3.org/2000/svg", "circle");
+  dot.setAttribute("cx", start.x);
+  dot.setAttribute("cy", start.y);
+  dot.setAttribute("r", "1.5");
+  dot.setAttribute("fill", "rgba(0,0,0,0.5)");
+  dot.classList.add("dot");
+  strokesSVG.appendChild(dot);
+}
+function deleteStrokes() {
+  paths1.forEach((path) => {path.style.display = 'none';});
+currentPathIndex = -1
+}      
       </script>`,
         }
       ]
@@ -325,7 +390,13 @@ export const Learn = () => {
             Character: kanjiData.character,
             Meaning: kanjiData.meanings.join(", "),  
           },
-          tags: []
+          tags: [
+            "JLPT:" + kanjiData.jlpt_new + "",
+            "NumberofStrokes:" + kanjiData.strokes + "",
+            "Radicals:" + kanjiData.wk_radicals + "",
+            "Grade:" + kanjiData.grade + "",
+            "Frequency:" + kanjiData.freq + ""
+          ],
         };
         api.open("POST", "http://localhost:8765");
         api.send(JSON.stringify({
@@ -386,6 +457,7 @@ export const Learn = () => {
       }
     }
   };
+ 
   
   const create = async () => {
     const batchSize = 10; // set the batch size here
