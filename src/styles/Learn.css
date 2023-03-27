@@ -9,26 +9,46 @@
   background-color: rgba(0,0,0,0.4);
 }
 
-#container {
-  font-size: 0;
-}
-
 .kanji-button {
-  
-  width: 35px;
-  height: 35px;
+  border-radius: 4.2px 4.2px 4.2px 4.2px;
+  width: 4.3rem;
+  height: 4.3rem;
   margin: 3px;  
-  
-  box-shadow: 3px 1px 3.5px;
-  transition: 0.5s;
+  background-color: transparent;
+  border: none;
+  transition: 0.37s;
+  box-shadow: 0px 3px 7px 0px rgba(0, 0, 0, 0.2);
+  color: #000;
+  backdrop-filter: blur(1px);
+}
+
+.button-text{
+  text-shadow: 1px 1px 2px rgb(209, 182, 182), 0 0 1em rgb(255, 255, 255), 0 0 0.2em rgb(255, 255, 255);
+  color: rgb(0, 0, 0);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 90%;
+  /* border: 2px solid black; */
+  height: 90%;
+  text-align: center
+  border-radius: 4.2px 4.2px 4.2px 4.2px;
 }
 
 
+.kanji-button:hover{
+  font-size: 1.2rem;
 
+  cursor: pointer;
+  
+  
+}
 
-#container button:hover{
-
-  transform: translateY(-0.25em);
-
+.group-container {
+  text-shadow: 1px 1px 2px rgb(209, 182, 182), 0 0 1em rgb(255, 255, 255), 0 0 0.2em rgb(255, 255, 255);
+  width: 100%;
+  height: 100%;
+  
+  
 }
 

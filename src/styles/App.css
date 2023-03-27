@@ -3,46 +3,38 @@
 }
 
 body {
+  text-shadow: 1px 1px 2px rgb(209, 182, 182), 0 0 1em rgb(255, 255, 255), 0 0 0.2em rgb(255, 255, 255);
+
   margin: 0;
   padding: 0;
   font-family: Arial, Helvetica, sans-serif;
+  background-image: url("src/assets/media/img/spring/spring1.jpg");
+  background-attachment: fixed;
+  background-repeat: no-repeat;
+  background-size: cover;
 }
 
 .navbar {
   width: 100%;
   height: 80px;
-  background-color: rgb(145, 7, 7);
-  display: flex;
-  align-items: center;
-  justify-content: flex-end;
-}
-
-.navbar .links {
-  text-align: center;
-  margin-right: 50px;
-}
-
-.links a {
-  color: white;
-  text-decoration: none;
-  border-bottom: 3px solid white;
-  padding-bottom: 2px;
-  margin: 10px;
-}
-
-.navbar .user {
+  background-color: transparent;
+  color: #000;
   display: flex;
   justify-content: center;
   align-items: center;
-  margin-right: 50px;
 }
 
-.user p {
-  font-size: 15px;
-  margin-right: 10px;
-  color: white;
+
+
+.links a {
+  color: rgb(0, 0, 0);
+  text-decoration: none;
+  border-bottom: 3px solid rgb(0, 0, 0);
+  padding-bottom: 2px;
+  margin: 1.5rem;
+  font-size: 1.35rem;
+  text-shadow: 1px 1px 2px rgb(209, 182, 182), 0 0 1em rgb(255, 255, 255), 0 0 0.2em rgb(255, 255, 255);
 }
-.user img {
-  font-size: 15px;
-  border-radius: 50%;
-}
+
+
+
