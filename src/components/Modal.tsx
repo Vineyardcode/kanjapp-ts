@@ -28,9 +28,7 @@ const Modal: React.FC<ModalProps> = ({ show, kanji, hideModal, handleSaveKanji, 
   const [strokes, setStrokes] = useState<SVGSVGElement | null>(null);
   const [kvgIndex, setKvgIndex] = useState();
 
-  
-  
-
+  const [currentPathIndex, setCurrentPathIndex] = useState(-1);
 
   const fetchData = async (kanji: Kanji) => {
 
@@ -43,53 +41,124 @@ const Modal: React.FC<ModalProps> = ({ show, kanji, hideModal, handleSaveKanji, 
     // look up the kanji svg in the XML file using the kanji VG index
     const kanjiElement = xmlDoc.querySelector(`[id="kvg:${kanjiIndex}"]`);
   
-    
     setStrokes(kanjiElement)
     setKvgIndex(kanjiIndex)
   }
 
-    useEffect(() => {
+  useEffect(() => {
     if(show){
       fetchData(kanji.character);
-      kvgPaths(kvgIndex)
+      kvgPaths()
     }
+    
   }, [kvgIndex]);
 
-  const kvgPaths = (vgIndex) => {
-   
-    const strokePaths = document.querySelectorAll(`#kvg\\:${vgIndex} path`);
-    
-    let hue = 200
-    // console.log(strokePaths);
-
-    strokePaths.forEach((path, i) => {
-      // create consecutive stroke paths
-      path.style.stroke = `hsl( ${hue}, 100%, 50%)`;
-      hue += 35;
-
+  //drawing functions
+  const kvgPaths = () => {
+    const paths = Array.from(document.querySelectorAll(`#kvg\\:${kvgIndex} path`));
+    let hue = 200;
+    paths.forEach((path, i) => {
+      path.style.stroke = `hsl(${hue + i * 25}, 100%, 50%)`;
       const start = path.getPointAtLength(0);
       const number = document.createElementNS("http://www.w3.org/2000/svg", "text");
-      number.setAttribute("x", start.x);
+      number.setAttribute("x", start.x + Math.floor(Math.random() * 5));
       number.setAttribute("y", start.y);
       number.textContent = i + 1;
-      number.setAttribute("font-size", "5px");
+      number.setAttribute("font-size", "4.2px");
+      number.classList.add("text");
       const strokesSVG = document.querySelector('svg');
       strokesSVG.appendChild(number);
-
       const dot = document.createElementNS("http://www.w3.org/2000/svg", "circle");
       dot.setAttribute("cx", start.x);
       dot.setAttribute("cy", start.y);
       dot.setAttribute("r", "1.5");
       dot.setAttribute("fill", "rgba(0,0,0,0.5)");
+      dot.classList.add("dot");
       strokesSVG.appendChild(dot);
     });
   }
 
+const paths1 = document.querySelectorAll(`#kvg\\:${kvgIndex} path`);
 
 
+const displayPath = () => {
+  let delay = 0.5
+  paths1.forEach((path, index) => {
+    if (index <= currentPathIndex) {
+          path.style.display = 'block';
+          const length = path.getTotalLength();
+          path.style.strokeDasharray = length;
+          path.style.strokeDashoffset = length;
+          path.style.animation = "draw 1s forwards " + delay + "s";
+      
+    } else {
+          path.style.display = 'none';
+          path.style.strokeDasharray = null;
+          path.style.strokeDashoffset = null;
+          path.style.animation = null;
+    }
+  });
+}
+
+
+  useEffect(() => {
+    document.getElementById('minus').addEventListener('click', () => {
+      if (currentPathIndex > -1) {
+        setCurrentPathIndex(currentPathIndex - 1);
+        displayPath();
+      }
+    });
+
+    document.getElementById('plus').addEventListener('click', () => {
+      if (currentPathIndex < paths1.length -1) {
+        setCurrentPathIndex(currentPathIndex + 1);
+        displayPath();
+      }
+    });
+    displayPath();
+    console.log(currentPathIndex);
+    }, [currentPathIndex])
+  
+
+
+
+  useEffect(() => {
+
+    
+
+  }, [])
+  
+  const fun = () => {
+    const paths = document.querySelectorAll(`#kvg\\:${kvgIndex} path`)
+    let delay = 0.5;
+    
+    console.log(currentPathIndex);
+    
+    paths.forEach((path) => {
+      
+      path.style.strokeDasharray = null;
+      path.style.strokeDashoffset = null;
+      path.style.animation = null;
+      const length = path.getTotalLength();
+      path.style.strokeDasharray = length;
+      path.style.strokeDashoffset = length;
+      path.style.animation = "draw 1s forwards " + delay + "s";
+      path.style.display = 'block';
+      delay += 1;
+      setCurrentPathIndex(currentPathIndex + 1)
+    })
+  }
+
+
+function deleteStrokes() {
+  paths1.forEach((path) => {path.style.display = 'none';});
+  setCurrentPathIndex(-1)
+}
+
+// onClick={hideModal}
 
   return show ? (
-    <div className="modal" onClick={hideModal}>
+    <div className="modal" >
       <div className="modal-body">
 
         <div className="kanji">
@@ -105,18 +174,29 @@ const Modal: React.FC<ModalProps> = ({ show, kanji, hideModal, handleSaveKanji, 
           >
             {strokes && <g dangerouslySetInnerHTML={{ __html: strokes.outerHTML }} />}
           </svg>
+          <div className="controls">
+            <div className="top-btns">
+            <button id="minus" className="stroke-btn"> {'<'} </button>
+            <button onClick={fun} id="fun">Draw</button> 
+            <button id="plus" className="stroke-btn"> {'>'} </button>
+            </div>
+            <div className="bot-btns">
+            <input type="checkbox" id="hardModeCheckbox" />
+            <label htmlFor="hardModeCheckbox">Hard mode</label>
+            <button onClick={deleteStrokes} id="delete-btn">Delete strokes</button>       
+            </div>
+          </div>
         </div>
 
         <div className="modal-details">
           <h1>{kanji.character}</h1>
-          <p>Meanings: {kanji.meanings.join(", ")}</p>
-          <p>Kun'yomi: {kanji.readings_kun || "N/A" }</p> 
-          <p>On'yomi: {kanji.readings_on || "N/A" }</p>
-          <p>Strokes: {kanji.strokes}</p>
-          <button onClick={() => handleSaveKanji(kanji)}>Move to learned</button>
-          <button onClick={() => createAnkiCard(kanji, `${kvgIndex}`, strokes)}>Create anki card</button>
-          
-          <button onClick={hideModal}>Close</button>
+          <h3>Meanings: {kanji.meanings.join(", ")}</h3>
+          <h3>Kun'yomi: {kanji.readings_kun || "N/A" }</h3> 
+          <h3>On'yomi: {kanji.readings_on || "N/A" }</h3>
+          <h3>Strokes: {kanji.strokes}</h3>
+          <button onClick={() => handleSaveKanji(kanji)}><h5>Move to learned</h5></button>
+          <button onClick={() => createAnkiCard(kanji, `${kvgIndex}`, strokes)}><h5>Create anki card</h5></button>         
+          <button onClick={hideModal}><h5>Close</h5></button>
         </div>
         
 

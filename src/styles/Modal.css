@@ -6,6 +6,7 @@
   height: 100%;
   background-color: rgba(0, 0, 0, 0.6);
   z-index: 1;
+  backdrop-filter: blur(5px);
 }
 
 .modal-body {
@@ -13,11 +14,13 @@
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-  background-color: #fff;
+  background-color: transparent;
+  border: 1px solid black;
   padding: 20px;
   border-radius: 10px;
   display: flex;
   flex-direction: row;
+  z-index: 10;
 }
 
 .modal-character {
@@ -27,14 +30,13 @@
   align-items: center;
 }
 
-.modal-character h3 {
-  font-size: 10em;
-  
-  margin: 0;
-}
-
 .modal-details {
+  display: flex;
   flex: 1;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
   margin-left: 20px;
 }
 
@@ -44,7 +46,33 @@
 }
 
 .modal-details button {
+  text-shadow: 1px 1px 2px rgb(209, 182, 182), 0 0 1em rgb(255, 255, 255), 0 0 0.2em rgb(255, 255, 255);
   margin-top: 10px;
+  width: 7em;
+  border-radius: 4.2px 4.2px 4.2px 4.2px;
+  background-color: transparent;
+  border: 1px solid black;
+  transition: 0.5s;
+}
+
+.controls button {
+  text-shadow: 1px 1px 2px rgb(209, 182, 182), 0 0 1em rgb(255, 255, 255), 0 0 0.2em rgb(255, 255, 255);
+  margin-top: 10px;
+  width: 7em;
+  border-radius: 4.2px 4.2px 4.2px 4.2px;
+  background-color: transparent;
+  border: 1px solid black;
+  transition: 0.5s;
+}
+
+.modal-details button:hover{
+  cursor: pointer;
+  box-shadow: 0px 5px 10px 0px rgba(0, 0, 0, 0.5);
+}
+
+.controls button:hover{
+  cursor: pointer;
+  box-shadow: 0px 5px 10px 0px rgba(0, 0, 0, 0.5);
 }
 
 .kanji path {
@@ -52,4 +80,16 @@
   stroke: rgb(145, 7, 7);
   stroke-width: 2;
   
+}
+
+svg {
+  width: 100%;
+  height: 80%;
+  
+}
+
+@keyframes draw {
+  to {
+    stroke-dashoffset: 0;
+  }
 }

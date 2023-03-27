@@ -9,6 +9,7 @@ import "../styles/Learn.css"
 import joyo from "../kanjiData/joyo.json"
 import KVGindex from "../kanjiData/kvg-index.json"
 
+
 interface Kanji {
   character?: string;
   meanings?: string[];
@@ -101,35 +102,33 @@ export const Learn = () => {
   
     sortedKanji.sort((a, b) => {
       if (sortByFreq) {
-        if (a.freq && b.freq) {
-          return a.freq - b.freq;
-        } else if (a.freq) {
-          return -1;
-        } else if (b.freq) {
+        if (a.freq === null || a.freq === undefined) {
           return 1;
+        } else if (b.freq === null || b.freq === undefined) {
+          return -1;
+        } else {
+          return a.freq - b.freq;
+        }
+      } else if (sortByGrade) {
+        if (a.grade === null || a.grade === undefined) {
+          return 1;
+        } else if (b.grade === null || b.grade === undefined) {
+          return -1;
+        } else {
+          return a.grade - b.grade;
+        }
+      } else if (sortByStrokes) {
+        if (a.strokes === null || a.strokes === undefined) {
+          return 1;
+        } else if (b.strokes === null || b.strokes === undefined) {
+          return -1;
+        } else {
+          return a.strokes - b.strokes;
         }
       }
-  
-      if (sortByGrade) {
-        return a.grade - b.grade;
-      }
-  
-      if (sortByStrokes) {
-        return a.strokes - b.strokes;
-      }
-  
-      // sort items with some undefined property to the end of the list
-      const aJlpt = a.jlpt_new || Infinity;
-      const bJlpt = b.jlpt_new || Infinity;
-      return aJlpt - bJlpt;
-      const aStrokes = a.strokes || Infinity;
-      const bStrokes = b.strokes || Infinity;
-      return aStrokes - bStrokes;
     });
   
     setKanji(sortedKanji);
-
-    
   };
   
   const handleSortByFreqChange = () => {
@@ -151,17 +150,18 @@ export const Learn = () => {
 
   //calculate color based on frequency
   const colorScale = (freq?: number) => {
-
-      if (freq === undefined) {
-          return 'rgb (0,255, 0)';
-        }
-
-        const minFreq = 1;
-        const maxFreq = 2495;
-        const normalizedFreq = (freq - minFreq) / (maxFreq - minFreq);
-        const hue = 120 + (normalizedFreq * -120); // range from green to red
-      
-        return `hsl(${hue}, 100%, 50%)`;
+    if (freq === undefined) {
+      return "hsl(140deg 50% 85%)";
+    }
+  
+    const minFreq = 1;
+    const maxFreq = 2495;
+    const normalizedFreq = (freq - minFreq) / (maxFreq - minFreq);
+    const hue = 130.13 + (20 * normalizedFreq);
+    const saturation = 63.64 + (2.21 * normalizedFreq);
+    const lightness = 52.55 - (36.47 * normalizedFreq);
+  
+    return `hsl(${hue}deg 100% ${lightness}%)`;
   };
 
   //filter kanjis and group them by JLPT
@@ -198,46 +198,47 @@ export const Learn = () => {
       modelName: kanjiData.character,
       inOrderFields: ["Character", "Meaning"],
       css: `
-      .kanji path {
-        stroke: black;
-        fill: none;
-        stroke-width: 2;
-      }
-      @keyframes draw {
-        to {
-          stroke-dashoffset: 0;
+        .kanji path {
+          stroke: black;
+          fill: none;
+          stroke-width: 2;
         }
-      }
-      svg {
-        border: 3px solid black;
-        margin: 1px; 
-      }
-      .container {
-        position: relative;
-        display: flex;
-        flex-direction: row;
-        width: 90%;
-        height: 90%;
-      }
-
+        @keyframes draw {
+          to {
+            stroke-dashoffset: 0;
+          }
+        }
+        svg {
+          border: 3px solid black;
+          margin: 1px; 
+        }
+        .container {
+          width: 90%;
+          height: 90%;
+          margin: 1%;
+        }
       .frontOfCard {
         text-align: center;
         font-size: 1313%;
         }
         .stroke-btn {
-          width: 22.5%;
+          width: 5rem;
           height: 3rem;
         }
         #fun {
-          width: 5%;
+          width: 5rem;
         }
         button, #checkbox {
           height: 3rem; 
         }
         .top-btns{
+          text-align: center;
           width: 100%;
+          margin: 0.25rem;
         }
         .bot-btns{
+          text-align: center;
+          margin: 0.25rem;
           width: 100%;
         }
       `,
@@ -266,9 +267,9 @@ export const Learn = () => {
           </div>
           </div>
           <div class="top-btns">
-          <button id="minus" class="stroke-btn"><h1> < </h1></button>
+          <button id="minus" class="stroke-btn"> < </button>
           <button onclick="fun()" id="fun">Draw</button> 
-          <button id="plus" class="stroke-btn"><h1> > </h1></button>
+          <button id="plus" class="stroke-btn"> > </button>
           </div>
           <div class="bot-btns">
           <input type="checkbox" id="hardModeCheckbox">
@@ -276,100 +277,7 @@ export const Learn = () => {
           <button onclick="deleteStrokes()" id="delete-btn">Delete strokes</button>  
           </div>
         <script>
-        var kanjiVG = "${kanjiVGID}"
-        var kanjiVG1 = "#kvg\\\\:" + kanjiVG + " path"
-        var paths1 = document.querySelectorAll(kanjiVG1);
-var currentPathIndex = -1;
-function displayPath() {
-let delay = 0.1
-paths1.forEach((path, index) => {
-  if (index <= currentPathIndex) {
-    path.style.display = 'block';
-    const length = path.getTotalLength();
-    path.style.strokeDasharray = length;
-    path.style.strokeDashoffset = length;
-    path.style.animation = "draw 1s forwards " + delay + "s";
-    
-  } else {
-    path.style.display = 'none';
-    path.style.strokeDasharray = null;
-    path.style.strokeDashoffset = null;
-    path.style.animation = null;
-  }
-});
-}
-displayPath();
-document.getElementById('minus').addEventListener('click', () => {
-if (currentPathIndex > -1) {
-  currentPathIndex--;
-  displayPath();
-}
-});
-
-document.getElementById('plus').addEventListener('click', () => {
-if (currentPathIndex < paths1.length -1) {
-  currentPathIndex++;
-  displayPath();
-}
-});
-var hardModeCheckbox = document.getElementById("hardModeCheckbox");
-hardModeCheckbox.addEventListener('change', function() {
-if (this.checked) {
-  const text = document.querySelectorAll('.text');
-  const dot = document.querySelectorAll('.dot'); 
-  dot.forEach((dot) => (dot.style.display = 'none'));
-  text.forEach((text) => (text.style.display = 'none'));
-} else {
-  const text = document.querySelectorAll('.text');
-  const dot = document.querySelectorAll('.dot'); 
-  dot.forEach((dot) => (dot.style.display = 'block'));
-  text.forEach((text) => (text.style.display = 'block'));
-}
-});
-var kanjiVG1 = "${kanjiVGID}";
-var kanjiVG11 = "#kvg\\\\:" + kanjiVG + " path";
-var paths = document.querySelectorAll(kanjiVG11);
-function fun() {
-let delay = 0.3;
-for (let i = 0; i < paths.length; i++) {
-  const path = paths[i];
-  path.style.strokeDasharray = null;
-  path.style.strokeDashoffset = null;
-  path.style.animation = null;
-  const length = path.getTotalLength();
-  path.style.strokeDasharray = length;
-  path.style.strokeDashoffset = length;
-  path.style.animation = "draw 1s forwards " + delay + "s";
-  path.style.display = 'block';
-  delay += 1;
-  currentPathIndex++
-}
-}
-var hue = 200;
-for (let i = 0; i < paths.length; i++) {
-  paths[i].style.stroke = "hsl(" + hue + ", 100%, 50%)";
-  hue += 25;
-  const start = paths[i].getPointAtLength(0);
-  const number = document.createElementNS("http://www.w3.org/2000/svg", "text");
-  number.setAttribute("x", start.x);
-  number.setAttribute("y", start.y);
-  number.textContent = i + 1;
-  number.setAttribute("font-size", "5px");
-  number.classList.add("text");
-  const strokesSVG = document.querySelector('svg');
-  strokesSVG.appendChild(number);
-  const dot = document.createElementNS("http://www.w3.org/2000/svg", "circle");
-  dot.setAttribute("cx", start.x);
-  dot.setAttribute("cy", start.y);
-  dot.setAttribute("r", "1.5");
-  dot.setAttribute("fill", "rgba(0,0,0,0.5)");
-  dot.classList.add("dot");
-  strokesSVG.appendChild(dot);
-}
-function deleteStrokes() {
-  paths1.forEach((path) => {path.style.display = 'none';});
-currentPathIndex = -1
-}      
+var kanjiVG="${kanjiVGID}",kanjiVG1="#kvg\\\\:"+kanjiVG+" path",paths1=document.querySelectorAll(kanjiVG1),currentPathIndex=-1;function displayPath(){paths1.forEach(((t,e)=>{if(e<=currentPathIndex){t.style.display="block";const e=t.getTotalLength();t.style.strokeDasharray=e,t.style.strokeDashoffset=e,t.style.animation="draw 1s forwards 0.1s"}else t.style.display="none",t.style.strokeDasharray=null,t.style.strokeDashoffset=null,t.style.animation=null}))}displayPath(),document.getElementById("minus").addEventListener("click",(()=>{currentPathIndex>-1&&(currentPathIndex--,displayPath())})),document.getElementById("plus").addEventListener("click",(()=>{currentPathIndex<paths1.length-1&&(currentPathIndex++,displayPath())}));var hardModeCheckbox=document.getElementById("hardModeCheckbox");hardModeCheckbox.addEventListener("change",(function(){if(this.checked){const t=document.querySelectorAll(".text");document.querySelectorAll(".dot").forEach((t=>t.style.display="none")),t.forEach((t=>t.style.display="none"))}else{const t=document.querySelectorAll(".text");document.querySelectorAll(".dot").forEach((t=>t.style.display="block")),t.forEach((t=>t.style.display="block"))}}));kanjiVG1="${kanjiVGID}";var kanjiVG11="#kvg\\\\:"+kanjiVG+" path",paths=document.querySelectorAll(kanjiVG11);function fun(){let t=.3;for(let e=0;e<paths.length;e++){const s=paths[e];s.style.strokeDasharray=null,s.style.strokeDashoffset=null,s.style.animation=null;const a=s.getTotalLength();s.style.strokeDasharray=a,s.style.strokeDashoffset=a,s.style.animation="draw 1s forwards "+t+"s",s.style.display="block",t+=1,currentPathIndex++}}var hue=200;for(let t=0;t<paths.length;t++){paths[t].style.stroke="hsl("+hue+", 100%, 50%)",hue+=25;const e=paths[t].getPointAtLength(0),s=document.createElementNS("http://www.w3.org/2000/svg","text");s.setAttribute("x",e.x),s.setAttribute("y",e.y),s.textContent=t+1,s.setAttribute("font-size","5px"),s.classList.add("text");const a=document.querySelector("svg");a.appendChild(s);const n=document.createElementNS("http://www.w3.org/2000/svg","circle");n.setAttribute("cx",e.x),n.setAttribute("cy",e.y),n.setAttribute("r","1.5"),n.setAttribute("fill","rgba(0,0,0,0.5)"),n.classList.add("dot"),a.appendChild(n)}function deleteStrokes(){paths1.forEach((t=>{t.style.display="none"})),currentPathIndex=-1}
       </script>`,
         }
       ]
@@ -414,7 +322,8 @@ currentPathIndex = -1
       }
     };
   };
-  
+
+  //choose multiple kanji
   const handleGenerateKanji = () => {
     // Filter out already learned kanji
     const filteredKanjiData = kanji.filter(kanji => {
@@ -438,7 +347,7 @@ currentPathIndex = -1
     setSelectedKanji(selected);
     
   };
-  
+  //create batches of kanji and then create a deck
   const createBatch = async (kanjiBatch: Kanji[]) => {
     for (const kanji of kanjiBatch) {
       try {
@@ -458,7 +367,6 @@ currentPathIndex = -1
     }
   };
  
-  
   const create = async () => {
     const batchSize = 10; // set the batch size here
     const numBatches = Math.ceil(selectedKanji.length / batchSize);
@@ -472,7 +380,7 @@ currentPathIndex = -1
   
   useEffect(() => {
 
-    create()
+    // create()
     
   }, [selectedKanji]);
 
@@ -480,7 +388,7 @@ currentPathIndex = -1
   return (
       <>
 
-      <div>
+      <div className="background">
 
         <div className="selector">
           <div className="params">
@@ -582,15 +490,16 @@ currentPathIndex = -1
           ))}
         </div>
 
-        <div>
+        {/* style={{ backgroundColor: colorScale(item.freq) }} */}
+        <div className='group-container'>
           {sortedKanji.map((group) => (
             <div key={group.level}>
               <h2>JLPT Level {group.level}</h2>
 
                 <div id="container">
                   {group.kanji.map((item, index) => (
-                    <button key={item.character} onClick={() => showModal(item)} className="kanji-button" style={{ backgroundColor: colorScale(item.freq) }}>
-                      {item.character}
+                    <button key={item.character} onClick={() => showModal(item)} className="kanji-button" >
+                     <span className="button-text"><h1>{item.character}</h1></span>
                       
                     </button>
                   ))}
