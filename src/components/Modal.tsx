@@ -31,31 +31,31 @@ const Modal: React.FC<ModalProps> = ({ show, kanji, hideModal, handleSaveKanji, 
   const [currentPathIndex, setCurrentPathIndex] = useState(-1);
 
   const fetchData = async (kanji: Kanji) => {
-
     // look up the kanjiVG index for the given kanji
     const kanjiIndex = KVGindex[kanji].find(index => index.length === 9).slice(0, -4);
     const response2 = await fetch('src/kanjiData/joyo_kanji_vg.xml');
     const xmlString = await response2.text();
     const xmlDoc = new DOMParser().parseFromString(xmlString, "text/xml");
-  
     // look up the kanji svg in the XML file using the kanji VG index
     const kanjiElement = xmlDoc.querySelector(`[id="kvg:${kanjiIndex}"]`);
   
     setStrokes(kanjiElement)
     setKvgIndex(kanjiIndex)
-  }
+  };
 
   useEffect(() => {
+
     if(show){
       fetchData(kanji.character);
-      kvgPaths()
+      kvgPaths();
+      setCurrentPathIndex(document.querySelectorAll(`#kvg\\:${kvgIndex} path`).length);
     }
     
   }, [kvgIndex]);
 
   //drawing functions
   const kvgPaths = () => {
-    const paths = Array.from(document.querySelectorAll(`#kvg\\:${kvgIndex} path`));
+    const paths = document.querySelectorAll(`#kvg\\:${kvgIndex} path`)
     let hue = 200;
     paths.forEach((path, i) => {
       path.style.stroke = `hsl(${hue + i * 25}, 100%, 50%)`;
@@ -76,84 +76,60 @@ const Modal: React.FC<ModalProps> = ({ show, kanji, hideModal, handleSaveKanji, 
       dot.classList.add("dot");
       strokesSVG.appendChild(dot);
     });
-  }
+  };
 
-const paths1 = document.querySelectorAll(`#kvg\\:${kvgIndex} path`);
+  const handleMinusClick = () => {
+    const paths = [...document.querySelectorAll(`#kvg\\:${kvgIndex} path`)];
 
-
-const displayPath = () => {
-  let delay = 0.5
-  paths1.forEach((path, index) => {
-    if (index <= currentPathIndex) {
-          path.style.display = 'block';
-          const length = path.getTotalLength();
-          path.style.strokeDasharray = length;
-          path.style.strokeDashoffset = length;
-          path.style.animation = "draw 1s forwards " + delay + "s";
-      
+    if (currentPathIndex > 0) {
+      paths[currentPathIndex-1].style.display = 'none';
+      paths[currentPathIndex-1].style.strokeDasharray = null;
+      paths[currentPathIndex-1].style.strokeDashoffset = null;
+      paths[currentPathIndex-1].style.animation = null;
+      setCurrentPathIndex(currentPathIndex - 1);
     } else {
-          path.style.display = 'none';
-          path.style.strokeDasharray = null;
-          path.style.strokeDashoffset = null;
-          path.style.animation = null;
+      setCurrentPathIndex(0)
     }
-  });
-}
+  };
 
+  const handlePlusClick = () => {
+    const paths = [...document.querySelectorAll(`#kvg\\:${kvgIndex} path`)];
 
-  useEffect(() => {
-    document.getElementById('minus').addEventListener('click', () => {
-      if (currentPathIndex > -1) {
-        setCurrentPathIndex(currentPathIndex - 1);
-        displayPath();
-      }
-    });
-
-    document.getElementById('plus').addEventListener('click', () => {
-      if (currentPathIndex < paths1.length -1) {
-        setCurrentPathIndex(currentPathIndex + 1);
-        displayPath();
-      }
-    });
-    displayPath();
-    console.log(currentPathIndex);
-    }, [currentPathIndex])
-  
-
-
-
-  useEffect(() => {
-
-    
-
-  }, [])
-  
-  const fun = () => {
-    const paths = document.querySelectorAll(`#kvg\\:${kvgIndex} path`)
-    let delay = 0.5;
-    
-    console.log(currentPathIndex);
-    
-    paths.forEach((path) => {
-      
-      path.style.strokeDasharray = null;
-      path.style.strokeDashoffset = null;
-      path.style.animation = null;
-      const length = path.getTotalLength();
-      path.style.strokeDasharray = length;
-      path.style.strokeDashoffset = length;
-      path.style.animation = "draw 1s forwards " + delay + "s";
-      path.style.display = 'block';
-      delay += 1;
+    if (currentPathIndex <= paths.length-1) {
+      paths[currentPathIndex].style.display = 'block';
+      const length = paths[currentPathIndex].getTotalLength();
+      paths[currentPathIndex].style.strokeDasharray = length;
+      paths[currentPathIndex].style.strokeDashoffset = length;
+      paths[currentPathIndex].style.animation = "draw 1s forwards 0.3s";
       setCurrentPathIndex(currentPathIndex + 1)
-    })
+    } else {
+      setCurrentPathIndex(paths.length)
+    }
+  };
+
+  const draw = () => {
+    const paths = [...document.querySelectorAll(`#kvg\\:${kvgIndex} path`)]
+    let delay = 0.5;
+      
+    for (let i = 0; i < paths.length; i++) {
+      paths[i].style.strokeDasharray = null;
+      paths[i].style.strokeDashoffset = null;
+      paths[i].style.animation = null;
+      paths[i].style.display = 'block';
+      const length = paths[i].getTotalLength();
+      paths[i].style.strokeDasharray = length;
+      paths[i].style.strokeDashoffset = length;
+      paths[i].style.animation = "draw 1s forwards " + delay + "s";
+      delay += 1 
+    }
+  };
+
+
+  const deleteStrokes = () => {
+    const paths = document.querySelectorAll(`#kvg\\:${kvgIndex} path`)
+    paths.forEach((path) => {path.style.display = 'none';});
+    setCurrentPathIndex(0)
   }
-
-
-function deleteStrokes() {
-  paths1.forEach((path) => {path.style.display = 'none';});
-  setCurrentPathIndex(-1)
-}
 
 // onClick={hideModal}
 
@@ -176,14 +152,14 @@ function deleteStrokes() {
           </svg>
           <div className="controls">
             <div className="top-btns">
-            <button id="minus" className="stroke-btn"> {'<'} </button>
-            <button onClick={fun} id="fun">Draw</button> 
-            <button id="plus" className="stroke-btn"> {'>'} </button>
+            <button onClick={handleMinusClick}> {'<'} </button>
+            <button onClick={draw}>Draw</button> 
+            <button onClick={handlePlusClick}> {'>'} </button>
             </div>
             <div className="bot-btns">
-            <input type="checkbox" id="hardModeCheckbox" />
-            <label htmlFor="hardModeCheckbox">Hard mode</label>
-            <button onClick={deleteStrokes} id="delete-btn">Delete strokes</button>       
+            {/* <input type="checkbox" id="hardModeCheckbox" />
+            <label htmlFor="hardModeCheckbox">Hard mode</label> */}
+            <button onClick={deleteStrokes} id="delete-btn">Erase</button>       
             </div>
           </div>
         </div>

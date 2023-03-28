@@ -124,7 +124,7 @@ return(
               {learnedKanjiByJlpt[jlpt] && learnedKanjiByJlpt[jlpt].length > 0 && (
                 <ul>
                   {learnedKanjiByJlpt[jlpt].map((kanji) => (
-                    <button key={kanji.character} onClick={() => showModal(kanji)}>{kanji.character}</button>
+                    <button key={kanji.character} onClick={() => showModal(kanji)}><h3>{kanji.character}</h3></button>
                   ))}
 
                 </ul>
