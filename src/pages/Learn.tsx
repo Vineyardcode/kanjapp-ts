@@ -388,7 +388,8 @@ var kanjiVG="${kanjiVGID}",kanjiVG1="#kvg\\\\:"+kanjiVG+" path",paths1=document.
   return (
       <>
 
-      <div className="background">
+     
+
 
         <div className="selector">
           <div className="params">
@@ -459,35 +460,36 @@ var kanjiVG="${kanjiVGID}",kanjiVG1="#kvg\\\\:"+kanjiVG+" path",paths1=document.
           </div>
         </div>
 
-        <section>
-          <h3>Sort</h3>
-              <label>
-                  <input type="checkbox" checked={sortByFreq} onChange={handleSortByFreqChange} />
-                  Sort by frequency
-                </label>
+        <div className="filters">
+          <div>
+            <h3>Sort</h3>
                 <label>
-                  <input type="checkbox" checked={sortByGrade} onChange={handleSortByGradeChange} />
-                  Sort by grade
+                    <input type="checkbox" checked={sortByFreq} onChange={handleSortByFreqChange} />
+                    Sort by frequency
+                  </label>
+                  <label>
+                    <input type="checkbox" checked={sortByGrade} onChange={handleSortByGradeChange} />
+                    Sort by grade
+                  </label>
+                  <label>
+                    <input type="checkbox" checked={sortByStrokes} onChange={handleSortByStrokesChange} />
+                    Sort by strokes
                 </label>
-                <label>
-                  <input type="checkbox" checked={sortByStrokes} onChange={handleSortByStrokesChange} />
-                  Sort by strokes
+          </div>
+          <div>
+            <h3>Select JLPT levels:</h3>
+            {[5, 4, 3, 2, 1].map((level) => (
+              <label key={level}>
+                <input
+                  type="checkbox"
+                  value={level}
+                  checked={selectedLevels.includes(level)}
+                  onChange={handleLevelSelection}
+                />
+                N{level}
               </label>
-        </section>
-
-        <div>
-          <h3>Select JLPT levels:</h3>
-          {[5, 4, 3, 2, 1].map((level) => (
-            <label key={level}>
-              <input
-                type="checkbox"
-                value={level}
-                checked={selectedLevels.includes(level)}
-                onChange={handleLevelSelection}
-              />
-              N{level}
-            </label>
-          ))}
+            ))}
+          </div>
         </div>
 
         {/* style={{ backgroundColor: colorScale(item.freq) }} */}
@@ -520,7 +522,7 @@ var kanjiVG="${kanjiVGID}",kanjiVG1="#kvg\\\\:"+kanjiVG+" path",paths1=document.
               )}
         </div>
 
-      </div>
+      
         
     </>
   );
