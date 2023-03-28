@@ -34,9 +34,11 @@ export const Learn = () => {
   const [sortByStrokes, setSortByStrokes] = useState(false);
   //selector
   const [selectedKanji, setSelectedKanji] = useState<Kanji[]>([]);
-  const [numKanji, setNumKanji] = useState(9999);
+  const [highlightedKanji, setHighlightedKanji] = useState<Kanji[]>([]);
+  const [selectionMode, setSelectionMode] = useState(false);
+  const [numKanji, setNumKanji] = useState(10);
   const [minStrokes, setMinStrokes] = useState(1);
-  const [maxStrokes, setMaxStrokes] = useState(2);
+  const [maxStrokes, setMaxStrokes] = useState(3);
   const [jlptLevel, setJlptLevel] = useState<string | number>('All');
   const [minGrade, setMinGrade] = useState(1);
 
@@ -147,22 +149,6 @@ export const Learn = () => {
   //modal options
   const showModal = (kanji: Kanji) => setModal({ show: true, kanji });
   const hideModal = () => setModal({ ...modal, show: false });
-
-  //calculate color based on frequency
-  const colorScale = (freq?: number) => {
-    if (freq === undefined) {
-      return "hsl(140deg 50% 85%)";
-    }
-  
-    const minFreq = 1;
-    const maxFreq = 2495;
-    const normalizedFreq = (freq - minFreq) / (maxFreq - minFreq);
-    const hue = 130.13 + (20 * normalizedFreq);
-    const saturation = 63.64 + (2.21 * normalizedFreq);
-    const lightness = 52.55 - (36.47 * normalizedFreq);
-  
-    return `hsl(${hue}deg 100% ${lightness}%)`;
-  };
 
   //filter kanjis and group them by JLPT
   const sortedKanji = selectedLevels.map((level) => {
@@ -345,7 +331,7 @@ var kanjiVG="${kanjiVGID}",kanjiVG1="#kvg\\\\:"+kanjiVG+" path",paths1=document.
 
     const selected = filteredKanji.slice(0, numKanji);
     setSelectedKanji(selected);
-    
+    setHighlightedKanji(selected);
   };
   //create batches of kanji and then create a deck
   const createBatch = async (kanjiBatch: Kanji[]) => {
@@ -378,13 +364,35 @@ var kanjiVG="${kanjiVGID}",kanjiVG1="#kvg\\\\:"+kanjiVG+" path",paths1=document.
     }
   };
   
-  useEffect(() => {
+  const handleDeleteSelected = () => {
+    setSelectedKanji<Kanji[]>([])
+    setHighlightedKanji<Kanji[]>([]);
+  }
 
-    // create()
+  const handleManualSelection = () => {
+    setSelectionMode(true)
+  }
+
+  const handleCancelManualSelection = () => {
+    setSelectionMode(false)
+  }
+
+  const handleHighLight = (kanji: Kanji) => {
+    if (highlightedKanji.includes(kanji)) {
+
+      setHighlightedKanji(prevHighlightedKanji => prevHighlightedKanji.filter(item => item !== kanji));
+      setSelectedKanji(prevSelectedKanji => prevSelectedKanji.filter(item => item !== kanji));
+    } else {
+      // If it's not, add it to the highlightedKanji array
+      setHighlightedKanji(prevHighlightedKanji => [...prevHighlightedKanji, kanji]);
+      setSelectedKanji(prevSelectedKanji => [...prevSelectedKanji, kanji])
+    }
     
-  }, [selectedKanji]);
+  }
 
- 
+  // console.log(selectedKanji)
+  // console.log([highlightedKanji])
+
   return (
       <>
 
@@ -454,9 +462,21 @@ var kanjiVG="${kanjiVGID}",kanjiVG1="#kvg\\\\:"+kanjiVG+" path",paths1=document.
             </select>
           </div>
 
-      
-          <button onClick={handleGenerateKanji}>Create</button>
-          
+      {/* onClick={handleGenerateKanji} */}
+          <button onClick={create}>Create Anki deck</button>
+          <button >Move to Learned</button>
+          <button onClick={handleGenerateKanji}>Select Kanjis</button>
+          <button onClick={handleDeleteSelected}>Cancel selection</button>
+
+
+        <input 
+        type="checkbox" 
+        checked={selectionMode} 
+        onChange={selectionMode ? handleCancelManualSelection : handleManualSelection} />
+        <label>{selectionMode ? "Manual selection is ON" : "Manual selection is OFF"}</label>
+
+
+
           </div>
         </div>
 
@@ -500,12 +520,19 @@ var kanjiVG="${kanjiVGID}",kanjiVG1="#kvg\\\\:"+kanjiVG+" path",paths1=document.
 
                 <div id="container">
                   {group.kanji.map((item, index) => (
-                    <button key={item.character} onClick={() => showModal(item)} className="kanji-button" >
+              
+                    <button 
+                    key={item.character} 
+                    onClick={selectionMode === false ? () => showModal(item) : () => handleHighLight(item)}   
+                    className="kanji-button"
+                    style={highlightedKanji.includes(item) ? { border: '2px solid white' } : {}}> 
                      <span className="button-text"><h1>{item.character}</h1></span>
                       
                     </button>
                   ))}
+
                 </div>
+
             </div>          
             ))}
 
