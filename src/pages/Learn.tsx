@@ -8,7 +8,7 @@ import Modal from '../components/Modal';
 import "../styles/Learn.css"
 import joyo from "../kanjiData/joyo.json"
 import KVGindex from "../kanjiData/kvg-index.json"
-
+import IconArrowsAlt from '../assets/icons/arrows-alt';
 
 interface Kanji {
   character?: string;
@@ -429,11 +429,6 @@ var kanjiVG="${kanjiVGID}",kanjiVG1="#kvg\\\\:"+kanjiVG+" path",paths1=document.
   return (
       <>
 
-     
-        <button onClick={handleShowSelector}>Show selector</button>
-
-
-
         <div className="filters">
           <div>
             <h3>Sort</h3>
@@ -502,9 +497,9 @@ var kanjiVG="${kanjiVGID}",kanjiVG1="#kvg\\\\:"+kanjiVG+" path",paths1=document.
               )}
         </div>
 
-     {selectorShown && (
+        {selectorShown && (
 
-           <div className="selector">
+        <div className="selector">
           <div className="params">
             <div>
               <label htmlFor="numKanji">Number of Kanji:</label>
@@ -566,9 +561,11 @@ var kanjiVG="${kanjiVGID}",kanjiVG1="#kvg\\\\:"+kanjiVG+" path",paths1=document.
               <option value={9}>9</option>
               </select>
             </div>
+          </div>
 
             {/* onClick={} */}
             <div className='selector-btns'>
+              
               <button onClick={create}>Create Anki deck from selected kanji</button>
               <button onClick={createBatchesForSavingKanji}>Move selected kanji to Learned</button>
               <button onClick={handleGenerateKanji}>Select Kanjis</button>
@@ -581,10 +578,12 @@ var kanjiVG="${kanjiVGID}",kanjiVG1="#kvg\\\\:"+kanjiVG+" path",paths1=document.
               <label>{selectionMode ? "Manual selection is ON" : "Manual selection is OFF"}</label>
 
             </div>
-          </div>
-     </div>
+          <IconArrowsAlt className='arrowsAlt' onClick={handleShowSelector}/>
+        </div>
+        
+          )}   
 
-     )}   
+      {!selectorShown && (<IconArrowsAlt id='arrowsAlt-outer' onClick={handleShowSelector}/>)}   
      
 
         
