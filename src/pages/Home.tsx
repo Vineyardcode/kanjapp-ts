@@ -9,6 +9,7 @@ import ProgressBar from '../components/ProgressBar';
 import joyo from "../kanjiData/joyo.json"
 //style
 import "../styles/Home.css"
+import WeatherWidget from '../components/WeatherWidget';
 
 export const Home = () => {
 
@@ -139,6 +140,10 @@ return(
       })}
     </div>  
 
+    <div>
+      <h1>Check if today's weather is ok to learn some new kanji</h1>
+      <WeatherWidget />
+    </div>
 
   </>
 );
