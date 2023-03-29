@@ -28,7 +28,7 @@ export const Learn = () => {
   const [kanji, setKanji] = useState(joyo); 
   const [modal, setModal] = useState<Modal>({ show: false, kanji: {} })
   const [learnedKanjiArray, setLearnedKanjiArray] = useState<Kanji[]>([]);
-  const [selectedLevels, setSelectedLevels] = useState([]);
+  const [selectedLevels, setSelectedLevels] = useState([5]);
   const [sortByFreq, setSortByFreq] = useState(false);
   const [sortByGrade, setSortByGrade] = useState(false);
   const [sortByStrokes, setSortByStrokes] = useState(false);
@@ -36,6 +36,7 @@ export const Learn = () => {
   const [selectedKanji, setSelectedKanji] = useState<Kanji[]>([]);
   const [highlightedKanji, setHighlightedKanji] = useState<Kanji[]>([]);
   const [selectionMode, setSelectionMode] = useState(false);
+  const [selectorShown, setSelectorShown] = useState(false);
   const [numKanji, setNumKanji] = useState(10);
   const [minStrokes, setMinStrokes] = useState(1);
   const [maxStrokes, setMaxStrokes] = useState(3);
@@ -68,7 +69,7 @@ export const Learn = () => {
     }
   }, []);
 
-  //
+  //save kanji to database
   const handleSaveKanji = async (kanji: Kanji) => { 
 
     const currentUser = auth.currentUser?.uid;
@@ -90,6 +91,28 @@ export const Learn = () => {
     }
     setLearnedKanjiArray(learnedKanjiArray)
     handleSaveKanji(kanji)
+  };
+
+  //create batches for saving kanji
+  const saveBatchesForSavingKanji = async (kanjiBatch: Kanji[]) => {
+    for (const kanji of kanjiBatch) {
+      try {
+        await saveKanji(kanji)       
+      } catch (error) {
+        console.error(error);
+      }
+    }
+  };
+
+  const createBatchesForSavingKanji = async () => {
+    const batchSize = 10; // set the batch size here
+    const numBatches = Math.ceil(selectedKanji.length / batchSize);
+    for (let i = 0; i < numBatches; i++) {
+      const start = i * batchSize;
+      const end = Math.min((i + 1) * batchSize, selectedKanji.length);
+      const kanjiBatch = selectedKanji.slice(start, end);
+      await saveBatchesForSavingKanji(kanjiBatch);
+    }
   };
 
   // call the sorting function every time a sorting option is changed
@@ -333,7 +356,8 @@ var kanjiVG="${kanjiVGID}",kanjiVG1="#kvg\\\\:"+kanjiVG+" path",paths1=document.
     setSelectedKanji(selected);
     setHighlightedKanji(selected);
   };
-  //create batches of kanji and then create a deck
+
+  //create batches of kanji for anki deck creation
   const createBatch = async (kanjiBatch: Kanji[]) => {
     for (const kanji of kanjiBatch) {
       try {
@@ -352,7 +376,7 @@ var kanjiVG="${kanjiVGID}",kanjiVG1="#kvg\\\\:"+kanjiVG+" path",paths1=document.
       }
     }
   };
- 
+  
   const create = async () => {
     const batchSize = 10; // set the batch size here
     const numBatches = Math.ceil(selectedKanji.length / batchSize);
@@ -364,6 +388,7 @@ var kanjiVG="${kanjiVGID}",kanjiVG1="#kvg\\\\:"+kanjiVG+" path",paths1=document.
     }
   };
   
+  //visual selector
   const handleDeleteSelected = () => {
     setSelectedKanji<Kanji[]>([])
     setHighlightedKanji<Kanji[]>([]);
@@ -390,6 +415,14 @@ var kanjiVG="${kanjiVGID}",kanjiVG1="#kvg\\\\:"+kanjiVG+" path",paths1=document.
     
   }
 
+  const handleShowSelector = () => {
+    if (selectorShown === true) {
+      setSelectorShown(false)
+    } else {
+      setSelectorShown(true)
+    }
+  }
+
   // console.log(selectedKanji)
   // console.log([highlightedKanji])
 
@@ -397,88 +430,9 @@ var kanjiVG="${kanjiVGID}",kanjiVG1="#kvg\\\\:"+kanjiVG+" path",paths1=document.
       <>
 
      
+        <button onClick={handleShowSelector}>Show selector</button>
 
 
-        <div className="selector">
-          <div className="params">
-          <div>
-            <label htmlFor="numKanji">Number of Kanji:</label>
-            <input
-            type="number"
-            name="numKanji"
-            value={numKanji}
-            onChange={(e) => setNumKanji(Number(e.target.value))}
-            />
-          </div>
-          <div>
-            <label htmlFor="minStrokes">Minimum strokes:</label>
-            <input
-              type="number"
-              name="minStrokes"
-              value={minStrokes}
-              onChange={(e) => setMinStrokes(Number(e.target.value))}
-            />
-          </div>
-          <div>
-            <label htmlFor="maxStrokes">Maximum strokes:</label>
-            <input
-              type="number"
-              name="maxStrokes"
-              value={maxStrokes}
-              onChange={(e) => setMaxStrokes(Number(e.target.value))}
-            />
-          </div>
-          <div>
-            <label htmlFor="jlptLevel">JLPT level:</label>
-            <select
-              name="jlptLevel"
-              value={jlptLevel}
-              onChange={(e) => setJlptLevel(Number(e.target.value))}
-            >
-              <option value="">All</option>
-              <option value={1}>N1</option>
-              <option value={2}>N2</option>
-              <option value={3}>N3</option>
-              <option value={4}>N4</option>
-              <option value={5}>N5</option>
-              
-            </select>
-          </div>
-          <div>
-            <label htmlFor="minGrade">Minimum grade:</label>
-            <select
-              name="minGrade"
-              value={minGrade}
-              onChange={(e) => setMinGrade(Number(e.target.value))}
-            >
-            <option value={1}>1</option>
-            <option value={2}>2</option>
-            <option value={3}>3</option>
-            <option value={4}>4</option>
-            <option value={5}>5</option>
-            <option value={6}>6</option>
-            <option value={8}>8</option>
-            <option value={9}>9</option>
-            </select>
-          </div>
-
-      {/* onClick={handleGenerateKanji} */}
-          <button onClick={create}>Create Anki deck</button>
-          <button >Move to Learned</button>
-          <button onClick={handleGenerateKanji}>Select Kanjis</button>
-          <button onClick={handleDeleteSelected}>Cancel selection</button>
-
-
-        <input 
-        type="checkbox" 
-        checked={selectionMode} 
-        onChange={selectionMode ? handleCancelManualSelection : handleManualSelection} />
-        <label>{selectionMode ? "Manual selection is ON" : "Manual selection is OFF"}</label>
-
-
-
-          </div>
-        </div>
 
         <div className="filters">
           <div>
@@ -512,7 +466,6 @@ var kanjiVG="${kanjiVGID}",kanjiVG1="#kvg\\\\:"+kanjiVG+" path",paths1=document.
           </div>
         </div>
 
-        {/* style={{ backgroundColor: colorScale(item.freq) }} */}
         <div className='group-container'>
           {sortedKanji.map((group) => (
             <div key={group.level}>
@@ -549,7 +502,91 @@ var kanjiVG="${kanjiVGID}",kanjiVG1="#kvg\\\\:"+kanjiVG+" path",paths1=document.
               )}
         </div>
 
-      
+     {selectorShown && (
+
+           <div className="selector">
+          <div className="params">
+            <div>
+              <label htmlFor="numKanji">Number of Kanji:</label>
+              <input
+              type="number"
+              name="numKanji"
+              value={numKanji}
+              onChange={(e) => setNumKanji(Number(e.target.value))}
+              />
+            </div>
+            <div>
+              <label htmlFor="minStrokes">Minimum strokes:</label>
+              <input
+                type="number"
+                name="minStrokes"
+                value={minStrokes}
+                onChange={(e) => setMinStrokes(Number(e.target.value))}
+              />
+            </div>
+            <div>
+              <label htmlFor="maxStrokes">Maximum strokes:</label>
+              <input
+                type="number"
+                name="maxStrokes"
+                value={maxStrokes}
+                onChange={(e) => setMaxStrokes(Number(e.target.value))}
+              />
+            </div>
+            <div>
+              <label htmlFor="jlptLevel">JLPT level:</label>
+              <select
+                name="jlptLevel"
+                value={jlptLevel}
+                onChange={(e) => setJlptLevel(Number(e.target.value))}
+              >
+                <option value="">All</option>
+                <option value={1}>N1</option>
+                <option value={2}>N2</option>
+                <option value={3}>N3</option>
+                <option value={4}>N4</option>
+                <option value={5}>N5</option>
+                
+              </select>
+            </div>
+            <div>
+              <label htmlFor="minGrade">Minimum grade:</label>
+              <select
+                name="minGrade"
+                value={minGrade}
+                onChange={(e) => setMinGrade(Number(e.target.value))}
+              >
+              <option value={1}>1</option>
+              <option value={2}>2</option>
+              <option value={3}>3</option>
+              <option value={4}>4</option>
+              <option value={5}>5</option>
+              <option value={6}>6</option>
+              <option value={8}>8</option>
+              <option value={9}>9</option>
+              </select>
+            </div>
+
+            {/* onClick={} */}
+            <div className='selector-btns'>
+              <button onClick={create}>Create Anki deck from selected kanji</button>
+              <button onClick={createBatchesForSavingKanji}>Move selected kanji to Learned</button>
+              <button onClick={handleGenerateKanji}>Select Kanjis</button>
+              <button onClick={handleDeleteSelected}>Cancel selection</button>
+
+              <input 
+              type="checkbox" 
+              checked={selectionMode} 
+              onChange={selectionMode ? handleCancelManualSelection : handleManualSelection} />
+              <label>{selectionMode ? "Manual selection is ON" : "Manual selection is OFF"}</label>
+
+            </div>
+          </div>
+     </div>
+
+     )}   
+     
+
         
     </>
   );

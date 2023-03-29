@@ -19,7 +19,6 @@
   transition: 0.5s;
   color: #000;
   vertical-align: middle;
-  
 }
 
 .button-text{
@@ -61,7 +60,14 @@
 }
 
 .filters div{
- margin: 5%; 
+  margin: 5%; 
+}
+
+.selector {
+  position: fixed;
+  bottom: 0;
+  backdrop-filter: blur(3px);
+  padding: 5px;
 }
 
 .selector button {
