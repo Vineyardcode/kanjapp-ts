@@ -9,7 +9,7 @@ import ProgressBar from '../components/ProgressBar';
 import joyo from "../kanjiData/joyo.json"
 //style
 import "../styles/Home.css"
-import WeatherWidget from '../components/WeatherWidget';
+import WeatherWidget from '../components/WeatherWidget/WeatherWidget';
 
 export const Home = () => {
 
@@ -100,51 +100,54 @@ export const Home = () => {
 
 return(
   <>
-    <div className="stats">
-      <h1>Kanji you learned so far:</h1>
+    <div className="home">
 
-      {modal.show && (
-          <div>
-            <div>Character: {modal.kanji.character}</div>
-            <div>Meaning: {modal.kanji.meanings[0]}</div>
-            <div>Frequency: {modal.kanji.freq}</div>
-            <div>Grade: {modal.kanji.grade}</div>
-            <div>JLPT (New): {modal.kanji.jlpt_new}</div>
-            <div>Strokes: {modal.kanji.strokes}</div>
-            <button onClick={() => handleForgetKanji(modal.kanji)}>Forget this kanji</button>
-            <button onClick={hideModal}>Close</button>
-            {/* <button onClick={() => handleKanjiClick(modal.kanji.character)}> test aaa</button> */}          
-          </div>
-        )}
-      {Object.keys(percentByJlpt).map((jlpt) => {
-        if (jlpt !== "undefined") { // skip undefined JLPT levels
-          return (
-            <div key={jlpt}>
-              <h2>JLPT N{jlpt} kanji learned</h2>
-              <ProgressBar percent={percentByJlpt[jlpt]} />
-              {learnedKanjiByJlpt[jlpt] && learnedKanjiByJlpt[jlpt].length > 0 && (
-                <ul>
-                  {learnedKanjiByJlpt[jlpt].map((kanji) => (
-                    <button key={kanji.character} onClick={() => showModal(kanji)}><h3>{kanji.character}</h3></button>
-                  ))}
+      <div className='WeatherWidget'>
+        <h3>Check if today's weather is ok to learn kanji</h3>
+        <WeatherWidget />
+      </div>
 
-                </ul>
-              )}
+      <div className="stats">
+        <h1>Kanji you learned so far:</h1>
 
+        {modal.show && (
+            <div>
+              <div>Character: {modal.kanji.character}</div>
+              <div>Meaning: {modal.kanji.meanings[0]}</div>
+              <div>Frequency: {modal.kanji.freq}</div>
+              <div>Grade: {modal.kanji.grade}</div>
+              <div>JLPT (New): {modal.kanji.jlpt_new}</div>
+              <div>Strokes: {modal.kanji.strokes}</div>
+              <button onClick={() => handleForgetKanji(modal.kanji)}>Forget this kanji</button>
+              <button onClick={hideModal}>Close</button>
+              {/* <button onClick={() => handleKanjiClick(modal.kanji.character)}> test aaa</button> */}          
             </div>
-          );
-        } else {
-          percentByJlpt[1] = percentByJlpt[1] || 0; // add percentage to JLPT 1
-          return null; // return null for undefined JLPT levels
-        }
-      })}
-    </div>  
+          )}
+        {Object.keys(percentByJlpt).map((jlpt) => {
+          if (jlpt !== "undefined") { // skip undefined JLPT levels
+            return (
+              <div key={jlpt}>
+                <h2>JLPT N{jlpt} kanji learned</h2>
+                <ProgressBar percent={percentByJlpt[jlpt]} />
+                {learnedKanjiByJlpt[jlpt] && learnedKanjiByJlpt[jlpt].length > 0 && (
+                  <ul>
+                    {learnedKanjiByJlpt[jlpt].map((kanji) => (
+                      <button key={kanji.character} onClick={() => showModal(kanji)}><h3>{kanji.character}</h3></button>
+                    ))}
 
-    <div>
-      <h1>Check if today's weather is ok to learn some new kanji</h1>
-      <WeatherWidget />
+                  </ul>
+                )}
+
+              </div>
+            );
+          } else {
+            percentByJlpt[1] = percentByJlpt[1] || 0; // add percentage to JLPT 1
+            return null; // return null for undefined JLPT levels
+          }
+        })}
+      </div> 
+      
     </div>
-
   </>
-);
+  );
 };
