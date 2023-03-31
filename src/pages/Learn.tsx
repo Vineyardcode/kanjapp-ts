@@ -9,6 +9,7 @@ import "../styles/Learn.css"
 import joyo from "../kanjiData/joyo.json"
 import KVGindex from "../kanjiData/kvg-index.json"
 import IconArrowsAlt from '../assets/icons/arrows-alt';
+import ProgressBar from '../components/ProgressBar';
 
 interface Kanji {
   character?: string;
@@ -42,7 +43,7 @@ export const Learn = () => {
   const [maxStrokes, setMaxStrokes] = useState(3);
   const [jlptLevel, setJlptLevel] = useState<string | number>('All');
   const [minGrade, setMinGrade] = useState(1);
-
+  const [completed, setCompleted] = useState(0)
 
   // fetch kanjis
   const fetchData = async () => {
@@ -200,56 +201,60 @@ export const Learn = () => {
     
   };
 
+  
+
   // create anki flash cards out of selected kanji
   const createAnkiCard = (kanjiData, kanjiVGID, svgPaths) => {
+   
+
     const api = new XMLHttpRequest();
     const model = {
       modelName: kanjiData.character,
       inOrderFields: ["Character", "Meaning"],
       css: `
-        .kanji path {
-          stroke: black;
-          fill: none;
-          stroke-width: 2;
+      body {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-content: center;
+        text-align: center;
+      }
+      .kanji path {
+        stroke: black;
+        fill: none;
+        stroke-width: 2;
+      }
+      @keyframes draw {
+        to {
+          stroke-dashoffset: 0;
         }
-        @keyframes draw {
-          to {
-            stroke-dashoffset: 0;
-          }
-        }
-        svg {
-          border: 3px solid black;
-          margin: 1px; 
-        }
-        .container {
-          width: 90%;
-          height: 90%;
-          margin: 1%;
-        }
+      } 
+      .container {
+        flex: 2;
+        align-self: center;
+        justify-self: center;
+        width: 100%;
+        height: 100%;
+        margin: 1%;
+        border: 3px solid black;
+      }
       .frontOfCard {
         text-align: center;
         font-size: 1313%;
         }
-        .stroke-btn {
-          width: 5rem;
-          height: 3rem;
-        }
-        #fun {
-          width: 5rem;
-        }
-        button, #checkbox {
-          height: 3rem; 
-        }
-        .top-btns{
-          text-align: center;
-          width: 100%;
-          margin: 0.25rem;
-        }
-        .bot-btns{
-          text-align: center;
-          margin: 0.25rem;
-          width: 100%;
-        }
+      .btns {
+        display: flex;
+        gap: 3px;
+        justify-content: center;
+        flex-flow: row wrap;
+        justify-content: center;
+        flex: 2;
+        margin: 1rem; 
+      }
+      .btns button {
+        width: 5rem;
+        height: 3rem;
+      }
       `,
       cardTemplates: [
         {
@@ -275,18 +280,17 @@ export const Learn = () => {
           </svg>
           </div>
           </div>
-          <div class="top-btns">
+          <div class="btns">
           <button id="minus" class="stroke-btn"> < </button>
           <button onclick="fun()" id="fun">Draw</button> 
           <button id="plus" class="stroke-btn"> > </button>
-          </div>
-          <div class="bot-btns">
-          <input type="checkbox" id="hardModeCheckbox">
-          <label for="hardModeCheckbox">Hard mode</label>
-          <button onclick="deleteStrokes()" id="delete-btn">Delete strokes</button>  
-          </div>
+          <button id="hardModeCheckbox">Hard mode</button>
+          <button onclick="showStrokes()" id="show-btn">Show strokes</button> 
+          <button onclick="deleteStrokes()" id="delete-btn">Delete strokes</button>       
+          </div>         
+      
         <script>
-var kanjiVG="${kanjiVGID}",kanjiVG1="#kvg\\\\:"+kanjiVG+" path",paths1=document.querySelectorAll(kanjiVG1),currentPathIndex=-1;function displayPath(){paths1.forEach(((t,e)=>{if(e<=currentPathIndex){t.style.display="block";const e=t.getTotalLength();t.style.strokeDasharray=e,t.style.strokeDashoffset=e,t.style.animation="draw 1s forwards 0.1s"}else t.style.display="none",t.style.strokeDasharray=null,t.style.strokeDashoffset=null,t.style.animation=null}))}displayPath(),document.getElementById("minus").addEventListener("click",(()=>{currentPathIndex>-1&&(currentPathIndex--,displayPath())})),document.getElementById("plus").addEventListener("click",(()=>{currentPathIndex<paths1.length-1&&(currentPathIndex++,displayPath())}));var hardModeCheckbox=document.getElementById("hardModeCheckbox");hardModeCheckbox.addEventListener("change",(function(){if(this.checked){const t=document.querySelectorAll(".text");document.querySelectorAll(".dot").forEach((t=>t.style.display="none")),t.forEach((t=>t.style.display="none"))}else{const t=document.querySelectorAll(".text");document.querySelectorAll(".dot").forEach((t=>t.style.display="block")),t.forEach((t=>t.style.display="block"))}}));kanjiVG1="${kanjiVGID}";var kanjiVG11="#kvg\\\\:"+kanjiVG+" path",paths=document.querySelectorAll(kanjiVG11);function fun(){let t=.3;for(let e=0;e<paths.length;e++){const s=paths[e];s.style.strokeDasharray=null,s.style.strokeDashoffset=null,s.style.animation=null;const a=s.getTotalLength();s.style.strokeDasharray=a,s.style.strokeDashoffset=a,s.style.animation="draw 1s forwards "+t+"s",s.style.display="block",t+=1,currentPathIndex++}}var hue=200;for(let t=0;t<paths.length;t++){paths[t].style.stroke="hsl("+hue+", 100%, 50%)",hue+=25;const e=paths[t].getPointAtLength(0),s=document.createElementNS("http://www.w3.org/2000/svg","text");s.setAttribute("x",e.x),s.setAttribute("y",e.y),s.textContent=t+1,s.setAttribute("font-size","5px"),s.classList.add("text");const a=document.querySelector("svg");a.appendChild(s);const n=document.createElementNS("http://www.w3.org/2000/svg","circle");n.setAttribute("cx",e.x),n.setAttribute("cy",e.y),n.setAttribute("r","1.5"),n.setAttribute("fill","rgba(0,0,0,0.5)"),n.classList.add("dot"),a.appendChild(n)}function deleteStrokes(){paths1.forEach((t=>{t.style.display="none"})),currentPathIndex=-1}
+var paths1=document.querySelectorAll("#kvg\\\\:${kanjiVGID} path"),currentPathIndex=-1;function displayPath(){paths1.forEach(((t,e)=>{if(e<=currentPathIndex){t.style.display="block";const e=t.getTotalLength();t.style.strokeDasharray=e,t.style.strokeDashoffset=e,t.style.animation="draw 1s forwards 0.5s"}else t.style.display="none",t.style.strokeDasharray=null,t.style.strokeDashoffset=null,t.style.animation=null}))}displayPath(),document.getElementById("minus").addEventListener("click",(()=>{currentPathIndex>-1&&(currentPathIndex--,displayPath())})),document.getElementById("plus").addEventListener("click",(()=>{currentPathIndex<paths1.length-1&&(currentPathIndex++,displayPath())}));var hardModeCheckbox=document.getElementById("hardModeCheckbox"),clicks=0;hardModeCheckbox.addEventListener("click",(function(){if(0===clicks){hardModeCheckbox.style.border="5px solid rgb(33, 128, 201)";const t=document.querySelectorAll(".text");document.querySelectorAll(".dot").forEach((t=>t.style.display="none")),t.forEach((t=>t.style.display="none")),clicks++}else{hardModeCheckbox.style.border="";const t=document.querySelectorAll(".text"),e=document.querySelectorAll(".dot");clicks--,e.forEach((t=>t.style.display="block")),t.forEach((t=>t.style.display="block"))}}));var kanjiVG="${kanjiVGID}",kanjiVG1="#kvg\\\\:"+kanjiVG+" path",paths=document.querySelectorAll(kanjiVG1);function fun(){let t=.01;for(let e=0;e<paths.length;e++){const s=paths[e];s.style.strokeDasharray=null,s.style.strokeDashoffset=null,s.style.animation=null;const l=s.getTotalLength();s.style.strokeDasharray=l,s.style.strokeDashoffset=l,s.style.animation="draw 1s forwards "+t+"s",s.style.display="block",t+=.42,currentPathIndex++}}var hue=200;for(let t=0;t<paths.length;t++){paths[t].style.stroke="hsl("+hue+", 100%, 50%)",hue+=25;const e=paths[t].getPointAtLength(0),s=document.createElementNS("http://www.w3.org/2000/svg","text");s.setAttribute("x",e.x+3),s.setAttribute("y",e.y),s.textContent=t+1,s.setAttribute("font-size","4.2px"),s.classList.add("text");const l=document.querySelector("svg");l.appendChild(s);const a=document.createElementNS("http://www.w3.org/2000/svg","circle");a.setAttribute("cx",e.x),a.setAttribute("cy",e.y),a.setAttribute("r","1.5"),a.setAttribute("fill","rgba(0,0,0,0.5)"),a.classList.add("dot"),l.appendChild(a)}function deleteStrokes(){paths1.forEach((t=>{t.style.display="none"})),currentPathIndex=-1}function showStrokes(){paths1.forEach((t=>{t.style.display="block",t.style.strokeDasharray=null,t.style.strokeDashoffset=null,t.style.animation=null})),currentPathIndex=paths1.length-1}
       </script>`,
         }
       ]
@@ -326,6 +330,9 @@ var kanjiVG="${kanjiVGID}",kanjiVG1="#kvg\\\\:"+kanjiVG+" path",paths1=document.
         api.onreadystatechange = function() {
           if (this.readyState === XMLHttpRequest.DONE && this.status === 200) {
             console.log(`Kanji ${kanjiData.character} was added to Anki successfully!`);
+            setCompleted((completed) => completed+1)
+            
+            
           }
         };
       }
@@ -356,9 +363,10 @@ var kanjiVG="${kanjiVGID}",kanjiVG1="#kvg\\\\:"+kanjiVG+" path",paths1=document.
     setSelectedKanji(selected);
     setHighlightedKanji(selected);
   };
-
+  
   //create batches of kanji for anki deck creation
-  const createBatch = async (kanjiBatch: Kanji[]) => {
+  const createAnkiDeck = async (kanjiBatch: Kanji[]) => {
+
     for (const kanji of kanjiBatch) {
       try {
         // look up the kanjiVG index for the given kanji
@@ -369,22 +377,28 @@ var kanjiVG="${kanjiVGID}",kanjiVG1="#kvg\\\\:"+kanjiVG+" path",paths1=document.
       
         // look up the kanji svg in the XML file using the kanji VG index
         const kanjiElement = xmlDoc.querySelector(`[id="kvg:${kanjiIndex}"]`);
-      
+        
+        
+        
+   
         await createAnkiCard(kanji, `${kanjiIndex}`, kanjiElement);
+        
+        
       } catch (error) {
         console.error(error);
       }
     }
-  };
+
+  }
   
-  const create = async () => {
-    const batchSize = 10; // set the batch size here
+  const createBatches = async () => {
+    const batchSize = 37; // set the batch size here
     const numBatches = Math.ceil(selectedKanji.length / batchSize);
     for (let i = 0; i < numBatches; i++) {
       const start = i * batchSize;
       const end = Math.min((i + 1) * batchSize, selectedKanji.length);
       const kanjiBatch = selectedKanji.slice(start, end);
-      await createBatch(kanjiBatch);
+      await createAnkiDeck(kanjiBatch);
     }
   };
   
@@ -392,6 +406,7 @@ var kanjiVG="${kanjiVGID}",kanjiVG1="#kvg\\\\:"+kanjiVG+" path",paths1=document.
   const handleDeleteSelected = () => {
     setSelectedKanji<Kanji[]>([])
     setHighlightedKanji<Kanji[]>([]);
+    setCompleted(0)
   }
 
   const handleManualSelection = () => {
@@ -429,6 +444,7 @@ var kanjiVG="${kanjiVGID}",kanjiVG1="#kvg\\\\:"+kanjiVG+" path",paths1=document.
   return (
       <>
 
+        
         <div className="filters">
           <div>
             <h3>Sort</h3>
@@ -496,9 +512,10 @@ var kanjiVG="${kanjiVGID}",kanjiVG1="#kvg\\\\:"+kanjiVG+" path",paths1=document.
                 
               )}
         </div>
+        
 
         {selectorShown && (
-
+        
         <div className="selector">
           <div className="params">
             <div>
@@ -565,8 +582,8 @@ var kanjiVG="${kanjiVGID}",kanjiVG1="#kvg\\\\:"+kanjiVG+" path",paths1=document.
 
             {/* onClick={} */}
             <div className='selector-btns'>
-              
-              <button onClick={create}>Create Anki deck from selected kanji</button>
+            <ProgressBar percent={(completed/selectedKanji.length)*100}/>
+              <button onClick={createBatches}>Create Anki deck from selected kanji</button>
               <button onClick={createBatchesForSavingKanji}>Move selected kanji to Learned</button>
               <button onClick={handleGenerateKanji}>Select Kanjis</button>
               <button onClick={handleDeleteSelected}>Cancel selection</button>
