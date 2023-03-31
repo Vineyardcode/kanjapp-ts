@@ -45,7 +45,7 @@ export const Home = () => {
         readFromLocalStorage();
       }, []);
 
-  // First, group kanji by JLPT level
+  //group kanji by JLPT level
   const kanjiByJlpt = kanjiData.reduce((groupedKanji, kanji) => {
     const jlpt = kanji.jlpt_new || 1; // set default JLPT 1 if JLPT level is undefined
     if (!groupedKanji[jlpt]) {
@@ -55,7 +55,7 @@ export const Home = () => {
     return groupedKanji;
   }, {});
 
-  // Then, group learned kanji by JLPT level
+  //group learned kanji by JLPT level
   const learnedKanjiByJlpt = learnedKanjiArray.reduce((groupedKanji, kanji) => {
     const jlpt = kanji.jlpt_new || 1; // set default JLPT 1 if JLPT level is undefined
     if (!groupedKanji[jlpt]) {
@@ -65,7 +65,7 @@ export const Home = () => {
     return groupedKanji;
   }, {});
 
-  // Finally, calculate the percentage of learned kanji in each category
+  //calculate the percentage of learned kanji in each category
   const percentByJlpt = {};
   Object.keys(kanjiByJlpt).forEach((jlpt) => {
     const kanjiCount = kanjiByJlpt[jlpt].length;
@@ -103,7 +103,7 @@ return(
     <div className="home">
 
       <div className='WeatherWidget'>
-        <h3>Check if today's weather is ok to learn kanji</h3>
+        <h3>Find out if the weather today is suitable for learning kanji</h3>
         <WeatherWidget />
       </div>
 

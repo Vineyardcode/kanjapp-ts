@@ -35,7 +35,6 @@ const WeatherWidget = () => {
 
   };
  
-  
   const handleOnSearchChange = (searchData) => {
     const [lat, lon] = searchData.value.split(" ");
 
@@ -43,22 +42,61 @@ const WeatherWidget = () => {
       `${WEATHER_API_URL}/weather?lat=${lat}&lon=${lon}&appid=${WEATHER_API_KEY}&units=metric`
     );
 
-
     Promise.all([currentWeatherFetch])
       .then(async (response) => {
         const weatherResponse = await response[0].json();
 
 
         setCurrentWeather({ city: searchData.label, ...weatherResponse });
-
+        console.log(weatherResponse.weather[0].icon);
       })
       .catch(console.log);
   };
 
-  useEffect(() => {
-  console.log(currentWeather);
-  }, [currentWeather])
+  
+  
+  
 
+  const synonymsForExcellent = [
+    'superb',
+    'outstanding',
+    'exceptional',
+    'fantastic',
+    'terrific',
+    'great',
+    'splendid',
+    'marvelous',
+    'wonderful',
+    'brilliant',
+    'superlative',
+    'first-rate',
+    'top-notch',
+    'stellar',
+    'amazing',
+    'perfectly good',
+    'completely adequate',
+    'entirely acceptable',
+    'absolutely suitable',
+    'flawlessly fine',
+    'utterly decent',
+    'totally satisfactory',
+    'entirely serviceable',
+    'faultlessly sufficient',
+    'perfectly acceptable',
+    'fully functional',
+    'megasuperb',
+    'hyperoutstanding',
+    'ultramagnificent',
+    'terramegaawesome',
+    'gigaepic',
+    'titanictop-notch',
+    'cosmostellar',
+    'supramarvelous',
+    'magnificently marvelous',
+    'spectacularly splendid'
+  ];
+
+  const randomAdjective = `${synonymsForExcellent[Math.floor(Math.random() * synonymsForExcellent.length)]}`;
 
 
 
@@ -67,7 +105,7 @@ const WeatherWidget = () => {
 
     <div className="container">
           <AsyncPaginate
-            placeholder="Search for city"
+            placeholder="In which city you want to study kanji ?"
             debounceTimeout={600}
             value={search}
             onChange={handleOnChange}
@@ -92,7 +130,7 @@ const WeatherWidget = () => {
                 className="weather-icon"
                 src={`icons/${currentWeather.weather[0].icon}.png`}
               />
-            </div>
+              </div>
               <div className="bottom">
                 <p className="temperature">{Math.round(currentWeather.main.temp)}°C</p>
                 <div className="details">
@@ -105,6 +143,7 @@ const WeatherWidget = () => {
                     <span className="parameter-value">{currentWeather.wind.speed} m/s</span>
                   </div>
                 </div>
+              <h5>Fortunately, today's weather in {currentWeather.city} is {randomAdjective} for learning kanji ! Hooray !</h5>
             </div>
           </div>
         </div> 

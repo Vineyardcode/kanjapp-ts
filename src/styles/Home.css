@@ -2,12 +2,15 @@
   display: flex;
   justify-content: center;
   align-items: center;
+  
 }
 
 .stats {
   width: 50%;
   height: 50%;
-  
+  border: 1px solid black;
+  border-radius: 4.2px 4.2px 4.2px 4.2px;
+  margin: 10px;
 }
 
 .stats ul {
@@ -42,4 +45,6 @@ button {
 .WeatherWidget {
   border: 1px solid black;
   border-radius: 4.2px 4.2px 4.2px 4.2px;
+  margin: 10px;
+  gr
 }
