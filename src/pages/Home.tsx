@@ -31,7 +31,7 @@ export const Home = () => {
 
   const [kanjiData, setKanjiData] = useState(joyo);
   const [learnedKanjiArray, setLearnedKanjiArray] = useState<Kanji[]>([]);
-  const [modal, setModal] = useState<Modal>({ show: false, kanji: {} });
+  const [modal, setModal] = useState({ show: false, kanji: {}, position: { top: 0, left: 0 }} );
 
   //fetch kanji from localStorage
   const readFromLocalStorage = () => {
@@ -94,13 +94,22 @@ export const Home = () => {
     setLearnedKanjiArray(learnedKanjiArray)
   };
 
-  //modal options
-  const showModal = (kanji: Kanji) => setModal({ show: true, kanji });
-  const hideModal = () => setModal({ ...modal, show: false });
+  //modal options and position calc
+  const showModal = (kanji: Kanji, event: React.MouseEvent<HTMLDivElement>) => {
+    
+    const rect = event.currentTarget.getBoundingClientRect();
+    const position = {
+      top: (rect.top + rect.height / 2)+rect.height*.5,
+      left: (rect.left + rect.width / 2)+rect.width*.5
+    };
+    setModal({ show: true, kanji, position });
+  };
+
+  const hideModal = () => setModal({ ...modal, show: false, position: { top: 0, left: 0 } });
 
 return(
   <>
-    <div className="home">
+    <div className="home" >
 
       <div className='WeatherWidget'>
         <h3>Find out if the weather today is suitable for learning kanji</h3>
@@ -111,7 +120,7 @@ return(
         <h1>Kanji you learned so far:</h1>
 
         {modal.show && (
-            <div>
+            <div className="homeModal" style={{ top: modal.position.top, left: modal.position.left }}>
               <button onClick={() => handleForgetKanji(modal.kanji)}>I forgot this kanji</button>
               <button onClick={hideModal}>Close</button>           
             </div>
@@ -126,7 +135,9 @@ return(
                 {learnedKanjiByJlpt[jlpt] && learnedKanjiByJlpt[jlpt].length > 0 && (
                   <ul>
                     {learnedKanjiByJlpt[jlpt].map((kanji) => (
-                      <button key={kanji.character} onClick={() => showModal(kanji)}><h3>{kanji.character}</h3></button>
+
+
+                      <button key={kanji.character} onClick={(event) => showModal(kanji,event)}><h3>{kanji.character}</h3></button>
                     ))}
 
                   </ul>
@@ -134,10 +145,12 @@ return(
 
               </div>
             );
+
           } else {
             percentByJlpt[1] = percentByJlpt[1] || 0; // add percentage to JLPT 1
             return null; // return null for undefined JLPT levels
           }
+
         })}
       </div> 
       

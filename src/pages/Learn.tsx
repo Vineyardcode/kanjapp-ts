@@ -377,10 +377,7 @@ var paths1=document.querySelectorAll("#kvg\\\\:${kanjiVGID} path"),currentPathIn
       
         // look up the kanji svg in the XML file using the kanji VG index
         const kanjiElement = xmlDoc.querySelector(`[id="kvg:${kanjiIndex}"]`);
-        
-        
-        
-   
+
         await createAnkiCard(kanji, `${kanjiIndex}`, kanjiElement);
         setCompleted((completed) => completed+1)
         
