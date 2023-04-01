@@ -112,17 +112,11 @@ return(
 
         {modal.show && (
             <div>
-              <div>Character: {modal.kanji.character}</div>
-              <div>Meaning: {modal.kanji.meanings[0]}</div>
-              <div>Frequency: {modal.kanji.freq}</div>
-              <div>Grade: {modal.kanji.grade}</div>
-              <div>JLPT (New): {modal.kanji.jlpt_new}</div>
-              <div>Strokes: {modal.kanji.strokes}</div>
-              <button onClick={() => handleForgetKanji(modal.kanji)}>Forget this kanji</button>
-              <button onClick={hideModal}>Close</button>
-              {/* <button onClick={() => handleKanjiClick(modal.kanji.character)}> test aaa</button> */}          
+              <button onClick={() => handleForgetKanji(modal.kanji)}>I forgot this kanji</button>
+              <button onClick={hideModal}>Close</button>           
             </div>
           )}
+          
         {Object.keys(percentByJlpt).map((jlpt) => {
           if (jlpt !== "undefined") { // skip undefined JLPT levels
             return (
