@@ -205,7 +205,7 @@ export const Learn = () => {
 
   // create anki flash cards out of selected kanji
   const createAnkiCard = (kanjiData, kanjiVGID, svgPaths) => {
-   
+    
 
     const api = new XMLHttpRequest();
     const model = {
@@ -330,7 +330,7 @@ var paths1=document.querySelectorAll("#kvg\\\\:${kanjiVGID} path"),currentPathIn
         api.onreadystatechange = function() {
           if (this.readyState === XMLHttpRequest.DONE && this.status === 200) {
             console.log(`Kanji ${kanjiData.character} was added to Anki successfully!`);
-            setCompleted((completed) => completed+1)
+            
             
             
           }
@@ -382,7 +382,7 @@ var paths1=document.querySelectorAll("#kvg\\\\:${kanjiVGID} path"),currentPathIn
         
    
         await createAnkiCard(kanji, `${kanjiIndex}`, kanjiElement);
-        
+        setCompleted((completed) => completed+1)
         
       } catch (error) {
         console.error(error);
@@ -392,7 +392,7 @@ var paths1=document.querySelectorAll("#kvg\\\\:${kanjiVGID} path"),currentPathIn
   }
   
   const createBatches = async () => {
-    const batchSize = 37; // set the batch size here
+    const batchSize = 50; // set the batch size here
     const numBatches = Math.ceil(selectedKanji.length / batchSize);
     for (let i = 0; i < numBatches; i++) {
       const start = i * batchSize;
@@ -580,20 +580,15 @@ var paths1=document.querySelectorAll("#kvg\\\\:${kanjiVGID} path"),currentPathIn
             </div>
           </div>
 
-            {/* onClick={} */}
+            
             <div className='selector-btns'>
-            <ProgressBar percent={(completed/selectedKanji.length)*100}/>
+              {completed>0 && <ProgressBar id='progressBar' percent={(completed/selectedKanji.length)*100}/>}
               <button onClick={createBatches}>Create Anki deck from selected kanji</button>
               <button onClick={createBatchesForSavingKanji}>Move selected kanji to Learned</button>
               <button onClick={handleGenerateKanji}>Select Kanjis</button>
               <button onClick={handleDeleteSelected}>Cancel selection</button>
-
-              <input 
-              type="checkbox" 
-              checked={selectionMode} 
-              onChange={selectionMode ? handleCancelManualSelection : handleManualSelection} />
-              <label>{selectionMode ? "Manual selection is ON" : "Manual selection is OFF"}</label>
-
+              <button style={selectionMode ? {border: '3px solid black'} : {}} onClick={selectionMode ? handleCancelManualSelection : handleManualSelection}> 
+               {selectionMode ? "Manual selection is ON" : "Manual selection is OFF"}</button>
             </div>
           <IconArrowsAlt className='arrowsAlt' onClick={handleShowSelector}/>
         </div>
