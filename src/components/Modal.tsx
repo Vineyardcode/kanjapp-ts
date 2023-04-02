@@ -106,7 +106,7 @@ const Modal: React.FC<ModalProps> = ({ show, kanji, hideModal, handleSaveKanji, 
       setCurrentPathIndex(paths.length)
     }
   };
-
+  
   const draw = () => {
     const paths = [...document.querySelectorAll(`#kvg\\:${kvgIndex} path`)]
     let delay = 0.5;
@@ -122,17 +122,15 @@ const Modal: React.FC<ModalProps> = ({ show, kanji, hideModal, handleSaveKanji, 
       paths[i].style.animation = "draw 1s forwards " + delay + "s";
       delay += 1 
     }
+    setCurrentPathIndex(paths.length)
   };
-
 
   const deleteStrokes = () => {
     const paths = document.querySelectorAll(`#kvg\\:${kvgIndex} path`)
     paths.forEach((path) => {path.style.display = 'none';});
     setCurrentPathIndex(0)
   }
-
-// onClick={hideModal}
-
+  
   return show ? (
     <div className="modal" >
       <div className="modal-body">
@@ -150,19 +148,28 @@ const Modal: React.FC<ModalProps> = ({ show, kanji, hideModal, handleSaveKanji, 
           >
             {strokes && <g dangerouslySetInnerHTML={{ __html: strokes.outerHTML }} />}
           </svg>
+
+        </div>
+
           <div className="controls">
-            <div className="top-btns">
-            <button onClick={handleMinusClick}> {'<'} </button>
-            <button onClick={draw}>Draw</button> 
-            <button onClick={handlePlusClick}> {'>'} </button>
+
+            <div className='stroke-arrow'>
+            <button onClick={handleMinusClick} > {'<'} </button>
             </div>
-            <div className="bot-btns">
-            {/* <input type="checkbox" id="hardModeCheckbox" />
-            <label htmlFor="hardModeCheckbox">Hard mode</label> */}
+
+            <div className="ctrls-mid">
+            <button onClick={draw}>Draw</button>    
             <button onClick={deleteStrokes} id="delete-btn">Erase</button>       
             </div>
+
+            <div className='stroke-arrow'>
+            <button onClick={handlePlusClick} > {'>'} </button>
+            </div>
+
+            
+
+
           </div>
-        </div>
 
         <div className="modal-details">
           <h1>{kanji.character}</h1>

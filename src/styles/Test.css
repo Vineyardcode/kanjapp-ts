@@ -1,14 +1,48 @@
-.questions{
+.params-parent {
+  display: flex;
+  justify-content: center;
 
+}
+
+.params { 
+  display: flex;
+  align-items: center;
+  margin: 1rem;
+  border: 1px solid black;
+  border-radius: 4.2px;
+  width: min-content;
+}
+
+.params-div {
+  margin: 0.25rem;
+  flex: 1;
+}
+
+.questions{
   display: grid;
   grid-template-columns: 1fr 1fr 1fr;
   grid-template-rows: 1fr 1fr 1fr;
   grid-gap: 10px;
   margin: 10px;
-  
+  vertical-align: middle;
+
 }
 
 .questions button{
-  
   height: 5rem;
+  border-radius: 4.2px 4.2px 4.2px 4.2px;
+  margin: 3px;  
+  background-color: transparent;
+  border: none;
+  transition: 0.5s;
+  color: #000;
+  vertical-align: middle;
+  text-shadow: 1px 1px 2px rgb(209, 182, 182), 0 0 1em rgb(255, 255, 255), 0 0 0.2em rgb(255, 255, 255);
+}
+
+.questions button:hover{
+  font-size: 1.035rem;
+  cursor: pointer;
+  box-shadow: 0px 3px 7px 0px rgba(0, 0, 0, 0.37);
+  
 }

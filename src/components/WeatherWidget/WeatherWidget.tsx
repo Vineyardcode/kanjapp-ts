@@ -98,8 +98,6 @@ const WeatherWidget = () => {
 
   const randomAdjective = `${synonymsForExcellent[Math.floor(Math.random() * synonymsForExcellent.length)]}`;
 
-
-
   return (
     <>
 
@@ -111,9 +109,6 @@ const WeatherWidget = () => {
             onChange={handleOnChange}
             loadOptions={loadOptions}
             />
-
-          {/* <Search onSearchChange={handleOnSearchChange} />
-          {currentWeather && <CurrentWeather data={currentWeather} />} */}
 
     </div>
 

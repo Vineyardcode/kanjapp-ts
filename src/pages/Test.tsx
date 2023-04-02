@@ -12,7 +12,7 @@ import joyo from "../kanjiData/joyo.json"
 
 const Test = () => {
 
-  const [numKanji, setNumKanji] = useState(9999);
+  const [numKanji, setNumKanji] = useState(20);
   const [minStrokes, setMinStrokes] = useState(1);
   const [maxStrokes, setMaxStrokes] = useState(2);
   const [jlptLevel, setJlptLevel] = useState<string | number>('All');
@@ -171,15 +171,15 @@ const Test = () => {
   };
 
   //wrong answer reactions
-  const angryQuote = ["What in Dog's name?!", "What?!", "NO !", "WRONG !", "Excuse me?!"]
+  const angryQuote = ["Nope", "What ?", "No", "Wrong", "Gotta work on this one"]
 
   const randomAngryQuote = angryQuote[Math.floor(Math.random() * angryQuote.length)];
 
   return (
     <>
-
+    <div className='params-parent'>
       <div className="params">
-        <div>
+        <div className='params-div'>
           <label htmlFor="numKanji">Number of Kanji:</label>
           <input
           type="number"
@@ -188,7 +188,7 @@ const Test = () => {
           onChange={(e) => setNumKanji(Number(e.target.value))}
           />
         </div>
-        <div>
+        <div className='params-div'>
           <label htmlFor="minStrokes">Minimum strokes:</label>
           <input
             type="number"
@@ -197,7 +197,7 @@ const Test = () => {
             onChange={(e) => setMinStrokes(Number(e.target.value))}
           />
         </div>
-        <div>
+        <div className='params-div'>
           <label htmlFor="maxStrokes">Maximum strokes:</label>
           <input
             type="number"
@@ -206,7 +206,7 @@ const Test = () => {
             onChange={(e) => setMaxStrokes(Number(e.target.value))}
           />
         </div>
-        <div>
+        <div className='params-div'>
           <label htmlFor="jlptLevel">JLPT level:</label>
           <select
             name="jlptLevel"
@@ -222,7 +222,7 @@ const Test = () => {
             
           </select>
         </div>
-        <div>
+        <div className='params-div'>
           <label htmlFor="minGrade">Minimum grade:</label>
           <select
             name="minGrade"
@@ -239,7 +239,7 @@ const Test = () => {
           <option value={9}>9</option>
           </select>
         </div>
-        <div>
+        <div className='params-div'>
           <label htmlFor="testType">Type of test: </label>
           <select
             name="testType"
@@ -252,10 +252,10 @@ const Test = () => {
           </select>
         </div>
         
-        <button onClick={handleGenerateKanji}>Generate Test</button>
+        {testType>0 && (<button onClick={handleGenerateKanji}>Generate Test</button>)}
         
       </div>
-
+    </div>
       {testType === 1 && currentQuestion !== null && (
         <MatchMeaningWithKanji
           currentQuestion={currentQuestion}
@@ -288,7 +288,7 @@ const Test = () => {
 
       {isFinished === false && currentQuestion !== null && (
         <div className="counter">
-          {qNumber + " " + "question's left"}
+          <h3>{qNumber + " " + "question's left"}</h3>
         </div>
           )}
 

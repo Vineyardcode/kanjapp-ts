@@ -107,9 +107,14 @@ export const Home = () => {
 
   const hideModal = () => setModal({ ...modal, show: false, position: { top: 0, left: 0 } });
 
+
 return(
   <>
-    <div className="home" >
+    <div className="home" onClick={() => {
+  if (modal.show) {
+    hideModal();
+  }
+}}>
 
       <div className='WeatherWidget'>
         <h3>Find out if the weather today is suitable for learning kanji</h3>
@@ -117,12 +122,12 @@ return(
       </div>
 
       <div className="stats">
-        <h1>Kanji you learned so far:</h1>
+        
 
         {modal.show && (
             <div className="homeModal" style={{ top: modal.position.top, left: modal.position.left }}>
               <button onClick={() => handleForgetKanji(modal.kanji)}>I forgot this kanji</button>
-              <button onClick={hideModal}>Close</button>           
+                         
             </div>
           )}
           
