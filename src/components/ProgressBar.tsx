@@ -9,9 +9,9 @@ const ProgressBar = ({ percent }) => {
   };
 
   return (
-    <div className="progress-bar">
-      <div className="progress" style={style}></div>
-      <span className="percent">{percent.toFixed(2)}%</span>
+    <div className="progress-bar" style={style}>
+      <div className="progress" style={style}><span className="percent">{percent.toFixed(2)}%</span></div>
+      
     </div>
   );
 };
