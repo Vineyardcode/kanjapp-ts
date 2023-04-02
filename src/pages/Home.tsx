@@ -129,18 +129,20 @@ return(
         {Object.keys(percentByJlpt).map((jlpt) => {
           if (jlpt !== "undefined") { // skip undefined JLPT levels
             return (
-              <div key={jlpt}>
+
+              <div key={jlpt} className='learned-group'>
                 <h2>JLPT N{jlpt} kanji learned</h2>
                 <ProgressBar percent={percentByJlpt[jlpt]} />
                 {learnedKanjiByJlpt[jlpt] && learnedKanjiByJlpt[jlpt].length > 0 && (
-                  <ul>
+
+                  <div className='learned-kanji'>
                     {learnedKanjiByJlpt[jlpt].map((kanji) => (
 
 
-                      <button key={kanji.character} onClick={(event) => showModal(kanji,event)}><h3>{kanji.character}</h3></button>
+                      <button key={kanji.character} onClick={(event) => showModal(kanji, event)}><h3>{kanji.character}</h3></button>
                     ))}
 
-                  </ul>
+                  </div>
                 )}
 
               </div>
