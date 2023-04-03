@@ -428,10 +428,12 @@ var paths1=document.querySelectorAll("#kvg\\\\:${kanjiVGID} path"),currentPathIn
   }
 
   const handleShowSelector = () => {
-    if (selectorShown === true) {
-      setSelectorShown(false)
+    const selector = document.querySelector(".selector")
+    
+    if (selector.classList.contains('open')) {
+      selector.classList.remove('open');
     } else {
-      setSelectorShown(true)
+      selector.classList.add('open')
     }
   }
 
@@ -511,7 +513,7 @@ var paths1=document.querySelectorAll("#kvg\\\\:${kanjiVGID} path"),currentPathIn
         </div>
         
 
-        {selectorShown && modal.show===false && (
+        {modal.show===false && (
         
         <div className="selector">
           <div className="params">
@@ -587,12 +589,12 @@ var paths1=document.querySelectorAll("#kvg\\\\:${kanjiVGID} path"),currentPathIn
               <button id='manual-btn' style={selectionMode ? {border: '3px solid black'} : {}} onClick={selectionMode ? handleCancelManualSelection : handleManualSelection}> 
                {selectionMode ? "Manual selection is ON" : "Manual selection is OFF"}</button>
             </div>
-          <IconArrowsAlt className='arrowsAlt' onClick={handleShowSelector}/>
+          <IconArrowsAlt id='hamburger-close' onClick={handleShowSelector}/>
         </div>
         
           )}   
 
-      {!selectorShown && modal.show===false && (<IconArrowsAlt id='arrowsAlt-outer' onClick={handleShowSelector}/>)}   
+      {modal.show===false && (<IconArrowsAlt id='hamburger-open' onClick={handleShowSelector}/>)}   
      
 
         
