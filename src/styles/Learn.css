@@ -72,7 +72,13 @@
   justify-content: center;
   align-items: center;
   transition: 0.5s;
-  
+  transition: transform 0.3s ease-in-out;
+  transform: translateY(-0px);
+  z-index: 9999;
+}
+
+.selector.open{
+  transform: translateY(-100px);
 }
 
 .selector-btns {
@@ -93,8 +99,8 @@
   grid-area: 2/2/2/2;
 }
 
-.arrowsAlt {
-  position: absolute;
+#hamburger-open {
+  position: fixed;
   width: 2em;
   height: 2em;
   transition: 0.5s;
@@ -103,12 +109,12 @@
   margin: 0;
 }
 
-.arrowsAlt:hover {
+#hamburger-open:hover {
   cursor: pointer;
   font-size: 1.35em;
 }
 
-#arrowsAlt-outer{
+#hamburger-close{
   position: fixed;
   width: 2em;
   height: 2em;
@@ -118,7 +124,7 @@
   padding-top: 1rem;
 }
 
-#arrowsAlt-outer:hover {
+#hamburger-close:hover {
   cursor: pointer;
   font-size: 1.35em;
 }
