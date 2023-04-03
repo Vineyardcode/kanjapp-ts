@@ -511,7 +511,7 @@ var paths1=document.querySelectorAll("#kvg\\\\:${kanjiVGID} path"),currentPathIn
         </div>
         
 
-        {selectorShown && (
+        {selectorShown && modal.show===false && (
         
         <div className="selector">
           <div className="params">
@@ -583,8 +583,8 @@ var paths1=document.querySelectorAll("#kvg\\\\:${kanjiVGID} path"),currentPathIn
               <button onClick={createBatches}>Create Anki deck from selected kanji</button>
               <button onClick={createBatchesForSavingKanji}>Move selected kanji to Learned</button>
               <button onClick={handleGenerateKanji}>Select Kanjis</button>
-              <button onClick={handleDeleteSelected}>Cancel selection</button>
-              <button style={selectionMode ? {border: '3px solid black'} : {}} onClick={selectionMode ? handleCancelManualSelection : handleManualSelection}> 
+              <button id='cancel-btn' onClick={handleDeleteSelected}>Cancel selection</button>
+              <button id='manual-btn' style={selectionMode ? {border: '3px solid black'} : {}} onClick={selectionMode ? handleCancelManualSelection : handleManualSelection}> 
                {selectionMode ? "Manual selection is ON" : "Manual selection is OFF"}</button>
             </div>
           <IconArrowsAlt className='arrowsAlt' onClick={handleShowSelector}/>
@@ -592,7 +592,7 @@ var paths1=document.querySelectorAll("#kvg\\\\:${kanjiVGID} path"),currentPathIn
         
           )}   
 
-      {!selectorShown && (<IconArrowsAlt id='arrowsAlt-outer' onClick={handleShowSelector}/>)}   
+      {!selectorShown && modal.show===false && (<IconArrowsAlt id='arrowsAlt-outer' onClick={handleShowSelector}/>)}   
      
 
         

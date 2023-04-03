@@ -11,6 +11,8 @@ export const Navbar = () => {
     await signOut(auth);
   };
 
+
+
   return (
     <div className="navbar">
       <div className="links">
@@ -19,16 +21,18 @@ export const Navbar = () => {
         <Link to="/"> Home </Link>
         <Link to="/Login"> Login </Link>
       </div>
+{user && (
       <div className="user">
-        {user && (
+        
           <>
             <p> {user?.displayName} </p>
             <img src={user?.photoURL || ""} width="20" height="20" />
             <button onClick={signUserOut}> Log Out</button>
           </>
-        )}
+        
         
       </div>
+      )}
     </div>
   );
 };
