@@ -1,6 +1,5 @@
 .modal {
   position: fixed;
-  z-index: 1;
   left: 0;
   top: 0;
   width: 100%;
@@ -32,15 +31,6 @@
   border-radius: 4.2px 4.2px 4.2px 4.2px;
 }
 
-.container {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  width: 90%;
-  height: 90%;
-  text-align: center
-}
-
 .kanji-button:hover{
   font-size: 1.035rem;
   cursor: pointer;
@@ -51,6 +41,7 @@
   text-shadow: 1px 1px 2px rgb(209, 182, 182), 0 0 1em rgb(255, 255, 255), 0 0 0.2em rgb(255, 255, 255);
   width: 100%;
   height: 100%;
+  
 }
 
 .filters {
@@ -81,21 +72,25 @@
   justify-content: center;
   align-items: center;
   transition: 0.5s;
+  
 }
 
 .selector-btns {
   display: grid;
   grid-template-columns: 1fr 1fr 1fr;
-  align-items: center;
-  justify-content: center;
+  grid-template-rows: 1fr 1fr;
+  row-gap: 3rem;
+  column-gap: 3rem;
   flex: 1;
   margin: 0;
 }
 
-.selector button {
-  margin: 5px;
-  width: inherit;
-  height: inherit;
+#cancel-btn {
+  grid-area: 2/3/2/3;
+}
+
+#manual-btn {
+  grid-area: 2/2/2/2;
 }
 
 .arrowsAlt {
@@ -104,7 +99,7 @@
   height: 2em;
   transition: 0.5s;
   bottom: 0;
-  left: 0;
+  left: 50%;
   margin: 0;
 }
 
@@ -118,16 +113,12 @@
   width: 2em;
   height: 2em;
   transition: 0.5s;
+  left: 50%;
   bottom: 0;
-  left: 0;
-  margin: 0;
+  padding-top: 1rem;
 }
 
 #arrowsAlt-outer:hover {
   cursor: pointer;
   font-size: 1.35em;
-}
-
-#progressBar {
-  background-color: rgb(209, 182, 182);
 }

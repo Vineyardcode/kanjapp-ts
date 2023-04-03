@@ -33,6 +33,8 @@ function App() {
     element.style.backgroundImage = `url('${backgroundImage}')`;
   }
 
+  
+
 
   return (
     
