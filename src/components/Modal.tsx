@@ -137,52 +137,56 @@ const Modal: React.FC<ModalProps> = ({ show, kanji, hideModal, handleSaveKanji, 
 
         <div className="kanji">
           <svg
-            width="100%"
-            height="100%"
             viewBox="0 0 100 100"
+            width="100%" height="100%"
             xmlns="http://www.w3.org/2000/svg"
             xmlnsXlink="http://www.w3.org/1999/xlink"
             xmlSpace="preserve"
             version="1.1"
             baseProfile="full"
           >
+           
             {strokes && <g dangerouslySetInnerHTML={{ __html: strokes.outerHTML }} />}
           </svg>
-
         </div>
 
-          <div className="controls">
+        <div className="controls">
 
-            <div className='stroke-arrow'>
-            <button onClick={handleMinusClick} > {'<'} </button>
-            </div>
-
-            <div className="ctrls-mid">
-            <button onClick={draw}>Draw</button>    
-            <button onClick={deleteStrokes} id="delete-btn">Erase</button>       
-            </div>
-
-            <div className='stroke-arrow'>
-            <button onClick={handlePlusClick} > {'>'} </button>
-            </div>
-
-            
-
-
+          <button onClick={handleMinusClick} className='row-btn'><h5>{'Prev'}</h5></button>
+          
+          <div className="ctrls-column">
+            <button onClick={draw} id='draw-btn'><h5>Draw</h5></button>    
+            <button onClick={deleteStrokes} id="delete-btn"><h5>Erase</h5></button>       
           </div>
 
-        <div className="modal-details">
-          <h1>{kanji.character}</h1>
-          <h3>Meanings: {kanji.meanings.join(", ")}</h3>
-          <h3>Kun'yomi: {kanji.readings_kun || "N/A" }</h3> 
-          <h3>On'yomi: {kanji.readings_on || "N/A" }</h3>
-          <h3>Strokes: {kanji.strokes}</h3>
-          <button onClick={() => handleSaveKanji(kanji)}><h5>Move to learned</h5></button>
-          <button onClick={() => createAnkiCard(kanji, `${kvgIndex}`, strokes)}><h5>Create anki card</h5></button>         
-          <button onClick={hideModal}><h5>Close</h5></button>
+          <button onClick={handlePlusClick} className='row-btn'><h5>{'Next'}</h5></button>
+          
+          <div className="ctrls-column">
+            <button onClick={() => handleSaveKanji(kanji)}><h5>{'Move to learned'}</h5></button>
+            <button onClick={() => createAnkiCard(kanji, `${kvgIndex}`, strokes)}><h5>Create anki card</h5></button>         
+          </div>
+          
+          <button onClick={hideModal} className='row-btn'><h5>Close</h5></button>
+          
         </div>
-        
 
+        <div className="modal-details">
+
+          <div className='left-column'>
+            <div id='meanings'><h5>Meanings: {kanji.meanings.join(", ")}</h5></div>
+            <div><h5>Strokes: {kanji.strokes}</h5></div> 
+          </div>
+
+          <div className="mid-column">
+            <h1>{kanji.character}</h1>
+          </div>
+
+          <div className="right-column">
+            <div><h5>On'yomi: {kanji.readings_on || "N/A" }</h5></div>
+            <div><h5>Kun'yomi: {kanji.readings_kun || "N/A" }</h5></div>
+          </div>
+
+        </div>
 
       </div>
     </div>
