@@ -428,13 +428,17 @@ var paths1=document.querySelectorAll("#kvg\\\\:${kanjiVGID} path"),currentPathIn
   }
 
   const handleShowSelector = () => {
-    const selector = document.querySelector(".selector")
     
-    if (selector.classList.contains('open')) {
-      selector.classList.remove('open');
-    } else {
-      selector.classList.add('open')
-    }
+    const selector = document.querySelector(".selector")
+   
+    if (selectorShown===false) {
+      selector.style.height = "17%"
+      setSelectorShown(true)  
+     } else {
+      selector.style.height = "0"
+      setSelectorShown(false)
+     }
+
   }
 
   // console.log(selectedKanji)
@@ -516,6 +520,7 @@ var paths1=document.querySelectorAll("#kvg\\\\:${kanjiVGID} path"),currentPathIn
         {modal.show===false && (
         
         <div className="selector">
+
           <div className="params">
             <div>
               <label htmlFor="numKanji">Number of Kanji:</label>
@@ -579,23 +584,23 @@ var paths1=document.querySelectorAll("#kvg\\\\:${kanjiVGID} path"),currentPathIn
             </div>
           </div>
 
-            
-            <div className='selector-btns'>
-              {completed>0 && <ProgressBar id='progressBar' percent={(completed/selectedKanji.length)*100}/>}
-              <button onClick={createBatches}>Create Anki deck from selected kanji</button>
-              <button onClick={createBatchesForSavingKanji}>Move selected kanji to Learned</button>
-              <button onClick={handleGenerateKanji}>Select Kanjis</button>
-              <button id='cancel-btn' onClick={handleDeleteSelected}>Cancel selection</button>
-              <button id='manual-btn' style={selectionMode ? {border: '3px solid black'} : {}} onClick={selectionMode ? handleCancelManualSelection : handleManualSelection}> 
-               {selectionMode ? "Manual selection is ON" : "Manual selection is OFF"}</button>
-            </div>
-          <IconArrowsAlt id='hamburger-close' onClick={handleShowSelector}/>
+            <button className='selector-createDeck' onClick={createBatches}>Create Anki deck from selected kanji</button>
+            <button className='selector-MoveSelectedToLearned' onClick={createBatchesForSavingKanji}>Move selected kanji to Learned</button>
+            <button className='selector-Select' onClick={handleGenerateKanji}>Select Kanjis</button>
+            <button className='selector-cancel' id='cancel-btn' onClick={handleDeleteSelected}>Cancel selection</button>
+            <button className='selector-manual' id='manual-btn' style={selectionMode ? {border: '3px solid black'} : {}} onClick={selectionMode ? handleCancelManualSelection : handleManualSelection}> 
+            {selectionMode ? "Manual selection is ON" : "Manual selection is OFF"}</button>
+            {completed>0 && <ProgressBar className='selector-progressBar' id='progressBar' percent={(completed/selectedKanji.length)*100}/>}
+          
+          
+            <IconArrowsAlt id='hamburger-close' onClick={handleShowSelector}/>
         </div>
         
           )}   
 
+     <div className="hamburger-holder">
       {modal.show===false && (<IconArrowsAlt id='hamburger-open' onClick={handleShowSelector}/>)}   
-     
+     </div>
 
         
     </>
