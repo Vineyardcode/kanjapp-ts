@@ -40,7 +40,7 @@ const GuessKanjiMeaningsQuiz = ({
   
 
   return (
-    <div>
+    <div className="test">
     {isFinished ? (
       <div>
         
@@ -68,7 +68,7 @@ const GuessKanjiMeaningsQuiz = ({
         </div>
         <div className='questions'>
             {questions.map((kanji: Kanji) => (
-              <button 
+              <button  style={{border: "1px solid black"}}
               key={kanji.character} 
               onClick={() => handleAnswer(kanji)}>{kanji.meanings.join(", ")}</button>
             ))}

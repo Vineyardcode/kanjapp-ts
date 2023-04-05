@@ -180,7 +180,7 @@ const Test = () => {
     <div className='params-parent'>
       <div className="tests-params">
         <div className='params-div'>
-          <label htmlFor="numKanji">Number of Kanji:</label>
+          <label htmlFor="numKanji">Kanji </label>
           <input
           type="number"
           name="numKanji"
@@ -189,7 +189,7 @@ const Test = () => {
           />
         </div>
         <div className='params-div'>
-          <label htmlFor="minStrokes">Minimum strokes:</label>
+          <label htmlFor="minStrokes">Min strokes </label>
           <input
             type="number"
             name="minStrokes"
@@ -198,7 +198,7 @@ const Test = () => {
           />
         </div>
         <div className='params-div'>
-          <label htmlFor="maxStrokes">Maximum strokes:</label>
+          <label htmlFor="maxStrokes">Max strokes </label>
           <input
             type="number"
             name="maxStrokes"
@@ -207,7 +207,7 @@ const Test = () => {
           />
         </div>
         <div className='params-div'>
-          <label htmlFor="jlptLevel">JLPT level:</label>
+          <label htmlFor="jlptLevel">JLPT level </label>
           <select
             name="jlptLevel"
             value={jlptLevel}
@@ -223,7 +223,7 @@ const Test = () => {
           </select>
         </div>
         <div className='params-div'>
-          <label htmlFor="minGrade">Minimum grade:</label>
+          <label htmlFor="minGrade">Min kanji grade </label>
           <select
             name="minGrade"
             value={minGrade}
@@ -240,7 +240,7 @@ const Test = () => {
           </select>
         </div>
         <div className='params-div'>
-          <label htmlFor="testType">Type of test: </label>
+          <label htmlFor="testType">Type of test </label>
           <select
             name="testType"
             value={testType}

@@ -43,7 +43,7 @@ const MatchMeaningWithKanji = ({
 
   return (
 
-    <div>
+    <div className="test">
     {isFinished ? (
       <div>
         <h2>You answered correctly {score} out of {numberOfQuestions} questions</h2>

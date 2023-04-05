@@ -404,6 +404,7 @@ var paths1=document.querySelectorAll("#kvg\\\\:${kanjiVGID} path"),currentPathIn
     setSelectedKanji<Kanji[]>([])
     setHighlightedKanji<Kanji[]>([]);
     setCompleted(0)
+    setSelectionMode(false)
   }
 
   const handleManualSelection = () => {
@@ -428,17 +429,23 @@ var paths1=document.querySelectorAll("#kvg\\\\:${kanjiVGID} path"),currentPathIn
   }
 
   const handleShowSelector = () => {
+
+    setSelectionMode(false)
+    setSelectedKanji<Kanji[]>([])
+    setHighlightedKanji<Kanji[]>([]);
+    setCompleted(0)
     
     const selector = document.querySelector(".selector")
    
     if (selectorShown===false) {
-      selector.style.height = "16.5%"
+      selector.style.height = "16%"
       setSelectorShown(true)  
      } else {
       selector.style.height = "0"
       setSelectorShown(false)
      }
 
+    
   }
 
   console.log(selectedKanji)
@@ -521,7 +528,7 @@ var paths1=document.querySelectorAll("#kvg\\\\:${kanjiVGID} path"),currentPathIn
 
           <div className="params">
             <div>
-              <label htmlFor="numKanji"><h5>Kanjis:</h5></label>
+              <label htmlFor="numKanji"><h5>Kanjis</h5></label>
               <input
               type="number"
               name="numKanji"
@@ -530,7 +537,7 @@ var paths1=document.querySelectorAll("#kvg\\\\:${kanjiVGID} path"),currentPathIn
               />
             </div>
             <div>
-              <label htmlFor="minStrokes"><h5>Min strokes:</h5></label>
+              <label htmlFor="minStrokes"><h5>Min strokes</h5></label>
               <input
                 type="number"
                 name="minStrokes"
@@ -539,7 +546,7 @@ var paths1=document.querySelectorAll("#kvg\\\\:${kanjiVGID} path"),currentPathIn
               />
             </div>
             <div>
-              <label htmlFor="maxStrokes"><h5>Max strokes:</h5></label>
+              <label htmlFor="maxStrokes"><h5>Max strokes</h5></label>
               <input
                 type="number"
                 name="maxStrokes"
@@ -548,7 +555,7 @@ var paths1=document.querySelectorAll("#kvg\\\\:${kanjiVGID} path"),currentPathIn
               />
             </div>
             <div>
-              <label htmlFor="jlptLevel"><h5>JLPT level:</h5></label>
+              <label htmlFor="jlptLevel"><h5>JLPT level</h5></label>
               <select
                 name="jlptLevel"
                 value={jlptLevel}
@@ -593,7 +600,7 @@ var paths1=document.querySelectorAll("#kvg\\\\:${kanjiVGID} path"),currentPathIn
             <div className="selector-select-progressBar-cancel">
 
               <button className='selector-select' onClick={handleGenerateKanji}><h5>Select Kanjis</h5></button>
-              {completed>0 && (<ProgressBar id='selector-progressBar' percent={(completed/selectedKanji.length)*100}/>)}
+              {completed>0 && (<div className="selector-progressBar"><button style={{width: `${(completed/selectedKanji.length)*100}%`}}><h5>{(completed/selectedKanji.length)*100}%</h5></button></div>)}
               <button className='selector-cancel' id='cancel-btn' onClick={handleDeleteSelected}><h5>Cancel selection</h5></button>
               
             </div>
