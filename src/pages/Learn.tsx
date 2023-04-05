@@ -432,7 +432,7 @@ var paths1=document.querySelectorAll("#kvg\\\\:${kanjiVGID} path"),currentPathIn
     const selector = document.querySelector(".selector")
    
     if (selectorShown===false) {
-      selector.style.height = "17%"
+      selector.style.height = "16.5%"
       setSelectorShown(true)  
      } else {
       selector.style.height = "0"
@@ -441,13 +441,11 @@ var paths1=document.querySelectorAll("#kvg\\\\:${kanjiVGID} path"),currentPathIn
 
   }
 
-  // console.log(selectedKanji)
+  console.log(selectedKanji)
   // console.log([highlightedKanji])
 
   return (
       <>
-
-        
         <div className="filters">
           <div>
             <h3>Sort</h3>
@@ -492,8 +490,8 @@ var paths1=document.querySelectorAll("#kvg\\\\:${kanjiVGID} path"),currentPathIn
                     key={item.character} 
                     onClick={selectionMode === false ? () => showModal(item) : () => handleHighLight(item)}   
                     className="kanji-button"
-                    style={highlightedKanji.includes(item) ? { border: '2px solid white' } : {}}> 
-                     <span className="button-text"><h1>{item.character}</h1></span>
+                    style={highlightedKanji.includes(item) ? { border: '1px solid black' } : {}}> 
+                    <span className="button-text"><h1>{item.character}</h1></span>
                       
                     </button>
                   ))}
@@ -515,15 +513,15 @@ var paths1=document.querySelectorAll("#kvg\\\\:${kanjiVGID} path"),currentPathIn
                 
               )}
         </div>
-        
+      
 
-        {modal.show===false && (
-        
+      {modal.show===false && (
+      
         <div className="selector">
 
           <div className="params">
             <div>
-              <label htmlFor="numKanji">Number of Kanji:</label>
+              <label htmlFor="numKanji"><h5>Kanjis:</h5></label>
               <input
               type="number"
               name="numKanji"
@@ -532,7 +530,7 @@ var paths1=document.querySelectorAll("#kvg\\\\:${kanjiVGID} path"),currentPathIn
               />
             </div>
             <div>
-              <label htmlFor="minStrokes">Minimum strokes:</label>
+              <label htmlFor="minStrokes"><h5>Min strokes:</h5></label>
               <input
                 type="number"
                 name="minStrokes"
@@ -541,7 +539,7 @@ var paths1=document.querySelectorAll("#kvg\\\\:${kanjiVGID} path"),currentPathIn
               />
             </div>
             <div>
-              <label htmlFor="maxStrokes">Maximum strokes:</label>
+              <label htmlFor="maxStrokes"><h5>Max strokes:</h5></label>
               <input
                 type="number"
                 name="maxStrokes"
@@ -550,7 +548,7 @@ var paths1=document.querySelectorAll("#kvg\\\\:${kanjiVGID} path"),currentPathIn
               />
             </div>
             <div>
-              <label htmlFor="jlptLevel">JLPT level:</label>
+              <label htmlFor="jlptLevel"><h5>JLPT level:</h5></label>
               <select
                 name="jlptLevel"
                 value={jlptLevel}
@@ -565,8 +563,8 @@ var paths1=document.querySelectorAll("#kvg\\\\:${kanjiVGID} path"),currentPathIn
                 
               </select>
             </div>
-            <div>
-              <label htmlFor="minGrade">Minimum grade:</label>
+            {/* <div>
+              <label htmlFor="minGrade">Min grade:</label>
               <select
                 name="minGrade"
                 value={minGrade}
@@ -581,28 +579,36 @@ var paths1=document.querySelectorAll("#kvg\\\\:${kanjiVGID} path"),currentPathIn
               <option value={8}>8</option>
               <option value={9}>9</option>
               </select>
-            </div>
+            </div> */}
           </div>
 
-            <button className='selector-createDeck' onClick={createBatches}>Create Anki deck from selected kanji</button>
-            <button className='selector-MoveSelectedToLearned' onClick={createBatchesForSavingKanji}>Move selected kanji to Learned</button>
-            <button className='selector-Select' onClick={handleGenerateKanji}>Select Kanjis</button>
-            <button className='selector-cancel' id='cancel-btn' onClick={handleDeleteSelected}>Cancel selection</button>
-            <button className='selector-manual' id='manual-btn' style={selectionMode ? {border: '3px solid black'} : {}} onClick={selectionMode ? handleCancelManualSelection : handleManualSelection}> 
-            {selectionMode ? "Manual selection is ON" : "Manual selection is OFF"}</button>
-            {completed>0 && <ProgressBar className='selector-progressBar' id='progressBar' percent={(completed/selectedKanji.length)*100}/>}
           
-          
-            <IconArrowsAlt id='hamburger-close' onClick={handleShowSelector}/>
+
+            <div className="selector-create-move-manual" >
+              <button className='selector-createDeck' onClick={createBatches}><h5>Create Anki deck</h5></button>
+              <button className='selector-MoveSelectedToLearned' onClick={createBatchesForSavingKanji}><h5>Move to Learned</h5></button>
+              <button className='selector-manual' id='manual-btn' style={selectionMode ? {border: '3px solid black'} : {}} onClick={selectionMode ? handleCancelManualSelection : handleManualSelection}><h5>{selectionMode ? "Manual selection ON" : "Manual selection OFF"}</h5></button>
+            </div>
+
+            <div className="selector-select-progressBar-cancel">
+
+              <button className='selector-select' onClick={handleGenerateKanji}><h5>Select Kanjis</h5></button>
+              {completed>0 && (<ProgressBar id='selector-progressBar' percent={(completed/selectedKanji.length)*100}/>)}
+              <button className='selector-cancel' id='cancel-btn' onClick={handleDeleteSelected}><h5>Cancel selection</h5></button>
+              
+            </div>
+
+        
+
         </div>
-        
-          )}   
+      
+        )}   
 
-     <div className="hamburger-holder">
-      {modal.show===false && (<IconArrowsAlt id='hamburger-open' onClick={handleShowSelector}/>)}   
-     </div>
-
-        
+      {modal.show===false && (    
+        <div className="hamburger-holder">
+          {modal.show===false && (<IconArrowsAlt className='hamburger' onClick={handleShowSelector}/>)}   
+        </div>
+        )}
     </>
   );
   

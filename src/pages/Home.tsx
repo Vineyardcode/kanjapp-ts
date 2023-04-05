@@ -137,7 +137,7 @@ return(
 
               <div key={jlpt} className='learned-group'>
                 <h2>JLPT N{jlpt} kanji learned</h2>
-                <ProgressBar percent={percentByJlpt[jlpt]} />
+                <ProgressBar id='progressBars' percent={percentByJlpt[jlpt]} />
                 {learnedKanjiByJlpt[jlpt] && learnedKanjiByJlpt[jlpt].length > 0 && (
 
                   <div className='learned-kanji'>

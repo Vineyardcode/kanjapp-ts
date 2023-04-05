@@ -6,8 +6,8 @@ function IconArrowsAlt(props: React.SVGProps<SVGSVGElement>) {
     <svg
     viewBox="0 0 64 64"
     fill="currentColor"
-    height="1em"
-    width="1em"
+    height="1.9em"
+    width="1.9em"
     {...props}
   >
     <path

@@ -30,7 +30,7 @@
  
 }
 
-.progress-bar {
+#progressBars {
   
   order: 1;
   flex-wrap: wrap;
