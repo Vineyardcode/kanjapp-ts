@@ -54,50 +54,68 @@
   margin: 5%; 
 }
 
-.params {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  flex: 0.7;
-  margin: 0;
-}
-
 .selector {
-  position: fixed;
-  bottom: 0;
-  backdrop-filter: blur(3px);
-  padding: 5px;
+  
+
   display: flex;
-  justify-content: center;
-  align-items: center;
-  transition: 0.5s;
-  transition: transform 0.3s ease-in-out;
-  transform: translateY(-0px);
-  z-index: 9999;
+  flex-direction: row;
+  flex-wrap: wrap;
+  justify-content: space-between;
+
+
+  position: fixed;
+  height: 0;
+  bottom: 0;
+  transition: height 0.75s ease-in-out;
+  z-index: 9;
+  width: 100%;
+  background-image: url('src/assets/media/img/spring/spring5.jpg');
+  background-attachment: fixed;
+  background-repeat: no-repeat;
+  background-size: cover;
+  
 }
 
-.selector.open{
-  transform: translateY(-100px);
+.params {
+flex-shrink: 1;
+width: auto;
+height: 10rem;
+width: 10rem;
 }
 
-.selector-btns {
-  display: grid;
-  grid-template-columns: 1fr 1fr 1fr;
-  grid-template-rows: 1fr 1fr;
-  row-gap: 3rem;
-  column-gap: 3rem;
-  flex: 1;
-  margin: 0;
+.selector button {
+  width: 5rem;
+  height: 5rem;
+} 
+
+
+/* 
+
+
+
+.selector-createDeck {
+  grid-area: 1 / 3 / 2 / 4;
 }
 
-#cancel-btn {
-  grid-area: 2/3/2/3;
+.selector-MoveSelectedToLearned {
+  grid-area: 1 / 4 / 2 / 5;
 }
 
-#manual-btn {
-  grid-area: 2/2/2/2;
+.selector-Select {
+  grid-area: 1 / 5 / 2 / 6;
 }
+
+.selector-cancel {
+  grid-area: 1 / 6 / 2 / 7;
+}
+
+.selector-manual {
+  grid-area: 2 / 5 / 3 / 7;
+}
+
+.selector-progressBar {
+  grid-area: 3 / 1 / 4 / 7;
+} */
 
 #hamburger-open {
   position: fixed;
@@ -111,7 +129,7 @@
 
 #hamburger-open:hover {
   cursor: pointer;
-  font-size: 1.35em;
+  font-size: 1.1em;
 }
 
 #hamburger-close{
@@ -126,5 +144,17 @@
 
 #hamburger-close:hover {
   cursor: pointer;
-  font-size: 1.35em;
+  font-size: 1.1em;
+}
+
+.hamburger-holder{
+  position: fixed;
+  width: 100%;
+  height: 2em;
+  bottom: 0;
+  background-image: url('src/assets/media/img/spring/spring5.jpg');
+  background-attachment: fixed;
+  background-repeat: no-repeat;
+  background-size: cover;
+
 }

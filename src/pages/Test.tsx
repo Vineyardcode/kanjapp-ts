@@ -178,7 +178,7 @@ const Test = () => {
   return (
     <>
     <div className='params-parent'>
-      <div className="params">
+      <div className="tests-params">
         <div className='params-div'>
           <label htmlFor="numKanji">Number of Kanji:</label>
           <input

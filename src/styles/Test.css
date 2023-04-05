@@ -4,7 +4,7 @@
 
 }
 
-.params { 
+.test-params { 
   display: flex;
   align-items: center;
   margin: 1rem;
@@ -13,10 +13,6 @@
   width: min-content;
 }
 
-.params-div {
-  margin: 0.25rem;
-  flex: 1;
-}
 
 .questions{
   display: grid;

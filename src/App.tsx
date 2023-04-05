@@ -12,10 +12,10 @@ import Test from './pages/Test';
 function App() {
 
   function setBackground() {
-    var date = new Date();
-    var month = date.getMonth() + 1;
-    var day = date.getDate();
-    var season = "";
+    let date = new Date();
+    let month = date.getMonth() + 1;
+    let day = date.getDate();
+    let season = "";
   
     if ((month == 2 && day >= 5) || month == 3 || month == 4 || (month == 5 && day <= 6)) {
       season = "spring";
@@ -27,9 +27,9 @@ function App() {
       season = "winter";
     }
   
-    var imageNumber = Math.floor(Math.random() * 5) + 1;
-    var backgroundImage = `${season}${imageNumber}.jpg`;
-    var element = document.getElementById("background-image");
+    let imageNumber = Math.floor(Math.random() * 5) + 1;
+    let backgroundImage = `${season}${imageNumber}.jpg`;
+    let element = document.getElementById("background-image");
     element.style.backgroundImage = `url('${backgroundImage}')`;
   }
 
