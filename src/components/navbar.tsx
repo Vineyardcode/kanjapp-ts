@@ -16,12 +16,12 @@ export const Navbar = () => {
   return (
     <div className="navbar">
       <div className="links">
-        <Link to="/Learn"> Learn </Link>
-        <Link to="/Test"> Test </Link>
-        <Link to="/"> Home </Link>
-        <Link to="/Login"> Login </Link>
+        <Link to="/Learn"><h5>Study</h5></Link>
+        <Link to="/Test"><h5>Test</h5></Link>
+        <Link to="/"><h5>Home</h5></Link>
+        <Link to="/Login"><h5>Login</h5></Link>
       </div>
-{user && (
+    {user && (
       <div className="user">
         
           <>

@@ -58,9 +58,9 @@ export const Login = () => {
 
 
   return (
-    <div>
-      <p> Sign In To Track Your Learning Progress</p>
-      <button onClick={signInWithGoogle}> Sign In With Google </button>
+    <div className="login-main">
+      <h3>save your learning progress by signing in</h3>
+      <button onClick={signInWithGoogle}><h5>Sign In With Google</h5></button>
     </div>
   );
 };

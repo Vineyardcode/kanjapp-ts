@@ -54,23 +54,23 @@ const GuessKanjiMeaningsQuiz = ({
           <h2>What is the meaning of {currentQuestion?.character}?</h2>
           {isAnswerCorrect !== null && (
             <div className="answer-feedback">
-              {isAnswerCorrect === true ? "Correct!" : (
+              {isAnswerCorrect === true ? <b>Correct!</b> : (
                   <>          
                     <b>{angryQuote}</b>           
                     <div>
-                    <br/>
-                    {correctAnswer?.character} has the meaning of "{correctAnswer?.meanings?.join(", ")}" !!!
+                    
+                    <h4>{correctAnswer?.character} has the meaning of "{correctAnswer?.meanings?.join(", ")}"</h4>
                     </div>
                   </>
                 )}
             </div>
           )}
         </div>
-        <div className='questions'>
+        <div className='answers'>
             {questions.map((kanji: Kanji) => (
               <button  style={{border: "1px solid black"}}
               key={kanji.character} 
-              onClick={() => handleAnswer(kanji)}>{kanji.meanings.join(", ")}</button>
+              onClick={() => handleAnswer(kanji)}><h5>{kanji.meanings.slice(0,3).join(", ")}</h5></button>
             ))}
           </div>
       </div>

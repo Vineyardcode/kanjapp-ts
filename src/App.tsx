@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useEffect} from 'react';
 import {BrowserRouter, Route, Routes} from 'react-router-dom'
 import  { Home }  from './pages/Home';
 import { Login } from "./pages/Login";
@@ -9,30 +9,38 @@ import Test from './pages/Test';
 
 
 
-function App() {
+const App = () => {
 
-  function setBackground() {
-    let date = new Date();
-    let month = date.getMonth() + 1;
-    let day = date.getDate();
-    let season = "";
+  // const setBackground = () => {
+  //   let date = new Date();
+  //   let month = date.getMonth() + 1;
+  //   let day = date.getDate();
+  //   let season = "";
   
-    if ((month == 2 && day >= 5) || month == 3 || month == 4 || (month == 5 && day <= 6)) {
-      season = "spring";
-    } else if ((month == 5 && day >= 7) || month == 6 || month == 7 || (month == 8 && day <= 8)) {
-      season = "summer";
-    } else if ((month == 8 && day >= 9) || month == 9 || month == 10 || (month == 11 && day <= 7)) {
-      season = "fall";
-    } else {
-      season = "winter";
-    }
+  //   if ((month == 2 && day >= 5) || month == 3 || month == 4 || (month == 5 && day <= 6)) {
+  //     season = "spring";
+  //   } else if ((month == 5 && day >= 7) || month == 6 || month == 7 || (month == 8 && day <= 8)) {
+  //     season = "summer";
+  //   } else if ((month == 8 && day >= 9) || month == 9 || month == 10 || (month == 11 && day <= 7)) {
+  //     season = "fall";
+  //   } else {
+  //     season = "winter";
+  //   }
   
-    let imageNumber = Math.floor(Math.random() * 5) + 1;
-    let backgroundImage = `${season}${imageNumber}.jpg`;
-    let element = document.getElementById("background-image");
-    element.style.backgroundImage = `url('${backgroundImage}')`;
-  }
+  //   let imageNumber = Math.floor(Math.random() * 5) + 1;
+  //   let backgroundImage = `${season}${imageNumber}.jpg`;
+  //   let element = document.querySelector("body");
+  //   let selector = document.querySelector("selector")
+  //   element.style.backgroundImage = `url('src/assets/media/img/spring/${backgroundImage}')`;
+  //   selector.style.backgroundImage = `url('src/assets/media/img/spring/${backgroundImage}')`;
+  //   console.log(backgroundImage);
+    
+  // }
 
+ 
+  // useEffect(() => {
+  //   setBackground()
+  // }, [])
   
 
 

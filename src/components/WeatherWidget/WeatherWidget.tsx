@@ -1,8 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { AsyncPaginate } from 'react-select-async-paginate';
 import { geoApiOptions, GEO_API_URL, WEATHER_API_URL, WEATHER_API_KEY } from './api';
-// import Search from './Search';
-// import CurrentWeather from './CurrentWeather';
+
 
 
 const WeatherWidget = () => {
@@ -12,7 +11,7 @@ const WeatherWidget = () => {
 
   const loadOptions = (inputValue) => {
     return fetch(
-      `${GEO_API_URL}/cities?minPopulation=1000000&namePrefix=${inputValue}`,
+      `${GEO_API_URL}/cities?minPopulation=1000&namePrefix=${inputValue}`,
       geoApiOptions
     )
       .then((response) => response.json())
@@ -48,7 +47,7 @@ const WeatherWidget = () => {
 
 
         setCurrentWeather({ city: searchData.label, ...weatherResponse });
-        console.log(weatherResponse.weather[0].icon);
+        
       })
       .catch(console.log);
   };
@@ -118,28 +117,27 @@ const WeatherWidget = () => {
             <div className="top">
               <div>
                 <p className="city">{currentWeather.city}</p>
+                
+              </div>
+              <div className='weather-desc'>
                 <p className="weather-description">{currentWeather.weather[0].description}</p>
+                <img
+                  alt="weather"
+                  className="weather-icon"
+                  src={`https://openweathermap.org/img/wn/${currentWeather.weather[0].icon}@2x.png`}
+                />
               </div>
-              <img
-                alt="weather"
-                className="weather-icon"
-                src={`icons/${currentWeather.weather[0].icon}.png`}
-              />
-              </div>
+            </div>
               <div className="bottom">
                 <p className="temperature">{Math.round(currentWeather.main.temp)}°C</p>
-                <div className="details">
-                  <div className="parameter-row">
-                    <span className="parameter-label">Details</span>
+                  <div className="details">
+                    <div className="parameter-row">
+                      <span className="parameter-label">Wind </span>
+                      <span className="parameter-value">{currentWeather.wind.speed} m/s</span>
+                    </div>
                   </div>
-
-                  <div className="parameter-row">
-                    <span className="parameter-label">Wind</span>
-                    <span className="parameter-value">{currentWeather.wind.speed} m/s</span>
-                  </div>
-                </div>
-              <h5>Fortunately, today's weather in {currentWeather.city} is {randomAdjective} for learning kanji ! Hooray !</h5>
-            </div>
+                <h5>Fortunately, today's weather in {currentWeather.city} is {randomAdjective} for learning kanji ! Hooray !</h5>
+              </div>
           </div>
         </div> 
     )}

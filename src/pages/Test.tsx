@@ -171,7 +171,7 @@ const Test = () => {
   };
 
   //wrong answer reactions
-  const angryQuote = ["Nope", "What ?", "No", "Wrong", "Gotta work on this one"]
+  const angryQuote = ["Nope", "What ?", "No", "Wrong", "You need to study harder!"]
 
   const randomAngryQuote = angryQuote[Math.floor(Math.random() * angryQuote.length)];
 
@@ -179,7 +179,8 @@ const Test = () => {
     <>
     <div className='params-parent'>
       <div className="tests-params">
-        <div className='params-div'>
+
+        <div className='params-column1'>
           <label htmlFor="numKanji">Kanji </label>
           <input
           type="number"
@@ -187,8 +188,7 @@ const Test = () => {
           value={numKanji}
           onChange={(e) => setNumKanji(Number(e.target.value))}
           />
-        </div>
-        <div className='params-div'>
+        
           <label htmlFor="minStrokes">Min strokes </label>
           <input
             type="number"
@@ -196,8 +196,7 @@ const Test = () => {
             value={minStrokes}
             onChange={(e) => setMinStrokes(Number(e.target.value))}
           />
-        </div>
-        <div className='params-div'>
+        
           <label htmlFor="maxStrokes">Max strokes </label>
           <input
             type="number"
@@ -205,8 +204,10 @@ const Test = () => {
             value={maxStrokes}
             onChange={(e) => setMaxStrokes(Number(e.target.value))}
           />
+
         </div>
-        <div className='params-div'>
+
+        <div className='params-column2'>
           <label htmlFor="jlptLevel">JLPT level </label>
           <select
             name="jlptLevel"
@@ -221,8 +222,7 @@ const Test = () => {
             <option value={5}>N5</option>
             
           </select>
-        </div>
-        <div className='params-div'>
+        
           <label htmlFor="minGrade">Min kanji grade </label>
           <select
             name="minGrade"
@@ -238,8 +238,7 @@ const Test = () => {
           <option value={8}>8</option>
           <option value={9}>9</option>
           </select>
-        </div>
-        <div className='params-div'>
+        
           <label htmlFor="testType">Type of test </label>
           <select
             name="testType"

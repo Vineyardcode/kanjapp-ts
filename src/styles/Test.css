@@ -1,3 +1,17 @@
+.test {
+  display: flex;
+  justify-content: center;
+  text-align: center;
+  
+}
+
+h4,h2 {
+  margin: 0;
+}
+
+b {
+  border-bottom: 1px solid black;
+}
 
 .params-parent {
   display: flex;
@@ -6,14 +20,54 @@
  
 }
 
-.test-params { 
-  display: flex;
+.tests-params { 
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  grid-template-rows: repeat(4, 1fr);
+  grid-column-gap: 0px;
+  grid-row-gap: 0%;
+
+  justify-items: center;
   align-items: center;
-  margin: 1rem;
-  border: 1px solid black;
+
+  padding: 5% 0 0 0;
+
   border-radius: 4.2px;
-  width: min-content;
+
 }
+  .params-column1 {
+    grid-area: 1 / 1 / 4 / 2;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.20rem;
+  }
+
+  .params-column2 {
+    grid-area: 1 / 2 / 4 / 3;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.20rem;
+  }
+
+  .tests-params button{ 
+    grid-area: 4 / 1 / 6 / 3;
+    text-shadow: 1px 1px 2px rgb(209, 182, 182), 0 0 1em rgb(255, 255, 255), 0 0 0.2em rgb(255, 255, 255);
+    border-radius: 4.2px 4.2px 4.2px 4.2px;
+    background-color: transparent;
+    border: 1px solid black;
+    transition: 0.5s;
+    text-align: center;
+    height: 1.75rem;
+  }
+
+  .tests-params button:hover{
+    font-size: .9rem;
+    cursor: pointer;
+    box-shadow: 0px 3px 7px 0px rgba(0, 0, 0, 0.37);
+    
+  }
 
 input,select {
   width: 3rem;
@@ -22,26 +76,33 @@ input,select {
   background-color: transparent;
   border: 1px solid black;
   transition: 0.5s;
+  text-align: center;
+  
 }
 
 .question {
   text-align: center;
-  padding: 0 1rem 0 1rem;
+  padding: 1rem 1rem 1rem 1rem;
 }
+  .question h2 {
+    padding-bottom: 0.5rem;
+  }
 
 
-.questions{
+.answers{
   display: grid;
+  align-items: center;
   grid-template-columns: 1fr 1fr 1fr;
   grid-template-rows: 1fr 1fr 1fr;
-  grid-gap: 10px;
+  row-gap: 5%;
+  column-gap: 5%;
   padding: 0 1rem 0 1rem;
-  vertical-align: middle;
-  
+  justify-items: center;
+
   border-radius: 4.2px;
 }
 
-.questions button{
+.answers button{
   text-shadow: 1px 1px 2px rgb(209, 182, 182), 0 0 1em rgb(255, 255, 255), 0 0 0.2em rgb(255, 255, 255);
   border-radius: 4.2px 4.2px 4.2px 4.2px;
   background-color: transparent;
@@ -50,10 +111,11 @@ input,select {
   height: 5rem;
   width: 5rem;
   word-wrap: break-word;
+  vertical-align: middle;
 }
 
-.questions button:hover{
-  font-size: 1.035rem;
+.answers button:hover{
+  font-size: .9rem;
   cursor: pointer;
   box-shadow: 0px 3px 7px 0px rgba(0, 0, 0, 0.37);
   
@@ -62,4 +124,11 @@ input,select {
 .counter {
   padding-top: 1rem;
   text-align: center;
+}
+
+.answer-feedback {
+  border-radius: 4.2px 4.2px 4.2px 4.2px;
+  padding: 0.5rem;
+  border: 1px solid black;
+  
 }
