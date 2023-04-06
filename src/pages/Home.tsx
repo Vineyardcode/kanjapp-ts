@@ -174,7 +174,7 @@ return(
 
                 <h5>Only <a href="https://en.wikipedia.org/wiki/J%C5%8Dy%C5%8D_kanji">joyo</a> kanji are available at the moment. For more kanji, please check in later</h5>
 
-                <h5></h5>
+                <h5>More features incoming !</h5>
 
             
           </div>
