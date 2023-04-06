@@ -9,7 +9,6 @@ import "../styles/Learn.css"
 import joyo from "../kanjiData/joyo.json"
 import KVGindex from "../kanjiData/kvg-index.json"
 import IconArrowsAlt from '../assets/icons/arrows-alt';
-import ProgressBar from '../components/ProgressBar';
 
 interface Kanji {
   character?: string;
@@ -20,7 +19,6 @@ interface Kanji {
   jlpt_old?: number;
   category?: string;
   strokes?: number;
-  
 }
 
 export const Learn = () => {
@@ -30,9 +28,10 @@ export const Learn = () => {
   const [modal, setModal] = useState<Modal>({ show: false, kanji: {} })
   const [learnedKanjiArray, setLearnedKanjiArray] = useState<Kanji[]>([]);
   const [selectedLevels, setSelectedLevels] = useState([5]);
-  const [sortByFreq, setSortByFreq] = useState(false);
-  const [sortByGrade, setSortByGrade] = useState(false);
-  const [sortByStrokes, setSortByStrokes] = useState(false);
+  // const [sortByFreq, setSortByFreq] = useState(false);
+  // const [sortByGrade, setSortByGrade] = useState(false);
+  // const [sortByStrokes, setSortByStrokes] = useState(false);
+
   //selector
   const [selectedKanji, setSelectedKanji] = useState<Kanji[]>([]);
   const [highlightedKanji, setHighlightedKanji] = useState<Kanji[]>([]);
@@ -45,12 +44,21 @@ export const Learn = () => {
   const [minGrade, setMinGrade] = useState(1);
   const [completed, setCompleted] = useState(0)
 
-  // fetch kanjis
+  // fetch kanjis and sort them
   const fetchData = async () => {
     try {
       const response = await fetch('src/kanjiData/joyo.json');
       const json = await response.json();
-      setKanji(json);
+      setKanji(json.sort((a, b) => {
+        const freqA = a.freq || Infinity;
+        const freqB = b.freq || Infinity;
+    
+        if (freqA !== freqB) {
+          return freqA - freqB;
+        }
+    
+        return a.strokes - b.strokes;
+      }));
     } catch (error) {
       console.error(error);
       
@@ -69,7 +77,7 @@ export const Learn = () => {
       setLearnedKanjiArray(kanjiArray);
     }
   }, []);
-
+  
   //save kanji to database
   const handleSaveKanji = async (kanji: Kanji) => { 
 
@@ -116,59 +124,58 @@ export const Learn = () => {
     }
   };
 
-  // call the sorting function every time a sorting option is changed
-  useEffect(() => {
-    sortKanji();
-  }, [sortByFreq, sortByGrade, sortByStrokes]);
+  //functions for sorting of the kanji
+  // useEffect(() => {
+  //   sortKanji();
+  // }, [sortByFreq, sortByGrade, sortByStrokes]);
 
-  //functions for sorting the kanji
-  const sortKanji = () => {
-    let filteredKanji = kanji.filter(k => selectedLevels.includes(k.jlpt_new));
-    let sortedKanji = [...filteredKanji];
+  // const sortKanji = () => {
+  //   let filteredKanji = kanji.filter(k => selectedLevels.includes(k.jlpt_new));
+  //   let sortedKanji = [...filteredKanji];
   
-    sortedKanji.sort((a, b) => {
-      if (sortByFreq) {
-        if (a.freq === null || a.freq === undefined) {
-          return 1;
-        } else if (b.freq === null || b.freq === undefined) {
-          return -1;
-        } else {
-          return a.freq - b.freq;
-        }
-      } else if (sortByGrade) {
-        if (a.grade === null || a.grade === undefined) {
-          return 1;
-        } else if (b.grade === null || b.grade === undefined) {
-          return -1;
-        } else {
-          return a.grade - b.grade;
-        }
-      } else if (sortByStrokes) {
-        if (a.strokes === null || a.strokes === undefined) {
-          return 1;
-        } else if (b.strokes === null || b.strokes === undefined) {
-          return -1;
-        } else {
-          return a.strokes - b.strokes;
-        }
-      }
-    });
+  //   sortedKanji.sort((a, b) => {
+  //     if (sortByFreq) {
+  //       if (a.freq === null || a.freq === undefined) {
+  //         return 1;
+  //       } else if (b.freq === null || b.freq === undefined) {
+  //         return -1;
+  //       } else {
+  //         return a.freq - b.freq;
+  //       }
+  //     } else if (sortByGrade) {
+  //       if (a.grade === null || a.grade === undefined) {
+  //         return 1;
+  //       } else if (b.grade === null || b.grade === undefined) {
+  //         return -1;
+  //       } else {
+  //         return a.grade - b.grade;
+  //       }
+  //     } else if (sortByStrokes) {
+  //       if (a.strokes === null || a.strokes === undefined) {
+  //         return 1;
+  //       } else if (b.strokes === null || b.strokes === undefined) {
+  //         return -1;
+  //       } else {
+  //         return a.strokes - b.strokes;
+  //       }
+  //     }
+  //   });
   
-    setKanji(sortedKanji);
-  };
+  //   setKanji(sortedKanji);
+  // };
   
-  const handleSortByFreqChange = () => {
-    setSortByFreq(!sortByFreq);
+  // const handleSortByFreqChange = () => {
+  //   setSortByFreq(!sortByFreq);
 
-  };
+  // };
 
-  const handleSortByGradeChange = () => {
-    setSortByGrade(!sortByGrade);
-  };
+  // const handleSortByGradeChange = () => {
+  //   setSortByGrade(!sortByGrade);
+  // };
 
-  const handleSortByStrokesChange = () => {
-    setSortByStrokes(!sortByStrokes);
-  };
+  // const handleSortByStrokesChange = () => {
+  //   setSortByStrokes(!sortByStrokes);
+  // };
 
   //modal options
   const showModal = (kanji: Kanji) => setModal({ show: true, kanji });
@@ -200,8 +207,6 @@ export const Learn = () => {
     }
     
   };
-
-  
 
   // create anki flash cards out of selected kanji
   const createAnkiCard = (kanjiData, kanjiVGID, svgPaths) => {
@@ -448,28 +453,28 @@ var paths1=document.querySelectorAll("#kvg\\\\:${kanjiVGID} path"),currentPathIn
     
   }
 
-  console.log(selectedKanji)
+  // console.log(selectedKanji)
   // console.log([highlightedKanji])
 
   return (
       <>
         <div className="filters">
-          <div>
+          {/* <div className='sorting'>
             <h3>Sort</h3>
                 <label>
                     <input type="checkbox" checked={sortByFreq} onChange={handleSortByFreqChange} />
-                    Sort by frequency
+                    <h5>By frequency</h5>
                   </label>
                   <label>
                     <input type="checkbox" checked={sortByGrade} onChange={handleSortByGradeChange} />
-                    Sort by grade
+                    <h5>By grade</h5>
                   </label>
                   <label>
                     <input type="checkbox" checked={sortByStrokes} onChange={handleSortByStrokesChange} />
-                    Sort by strokes
+                    <h5>By strokes</h5>
                 </label>
-          </div>
-          <div>
+          </div> */}
+          <div className='levels'>
             <h3>Select JLPT levels:</h3>
             {[5, 4, 3, 2, 1].map((level) => (
               <label key={level}>
@@ -479,7 +484,7 @@ var paths1=document.querySelectorAll("#kvg\\\\:${kanjiVGID} path"),currentPathIn
                   checked={selectedLevels.includes(level)}
                   onChange={handleLevelSelection}
                 />
-                N{level}
+                <h5>N{level}</h5>
               </label>
             ))}
           </div>
@@ -494,11 +499,11 @@ var paths1=document.querySelectorAll("#kvg\\\\:${kanjiVGID} path"),currentPathIn
                   {group.kanji.map((item, index) => (
               
                     <button 
-                    key={item.character} 
-                    onClick={selectionMode === false ? () => showModal(item) : () => handleHighLight(item)}   
-                    className="kanji-button"
-                    style={highlightedKanji.includes(item) ? { border: '1px solid black' } : {}}> 
-                    <span className="button-text"><h1>{item.character}</h1></span>
+                      key={item.character} 
+                      onClick={selectionMode === false ? () => showModal(item) : () => handleHighLight(item)}   
+                      className="kanji-button"
+                      style={highlightedKanji.includes(item) ? { border: '1px solid black' } : {}}> 
+                      <span className="button-text"><h1>{item.character}</h1></span>
                       
                     </button>
                   ))}

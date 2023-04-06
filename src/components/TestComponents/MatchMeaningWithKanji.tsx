@@ -57,19 +57,19 @@ const MatchMeaningWithKanji = ({
         <h2>Which kanji has the meaning of <strong>"{currentQuestion?.meanings.join(", ")}"</strong> ?</h2>
         {isAnswerCorrect !== null && (
           <div className="answer-feedback">
-              {isAnswerCorrect === true ? "Correct!" : (
+              {isAnswerCorrect === true ? <b>Correct!</b> : (
                 <>          
                   <b>{angryQuote}</b>           
                   <div>
                   <br/>
-                  Kanji for "{correctAnswer.meanings}" is <br /> <h2>{correctAnswer.character}</h2> !!!
+                  <h4>Kanji for "{correctAnswer.meanings.join(", ")}" is</h4><h2>{correctAnswer.character}</h2>
                   </div>
                 </>
               )}
           </div>
         )}
       </div>
-      <div className='questions'>
+      <div className='answers'>
           {questions.map((kanji: Kanji) => (
             <button 
             key={kanji.character} 

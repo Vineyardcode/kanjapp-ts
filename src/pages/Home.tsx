@@ -7,6 +7,8 @@ import { doc, setDoc, collection, deleteDoc, getDocs, } from "firebase/firestore
 //components & data
 import ProgressBar from '../components/ProgressBar';
 import joyo from "../kanjiData/joyo.json"
+import { Link } from 'react-router-dom';
+import IconHeart from '../assets/icons/heart';
 //style
 import "../styles/Home.css"
 import WeatherWidget from '../components/WeatherWidget/WeatherWidget';
@@ -97,12 +99,14 @@ export const Home = () => {
   //modal options and position calc
   const showModal = (kanji: Kanji, event: React.MouseEvent<HTMLDivElement>) => {
     
-    const rect = event.currentTarget.getBoundingClientRect();
+    
     const position = {
-      top: (rect.top + rect.height / 2)+rect.height*.5,
-      left: (rect.left + rect.width / 2)+rect.width*.5
+      top: (event.currentTarget.offsetTop)+30,
+      left: (event.currentTarget.offsetLeft)+30
     };
     setModal({ show: true, kanji, position });
+    console.log(position);
+    
   };
 
   const hideModal = () => setModal({ ...modal, show: false, position: { top: 0, left: 0 } });
@@ -136,7 +140,7 @@ return(
             return (
 
               <div key={jlpt} className='learned-group'>
-                <h2>JLPT N{jlpt} kanji learned</h2>
+                <h3>JLPT N{jlpt} kanji learned</h3>
                 <ProgressBar id='progressBars' percent={percentByJlpt[jlpt]} />
                 {learnedKanjiByJlpt[jlpt] && learnedKanjiByJlpt[jlpt].length > 0 && (
 
@@ -160,8 +164,49 @@ return(
 
         })}
       </div> 
+
+      <div className="about">
+        <h3>Info</h3>
+          <div className='info'>
+            
+              
+                <h5>To create Anki cards, you need to have the <a href="https://ankiweb.net/shared/info/2055492159">Anki Connect</a> addon installed and have the anki app open, while creating the cards</h5> 
+
+                <h5>Only <a href="https://en.wikipedia.org/wiki/J%C5%8Dy%C5%8D_kanji">joyo</a> kanji are available at the moment. For more kanji, please check in later</h5>
+
+                <h5></h5>
+
+            
+          </div>
+      </div>
+
+      <div className="about">
+        <h3>About</h3>
+          <div className='info'>
+            
+              
+                <h5>Kanji data are taken from <a href="https://kanjiapi.dev/">kanjiapi.dev</a>, which uses the EDICT and KANJIDIC dictionary files. These files are the property of the <a href="http://www.edrdg.org/">Electronic Dictionary Research and Development Group</a>, and are used in conformance with the Group's <a href="http://www.edrdg.org/edrdg/licence.html">licence</a></h5>
+              
+              
+                <h5>Kanji stroke order data are taken from the <a href="https://kanjivg.tagaini.net/index.html">Kanji VG</a> project</h5>
+              
+                          
+                <h5>The weather widget is powered by the <a href="https://openweathermap.org/">OpenWeather</a> and the <a href="https://rapidapi.com/wirefreethought/api/geodb-cities">GeoDB</a> API's</h5>              
+              
+              
+                <h5>Made with <IconHeart/> by <a href="https://github.com/Vineyardcode">Vine</a></h5>
+              
+            
+          </div>
+      </div>  
+
+
+        
       
     </div>
+
+
+
   </>
   );
 };
