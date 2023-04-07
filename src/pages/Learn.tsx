@@ -349,6 +349,8 @@ var paths1=document.querySelectorAll("#kvg\\\\:${kanjiVGID} path"),currentPathIn
     };
   };
 
+  
+
   //choose multiple kanji
   const handleGenerateKanji = () => {
     // Filter out already learned kanji
