@@ -1,6 +1,6 @@
 import React from 'react';
 import { useState, useEffect } from 'react';
-import KVGindex from "../kanjiData/kvg-index.json"
+import KVGindex  from "../kanjiData/kvg-index.json"
 import '../styles/Modal.css'
 
 interface ModalProps {
@@ -26,7 +26,7 @@ interface Kanji {
 }
 
 interface KVGindex {
-  [key: string]: string[];
+  [key: number]: string;
 }
 
 const Modal: React.FC<ModalProps> = ({ show, kanji, hideModal, handleSaveKanji, createAnkiCard }) => {
@@ -38,6 +38,7 @@ const Modal: React.FC<ModalProps> = ({ show, kanji, hideModal, handleSaveKanji, 
 
   const fetchData = async (kanji: any) => {
     // look up the kanjiVG index for the given kanji
+    
     const kanjiIndex = KVGindex[kanji].find((index: any) => index.length === 9).slice(0, -4);
     const response2 = await fetch('src/kanjiData/joyo_kanji_vg.xml');
     const xmlString = await response2.text();

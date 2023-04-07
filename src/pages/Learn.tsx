@@ -24,14 +24,6 @@ interface Kanji {
   wk_radicals?: string;
 }
 
-interface ModalProps {
-  show: boolean;
-  kanji: Kanji;
-  hideModal: () => void;
-  handleSaveKanji: (kanji: Kanji) => void;
-  createAnkiCard: any;
-}
-
 export const Learn = () => {
 
   //info management
@@ -54,7 +46,7 @@ export const Learn = () => {
   const [jlptLevel, setJlptLevel] = useState<string | number>('All');
   const [minGrade, setMinGrade] = useState(1);
   const [completed, setCompleted] = useState(0)
-
+  
   // fetch kanjis and sort them
   const fetchData = async () => {
     try {
@@ -390,6 +382,7 @@ var paths1=document.querySelectorAll("#kvg\\\\:${kanjiVGID} path"),currentPathIn
     for (const kanji of kanjiBatch) {
       try {
         // look up the kanjiVG index for the given kanji
+        
         const kanjiIndex = KVGindex[kanji.character].find((index: any) => index.length === 9).slice(0, -4);
         const response2 = await fetch('src/kanjiData/joyo_kanji_vg.xml');
         const xmlString = await response2.text();
