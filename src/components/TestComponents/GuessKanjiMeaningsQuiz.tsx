@@ -10,7 +10,7 @@
   isFinished: boolean;
   angryQuote: string;
   numberOfQuestions: number;
-  handleGenerateKanji: Event;
+  handleGenerateKanji: any;
   }
 
   interface Kanji {
@@ -70,7 +70,7 @@ const GuessKanjiMeaningsQuiz = ({
             {questions.map((kanji: Kanji) => (
               <button  style={{border: "1px solid black"}}
               key={kanji.character} 
-              onClick={() => handleAnswer(kanji)}><h5>{kanji.meanings.slice(0,3).join(", ")}</h5></button>
+              onClick={() => handleAnswer(kanji)}><h5>{kanji.meanings?.slice(0,3).join(", ")}</h5></button>
             ))}
           </div>
       </div>

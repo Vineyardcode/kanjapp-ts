@@ -22,17 +22,17 @@ const Test = () => {
   const [currentQuestion, setCurrentQuestion] = useState<Kanji | null>(null);
   const [usedKanji, setUsedKanji] = useState<Kanji[]>([]);
 
-  const [correctAnswer, setCorrectAnswer] = useState<Kanji[]>([]);
+  const [correctAnswer, setCorrectAnswer] = useState<any>([]);
 
   const [score, setScore] = useState(0);
 
-  const [isAnswerCorrect, setIsAnswerCorrect] = useState<boolean>(null);
+  const [isAnswerCorrect, setIsAnswerCorrect] = useState<any>(null);
 
   const [questions, setQuestions] = useState<Kanji[]>([]);
 
   const [kanjiData, setKanjiData] = useState(joyo);
   
-  const [testType, setTestType] = useState()
+  const [testType, setTestType] = useState<any>()
 
   const [learnedKanjiArray, setLearnedKanjiArray] = useState<Kanji[]>([]);
 
@@ -95,7 +95,7 @@ const Test = () => {
     setCurrentQuestion(initialQuestion);
     setUsedKanji([initialQuestion]);
     setScore(0);
-    setCorrectAnswer([]);
+    setCorrectAnswer(null);
     setIsAnswerCorrect(null);
     setIsFinished(false)
   };

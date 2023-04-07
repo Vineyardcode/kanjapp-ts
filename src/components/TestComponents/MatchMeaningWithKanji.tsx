@@ -10,7 +10,7 @@ import { useState, useEffect } from "react";
   isFinished: boolean;
   angryQuote: string;
   numberOfQuestions: number;
-  handleGenerateKanji: Event;
+  handleGenerateKanji: any;
   }
 
   interface Kanji {
@@ -54,7 +54,7 @@ const MatchMeaningWithKanji = ({
 
     <div className="quiz2">
       <div className="question">
-        <h2>Which kanji has the meaning of <strong>"{currentQuestion?.meanings.join(", ")}"</strong> ?</h2>
+        <h2>Which kanji has the meaning of <strong>"{currentQuestion.meanings?.join(", ")}"</strong> ?</h2>
         {isAnswerCorrect !== null && (
           <div className="answer-feedback">
               {isAnswerCorrect === true ? <b>Correct!</b> : (
@@ -62,7 +62,7 @@ const MatchMeaningWithKanji = ({
                   <b>{angryQuote}</b>           
                   <div>
                   <br/>
-                  <h4>Kanji for "{correctAnswer.meanings.join(", ")}" is</h4><h2>{correctAnswer.character}</h2>
+                  <h4>Kanji for "{correctAnswer.meanings?.join(", ")}" is</h4><h2>{correctAnswer.character}</h2>
                   </div>
                 </>
               )}
