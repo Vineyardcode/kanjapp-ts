@@ -2,7 +2,7 @@ import React from 'react'
 import "../styles/ProgressBar.css"
 
 
-const ProgressBar = ({ percent }) => {
+const ProgressBar = ({ percent }: any) => {
 
   const style = {
     width: `${percent}%`,

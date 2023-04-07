@@ -6,35 +6,53 @@ import { geoApiOptions, GEO_API_URL, WEATHER_API_URL, WEATHER_API_KEY } from './
 
 const WeatherWidget = () => {
 
-  const [search, setSearch] = useState(null);
-  const [currentWeather, setCurrentWeather] = useState(null);
+  interface WeatherData {
+    city: string;
+    weather: {
+      description: string;
+      icon: string;
+    }[];
+    main: {
+      temp: number;
+    };
+    wind: {
+      speed: number;
+    };
+  }
 
-  const loadOptions = (inputValue) => {
+  const [search, setSearch] = useState(null);
+  const [currentWeather, setCurrentWeather] = useState<WeatherData | null>(null);
+
+  const loadOptions = (inputValue: string) => {
     return fetch(
       `${GEO_API_URL}/cities?minPopulation=1000&namePrefix=${inputValue}`,
       geoApiOptions
     )
       .then((response) => response.json())
       .then((response) => {
-
+        
+        
         return {
-          options: response.data.map((city) => {
+          options: response.data.map((city: any) => {
             return {
               value: `${city.latitude} ${city.longitude}`,
               label: `${city.name}, ${city.countryCode}`,
+              
+              
             };
           }),
         };
       });
+      
   };
 
-  const handleOnChange = (searchData) => {
+  const handleOnChange = (searchData: any) => {
     setSearch(searchData);
     handleOnSearchChange(searchData);
 
   };
  
-  const handleOnSearchChange = (searchData) => {
+  const handleOnSearchChange = (searchData: any) => {
     const [lat, lon] = searchData.value.split(" ");
 
     const currentWeatherFetch = fetch(
@@ -45,7 +63,7 @@ const WeatherWidget = () => {
       .then(async (response) => {
         const weatherResponse = await response[0].json();
 
-
+        
         setCurrentWeather({ city: searchData.label, ...weatherResponse });
         
       })
