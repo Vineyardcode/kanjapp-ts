@@ -44,6 +44,9 @@
   text-align: center;
   padding-bottom: 15.5%;
 }
+  .group-container h2 {
+    padding: 0.5rem 0 0.5rem 0;
+  }
 
 .filters {
   display: flex;

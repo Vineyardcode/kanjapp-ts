@@ -11,7 +11,7 @@
   height: 50%;
   border: 1px solid black;
   border-radius: 4.2px 4.2px 4.2px 4.2px;
-  margin: 10px;
+  margin: 0.5rem;
 }
 
 .learned-group h2 {
@@ -26,13 +26,6 @@
   align-items: center;
   flex-wrap: wrap;
   flex-direction: column;
-}
-
-#progressBars {
-  order: 1;
-  flex-wrap: wrap;
-  align-self: flex-start;
-  text-align: center;
 }
 
 .learned-kanji {
@@ -70,7 +63,7 @@
 .WeatherWidget {
   border: 1px solid black;
   border-radius: 4.2px 4.2px 4.2px 4.2px;
-  margin: 1rem;
+  margin: 0.5rem;
   width: 100%;
   display: flex;
   flex-direction: column;
@@ -85,7 +78,7 @@
 
 .WeatherWidget h3 {
   margin: 10px;
-}
+} 
 
 .weather {
   margin: 10px;
@@ -114,7 +107,6 @@
   justify-content: center;
   align-items: center;
   flex-direction: column;
-
 }
 
 .homeModal button {
@@ -130,7 +122,6 @@
 .homeModal button:hover {
   cursor: pointer;
   box-shadow: 0px 5px 10px 0px rgba(0, 0, 0, 0.5);
-
 }
 
 .about {
@@ -138,7 +129,7 @@
   height: 50%;
   border: 1px solid black;
   border-radius: 4.2px 4.2px 4.2px 4.2px;
-  margin: 10px;
+  margin: 0.5rem;
   text-align: center;
   display: flex;
   flex-direction: column;
