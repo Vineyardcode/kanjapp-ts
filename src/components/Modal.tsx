@@ -25,9 +25,7 @@ interface Kanji {
   wk_radicals?: string;
 }
 
-interface KVGindex {
-  [key: number]: string;
-}
+
 
 const Modal: React.FC<ModalProps> = ({ show, kanji, hideModal, handleSaveKanji, createAnkiCard }) => {
 
@@ -38,8 +36,8 @@ const Modal: React.FC<ModalProps> = ({ show, kanji, hideModal, handleSaveKanji, 
 
   const fetchData = async (kanji: any) => {
     // look up the kanjiVG index for the given kanji
-    
-    const kanjiIndex = KVGindex[kanji].find((index: any) => index.length === 9).slice(0, -4);
+    const kanjiVGindex:any = KVGindex
+    const kanjiIndex = kanjiVGindex[kanji].find((index: any) => index.length === 9).slice(0, -4);
     const response2 = await fetch('src/kanjiData/joyo_kanji_vg.xml');
     const xmlString = await response2.text();
     const xmlDoc = new DOMParser().parseFromString(xmlString, "text/xml");
