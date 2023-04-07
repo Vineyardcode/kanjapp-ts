@@ -10,18 +10,6 @@ import { auth, provider, db } from "../config/firebase";
 
 export const Login = () => {
 
-  interface Kanji {
-    character?: string;
-    meanings?: string[];
-    freq?: number;
-    grade?: number;
-    jlpt_new?: number;
-    jlpt_old?: number;
-    category?: string;
-    strokes?: number;
-    
-  }
-
   const navigate = useNavigate();
 
   const signInWithGoogle = async () => {

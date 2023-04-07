@@ -47,7 +47,10 @@ const Test = () => {
     jlpt_old?: number;
     category?: string;
     strokes?: number;
-    
+    readings_kun?: string;
+    readings_on?: string;
+    wk_radicals?: string;
+    [key: string]: any;
   }
 
   //fetch learned kanji from localStorage and save them to a state variable
@@ -57,7 +60,8 @@ const Test = () => {
       const kanjiArray = JSON.parse(storedKanji);
       setLearnedKanjiArray(kanjiArray);
     }
-  }, []);
+    
+  }, [isFinished]);
 
   //question counter
   let qNumber = ((selectedKanji.length) - (usedKanji.length)) + 1
@@ -91,12 +95,12 @@ const Test = () => {
     setCurrentQuestion(initialQuestion);
     setUsedKanji([initialQuestion]);
     setScore(0);
-    setCorrectAnswer(null);
+    setCorrectAnswer([]);
     setIsAnswerCorrect(null);
     setIsFinished(false)
   };
 
-  const handleSaveKanji = async (kanji: Kanji) => { 
+  const handleSaveKanji = async (kanji: any) => { 
 
     const currentUser = auth.currentUser?.uid;
       if (currentUser) {
@@ -108,8 +112,8 @@ const Test = () => {
   };
       
   //quiz logic 
-  const handleAnswer = (kanji: Kanji) => {
-    if (kanji.character === currentQuestion.character) {
+  const handleAnswer = (kanji: any) => {
+    if (kanji.character === currentQuestion?.character) {
       setScore(score + 1);
       setIsAnswerCorrect(true);
       
@@ -120,7 +124,7 @@ const Test = () => {
           handleSaveKanji(kanji)
           localStorage.removeItem(kanji.character);
           const learnedKanjiArray = JSON.parse(localStorage.getItem('learnedKanjiArray') || '[]');
-          if (!learnedKanjiArray.some((k: Kanji) => k.character === kanji.character)) {
+          if (!learnedKanjiArray.some((k: any) => k.character === kanji.character)) {
             learnedKanjiArray.push(kanji);
             localStorage.setItem("learnedKanjiArray", JSON.stringify(learnedKanjiArray));
           }
