@@ -96,7 +96,7 @@
   transition: height 0.75s ease-in-out;
   z-index: 9;
   width: 100%;
-  background-image: url('src/assets/media/img/spring/spring5.jpg');
+  background-image: url('https://images.pexels.com/photos/4725604/pexels-photo-4725604.jpeg');
   background-attachment: fixed;
   background-repeat: no-repeat;
   background-size: cover;
@@ -217,7 +217,7 @@
   align-items: center;
   vertical-align: middle;
   flex-wrap: wrap;
-  background-image: url('src/assets/media/img/spring/spring5.jpg');
+  background-image: url('https://images.pexels.com/photos/4725604/pexels-photo-4725604.jpeg');
   background-attachment: fixed;
   background-repeat: no-repeat;
   background-size: cover;
