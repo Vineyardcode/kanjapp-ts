@@ -20,7 +20,9 @@ interface Kanji {
   jlpt_old?: number;
   category?: string;
   strokes?: number;
-  
+  readings_kun?: string;
+  readings_on?: string;
+  wk_radicals?: string;
 }
 
 const Modal: React.FC<ModalProps> = ({ show, kanji, hideModal, handleSaveKanji, createAnkiCard }) => {
@@ -32,14 +34,16 @@ const Modal: React.FC<ModalProps> = ({ show, kanji, hideModal, handleSaveKanji, 
 
   const fetchData = async (kanji: Kanji) => {
     // look up the kanjiVG index for the given kanji
-    const kanjiIndex = KVGindex[kanji].find(index => index.length === 9).slice(0, -4);
+    const kanjiIndex = KVGindex[kanji].find((index: any) => index.length === 9).slice(0, -4);
     const response2 = await fetch('src/kanjiData/joyo_kanji_vg.xml');
     const xmlString = await response2.text();
     const xmlDoc = new DOMParser().parseFromString(xmlString, "text/xml");
     // look up the kanji svg in the XML file using the kanji VG index
     const kanjiElement = xmlDoc.querySelector(`[id="kvg:${kanjiIndex}"]`);
   
+  
     setStrokes(kanjiElement)
+   
     setKvgIndex(kanjiIndex)
   };
 
@@ -55,37 +59,42 @@ const Modal: React.FC<ModalProps> = ({ show, kanji, hideModal, handleSaveKanji, 
 
   //drawing functions
   const kvgPaths = () => {
-    const paths = document.querySelectorAll(`#kvg\\:${kvgIndex} path`)
+    const paths: SVGPathElement[] = Array.from(document.querySelectorAll(`#kvg\\:${kvgIndex} path`));
     let hue = 200;
-    paths.forEach((path, i) => {
+    
+    paths.forEach((path, i: any) => {
       path.style.stroke = `hsl(${hue + i * 25}, 100%, 50%)`;
       const start = path.getPointAtLength(0);
       const number = document.createElementNS("http://www.w3.org/2000/svg", "text");
-      number.setAttribute("x", start.x + Math.floor(Math.random() * 5));
-      number.setAttribute("y", start.y);
+      number.setAttribute("x", (start.x).toString());
+      number.setAttribute("y", (start.y).toString());
       number.textContent = i + 1;
       number.setAttribute("font-size", "4.2px");
       number.classList.add("text");
       const strokesSVG = document.querySelector('svg');
-      strokesSVG.appendChild(number);
+      
       const dot = document.createElementNS("http://www.w3.org/2000/svg", "circle");
-      dot.setAttribute("cx", start.x);
-      dot.setAttribute("cy", start.y);
+      dot.setAttribute("cx", (start.x).toString());
+      dot.setAttribute("cy", (start.y).toString());
       dot.setAttribute("r", "1.5");
       dot.setAttribute("fill", "rgba(0,0,0,0.5)");
       dot.classList.add("dot");
-      strokesSVG.appendChild(dot);
+      if (strokesSVG) {
+        strokesSVG.appendChild(number);
+        strokesSVG.appendChild(dot);
+      }
+      
     });
   };
 
   const handleMinusClick = () => {
-    const paths = [...document.querySelectorAll(`#kvg\\:${kvgIndex} path`)];
+    const paths: SVGPathElement[] = Array.from(document.querySelectorAll(`#kvg\\:${kvgIndex} path`));
 
     if (currentPathIndex > 0) {
       paths[currentPathIndex-1].style.display = 'none';
-      paths[currentPathIndex-1].style.strokeDasharray = null;
-      paths[currentPathIndex-1].style.strokeDashoffset = null;
-      paths[currentPathIndex-1].style.animation = null;
+      paths[currentPathIndex-1].style.strokeDasharray = "";
+      paths[currentPathIndex-1].style.strokeDashoffset = "";
+      paths[currentPathIndex-1].style.animation = "";
       setCurrentPathIndex(currentPathIndex - 1);
     } else {
       setCurrentPathIndex(0)
@@ -93,13 +102,13 @@ const Modal: React.FC<ModalProps> = ({ show, kanji, hideModal, handleSaveKanji, 
   };
 
   const handlePlusClick = () => {
-    const paths = [...document.querySelectorAll(`#kvg\\:${kvgIndex} path`)];
+    const paths: SVGPathElement[] = Array.from(document.querySelectorAll(`#kvg\\:${kvgIndex} path`));
 
     if (currentPathIndex <= paths.length-1) {
       paths[currentPathIndex].style.display = 'block';
       const length = paths[currentPathIndex].getTotalLength();
-      paths[currentPathIndex].style.strokeDasharray = length;
-      paths[currentPathIndex].style.strokeDashoffset = length;
+      paths[currentPathIndex].style.strokeDasharray = length.toString();
+      paths[currentPathIndex].style.strokeDashoffset = length.toString();
       paths[currentPathIndex].style.animation = "draw 1s forwards 0.3s";
       setCurrentPathIndex(currentPathIndex + 1)
     } else {
@@ -108,17 +117,17 @@ const Modal: React.FC<ModalProps> = ({ show, kanji, hideModal, handleSaveKanji, 
   };
   
   const draw = () => {
-    const paths = [...document.querySelectorAll(`#kvg\\:${kvgIndex} path`)]
+    const paths: SVGPathElement[] = Array.from(document.querySelectorAll(`#kvg\\:${kvgIndex} path`));
     let delay = 0.5;
       
     for (let i = 0; i < paths.length; i++) {
-      paths[i].style.strokeDasharray = null;
-      paths[i].style.strokeDashoffset = null;
-      paths[i].style.animation = null;
+      paths[i].style.strokeDasharray = "";
+      paths[i].style.strokeDashoffset = "";
+      paths[i].style.animation = "";
       paths[i].style.display = 'block';
       const length = paths[i].getTotalLength();
-      paths[i].style.strokeDasharray = length;
-      paths[i].style.strokeDashoffset = length;
+      paths[i].style.strokeDasharray = length.toString();
+      paths[i].style.strokeDashoffset = length.toString();
       paths[i].style.animation = "draw 1s forwards " + delay + "s";
       delay += 1 
     }
@@ -126,7 +135,7 @@ const Modal: React.FC<ModalProps> = ({ show, kanji, hideModal, handleSaveKanji, 
   };
 
   const deleteStrokes = () => {
-    const paths = document.querySelectorAll(`#kvg\\:${kvgIndex} path`)
+    const paths: NodeListOf<SVGPathElement> = document.querySelectorAll(`#kvg\\:${kvgIndex} path`)
     paths.forEach((path) => {path.style.display = 'none';});
     setCurrentPathIndex(0)
   }
@@ -173,7 +182,7 @@ const Modal: React.FC<ModalProps> = ({ show, kanji, hideModal, handleSaveKanji, 
         <div className="modal-details">
 
           <div className='left-column'>
-            <div id='meanings'><h5>Meanings: {kanji.meanings.join(", ")}</h5></div>
+            <div id='meanings'><h5>Meanings: {kanji.meanings?.join(", ")}</h5></div>
             <div><h5>Strokes: {kanji.strokes}</h5></div> 
           </div>
 
