@@ -19,13 +19,16 @@ interface Kanji {
   jlpt_old?: number;
   category?: string;
   strokes?: number;
+  readings_kun?: string;
+  readings_on?: string;
+  wk_radicals?: string;
 }
 
 export const Learn = () => {
 
   //info management
   const [kanji, setKanji] = useState(joyo); 
-  const [modal, setModal] = useState<Modal>({ show: false, kanji: {} })
+  const [modal, setModal] = useState({ show: false, kanji: {} })
   const [learnedKanjiArray, setLearnedKanjiArray] = useState<Kanji[]>([]);
   const [selectedLevels, setSelectedLevels] = useState([5]);
   // const [sortByFreq, setSortByFreq] = useState(false);
@@ -49,15 +52,17 @@ export const Learn = () => {
     try {
       const response = await fetch('src/kanjiData/joyo.json');
       const json = await response.json();
-      setKanji(json.sort((a, b) => {
-        const freqA = a.freq || Infinity;
-        const freqB = b.freq || Infinity;
-    
+      setKanji(json.sort((a: Kanji, b: Kanji) => {
+        const freqA = a.freq ?? Infinity;
+        const freqB = b.freq ?? Infinity;
+        const strokesA = a.strokes ?? 0;
+        const strokesB = b.strokes ?? 0;
+      
         if (freqA !== freqB) {
           return freqA - freqB;
         }
-    
-        return a.strokes - b.strokes;
+      
+        return strokesA - strokesB;
       }));
     } catch (error) {
       console.error(error);
@@ -92,8 +97,8 @@ export const Learn = () => {
 
   //save learned kanji to localStorage 
   const saveKanji = (kanji: Kanji) => {
-    let learnedKanjiArray = JSON.parse(localStorage.getItem("learnedKanjiArray")) || [];
-    if (!learnedKanjiArray.some(k => k.character === kanji.character)) {
+    let learnedKanjiArray = JSON.parse(localStorage.getItem("learnedKanjiArray") || "[]");
+    if (!learnedKanjiArray.some((k: Kanji) => k.character === kanji.character)) {
       learnedKanjiArray.push(kanji);
       localStorage.setItem("learnedKanjiArray", JSON.stringify(learnedKanjiArray));
       
@@ -195,7 +200,7 @@ export const Learn = () => {
     });
 
   //handling of user selected JLPT levels
-  const handleLevelSelection = (e) => {
+  const handleLevelSelection = (e: any) => {
     const level = Number(e.target.value);
     const index = selectedLevels.indexOf(level);
 
@@ -209,7 +214,7 @@ export const Learn = () => {
   };
 
   // create anki flash cards out of selected kanji
-  const createAnkiCard = (kanjiData, kanjiVGID, svgPaths) => {
+  const createAnkiCard = (kanjiData: Kanji, kanjiVGID: any, svgPaths: any) => {
     
 
     const api = new XMLHttpRequest();
@@ -295,7 +300,7 @@ export const Learn = () => {
           </div>         
       
         <script>
-var paths1=document.querySelectorAll("#kvg\\\\:${kanjiVGID} path"),currentPathIndex=-1;function displayPath(){paths1.forEach(((t,e)=>{if(e<=currentPathIndex){t.style.display="block";const e=t.getTotalLength();t.style.strokeDasharray=e,t.style.strokeDashoffset=e,t.style.animation="draw 1s forwards 0.5s"}else t.style.display="none",t.style.strokeDasharray=null,t.style.strokeDashoffset=null,t.style.animation=null}))}displayPath(),document.getElementById("minus").addEventListener("click",(()=>{currentPathIndex>-1&&(currentPathIndex--,displayPath())})),document.getElementById("plus").addEventListener("click",(()=>{currentPathIndex<paths1.length-1&&(currentPathIndex++,displayPath())}));var hardModeCheckbox=document.getElementById("hardModeCheckbox"),clicks=0;hardModeCheckbox.addEventListener("click",(function(){if(0===clicks){hardModeCheckbox.style.border="5px solid rgb(33, 128, 201)";const t=document.querySelectorAll(".text");document.querySelectorAll(".dot").forEach((t=>t.style.display="none")),t.forEach((t=>t.style.display="none")),clicks++}else{hardModeCheckbox.style.border="";const t=document.querySelectorAll(".text"),e=document.querySelectorAll(".dot");clicks--,e.forEach((t=>t.style.display="block")),t.forEach((t=>t.style.display="block"))}}));var kanjiVG="${kanjiVGID}",kanjiVG1="#kvg\\\\:"+kanjiVG+" path",paths=document.querySelectorAll(kanjiVG1);function fun(){let t=.01;for(let e=0;e<paths.length;e++){const s=paths[e];s.style.strokeDasharray=null,s.style.strokeDashoffset=null,s.style.animation=null;const l=s.getTotalLength();s.style.strokeDasharray=l,s.style.strokeDashoffset=l,s.style.animation="draw 1s forwards "+t+"s",s.style.display="block",t+=.42,currentPathIndex++}}var hue=200;for(let t=0;t<paths.length;t++){paths[t].style.stroke="hsl("+hue+", 100%, 50%)",hue+=25;const e=paths[t].getPointAtLength(0),s=document.createElementNS("http://www.w3.org/2000/svg","text");s.setAttribute("x",e.x+3),s.setAttribute("y",e.y),s.textContent=t+1,s.setAttribute("font-size","4.2px"),s.classList.add("text");const l=document.querySelector("svg");l.appendChild(s);const a=document.createElementNS("http://www.w3.org/2000/svg","circle");a.setAttribute("cx",e.x),a.setAttribute("cy",e.y),a.setAttribute("r","1.5"),a.setAttribute("fill","rgba(0,0,0,0.5)"),a.classList.add("dot"),l.appendChild(a)}function deleteStrokes(){paths1.forEach((t=>{t.style.display="none"})),currentPathIndex=-1}function showStrokes(){paths1.forEach((t=>{t.style.display="block",t.style.strokeDasharray=null,t.style.strokeDashoffset=null,t.style.animation=null})),currentPathIndex=paths1.length-1}
+var paths1=document.querySelectorAll("#kvg\\\\:${kanjiVGID} path"),currentPathIndex=-1;function displayPath(){paths1.forEach(((t,e)=>{if(e<=currentPathIndex){t.style.display="block";const e=t.getTotalLength();t.style.strokeDasharray=e,t.style.strokeDashoffset=e,t.style.animation="draw 1s forwards 0.5s"}else t.style.display="none",t.style.strokeDasharray=null,t.style.strokeDashoffset=null,t.style.animation=null}))}displayPath(),document.getElementById("minus").addEventListener("click",(()=>{currentPathIndex>-1&&(currentPathIndex--,displayPath())})),document.getElementById("plus").addEventListener("click",(()=>{currentPathIndex<paths1.length-1&&(currentPathIndex++,displayPath())}));var hardModeCheckbox=document.getElementById("hardModeCheckbox"),clicks=0;hardModeCheckbox.addEventListener("click",(function(){if(0===clicks){hardModeCheckbox.style.border="5px solid rgb(33, 128, 201)";const t=document.querySelectorAll(".text");document.querySelectorAll(".dot").forEach((t=>t.style.display="none")),t.forEach((t=>t.style.display="none")),clicks++}else{hardModeCheckbox.style.border="";const t=document.querySelectorAll(".text"),e=document.querySelectorAll(".dot");clicks--,e.forEach((t=>t.style.display="block")),t.forEach((t=>t.style.display="block"))}}));var kanjiVG="${kanjiVGID}",kanjiVG1="#kvg\\\\:"+kanjiVG+" path",paths=document.querySelectorAll(kanjiVG1);function fun(){let t=.3;for(let e=0;e<paths.length;e++){const s=paths[e];s.style.strokeDasharray=null,s.style.strokeDashoffset=null,s.style.animation=null;const l=s.getTotalLength();s.style.strokeDasharray=l,s.style.strokeDashoffset=l,s.style.animation="draw 1s forwards "+t+"s",s.style.display="block",t+=.42,currentPathIndex++}}var hue=200;for(let t=0;t<paths.length;t++){paths[t].style.stroke="hsl("+hue+", 100%, 50%)",hue+=25;const e=paths[t].getPointAtLength(0),s=document.createElementNS("http://www.w3.org/2000/svg","text");s.setAttribute("x",e.x+3),s.setAttribute("y",e.y),s.textContent=t+1,s.setAttribute("font-size","4.2px"),s.classList.add("text");const l=document.querySelector("svg");l.appendChild(s);const a=document.createElementNS("http://www.w3.org/2000/svg","circle");a.setAttribute("cx",e.x),a.setAttribute("cy",e.y),a.setAttribute("r","1.5"),a.setAttribute("fill","rgba(0,0,0,0.5)"),a.classList.add("dot"),l.appendChild(a)}function deleteStrokes(){paths1.forEach((t=>{t.style.display="none"})),currentPathIndex=-1}function showStrokes(){paths1.forEach((t=>{t.style.display="block",t.style.strokeDasharray=null,t.style.strokeDashoffset=null,t.style.animation=null})),currentPathIndex=paths1.length-1}
       </script>`,
         }
       ]
@@ -314,7 +319,7 @@ var paths1=document.querySelectorAll("#kvg\\\\:${kanjiVGID} path"),currentPathIn
           modelName: model.modelName,
           fields: {
             Character: kanjiData.character,
-            Meaning: kanjiData.meanings.join(", "),  
+            Meaning: kanjiData.meanings?.join(", "),  
           },
           tags: [
             "JLPT:" + kanjiData.jlpt_new + "",
@@ -375,7 +380,7 @@ var paths1=document.querySelectorAll("#kvg\\\\:${kanjiVGID} path"),currentPathIn
     for (const kanji of kanjiBatch) {
       try {
         // look up the kanjiVG index for the given kanji
-        const kanjiIndex = KVGindex[kanji.character].find(index => index.length === 9).slice(0, -4);
+        const kanjiIndex = KVGindex[kanji.character].find((index: any) => index.length === 9).slice(0, -4);
         const response2 = await fetch('src/kanjiData/joyo_kanji_vg.xml');
         const xmlString = await response2.text();
         const xmlDoc = new DOMParser().parseFromString(xmlString, "text/xml");
@@ -406,8 +411,8 @@ var paths1=document.querySelectorAll("#kvg\\\\:${kanjiVGID} path"),currentPathIn
   
   //visual selector
   const handleDeleteSelected = () => {
-    setSelectedKanji<Kanji[]>([])
-    setHighlightedKanji<Kanji[]>([]);
+    setSelectedKanji([])
+    setHighlightedKanji([]);
     setCompleted(0)
     setSelectionMode(false)
   }
@@ -436,19 +441,22 @@ var paths1=document.querySelectorAll("#kvg\\\\:${kanjiVGID} path"),currentPathIn
   const handleShowSelector = () => {
 
     setSelectionMode(false)
-    setSelectedKanji<Kanji[]>([])
-    setHighlightedKanji<Kanji[]>([]);
+    setSelectedKanji([])
+    setHighlightedKanji([]);
     setCompleted(0)
     
     const selector = document.querySelector(".selector")
    
-    if (selectorShown===false) {
-      selector.style.height = "16%"
-      setSelectorShown(true)  
-     } else {
-      selector.style.height = "0"
-      setSelectorShown(false)
-     }
+
+    if (selector instanceof HTMLElement) {
+      if (selectorShown === false) {
+        selector.style.height = "16%";
+        setSelectorShown(true);
+      } else {
+        selector.style.height = "0";
+        setSelectorShown(false);
+      }
+    }
 
     
   }
@@ -594,23 +602,19 @@ var paths1=document.querySelectorAll("#kvg\\\\:${kanjiVGID} path"),currentPathIn
             </div> */}
           </div>
 
-          
+          <div className="selector-create-move-manual" >
+            <button className='selector-createDeck' onClick={createBatches}><h5>Create Anki deck</h5></button>
+            <button className='selector-MoveSelectedToLearned' onClick={createBatchesForSavingKanji}><h5>Move to Learned</h5></button>
+            <button className='selector-manual' id='manual-btn' style={selectionMode ? {border: '3px solid black'} : {}} onClick={selectionMode ? handleCancelManualSelection : handleManualSelection}><h5>{selectionMode ? "Manual selection ON" : "Manual selection OFF"}</h5></button>
+          </div>
 
-            <div className="selector-create-move-manual" >
-              <button className='selector-createDeck' onClick={createBatches}><h5>Create Anki deck</h5></button>
-              <button className='selector-MoveSelectedToLearned' onClick={createBatchesForSavingKanji}><h5>Move to Learned</h5></button>
-              <button className='selector-manual' id='manual-btn' style={selectionMode ? {border: '3px solid black'} : {}} onClick={selectionMode ? handleCancelManualSelection : handleManualSelection}><h5>{selectionMode ? "Manual selection ON" : "Manual selection OFF"}</h5></button>
-            </div>
+          <div className="selector-select-progressBar-cancel">
 
-            <div className="selector-select-progressBar-cancel">
-
-              <button className='selector-select' onClick={handleGenerateKanji}><h5>Select Kanjis</h5></button>
-              {completed>0 && (<div className="selector-progressBar"><button style={{width: `${(completed/selectedKanji.length)*100}%`}}><h5>{(completed/selectedKanji.length)*100}%</h5></button></div>)}
-              <button className='selector-cancel' id='cancel-btn' onClick={handleDeleteSelected}><h5>Cancel selection</h5></button>
-              
-            </div>
-
-        
+            <button className='selector-select' onClick={handleGenerateKanji}><h5>Select Kanjis</h5></button>
+            {completed>0 && (<div className="selector-progressBar"><button style={{width: `${(completed/selectedKanji.length)*100}%`}}><h5>{(completed/selectedKanji.length)*100}%</h5></button></div>)}
+            <button className='selector-cancel' id='cancel-btn' onClick={handleDeleteSelected}><h5>Cancel selection</h5></button>
+            
+          </div>
 
         </div>
       
