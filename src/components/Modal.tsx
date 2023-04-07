@@ -6,9 +6,9 @@ import '../styles/Modal.css'
 interface ModalProps {
   show: boolean;
   kanji: Kanji;
-  hideModal: () => void;
-  handleSaveKanji: (kanji: Kanji) => void;
-  createAnkiCard: (kanjiData: Kanji) => void;
+  hideModal: any;
+  handleSaveKanji: any;
+  createAnkiCard: any;
 }
 
 interface Kanji {
@@ -25,14 +25,18 @@ interface Kanji {
   wk_radicals?: string;
 }
 
+interface KVGindex {
+  [key: string]: string[];
+}
+
 const Modal: React.FC<ModalProps> = ({ show, kanji, hideModal, handleSaveKanji, createAnkiCard }) => {
 
-  const [strokes, setStrokes] = useState<SVGSVGElement | null>(null);
-  const [kvgIndex, setKvgIndex] = useState();
+  const [strokes, setStrokes] = useState<any>(null);
+  const [kvgIndex, setKvgIndex] = useState<any>();
 
-  const [currentPathIndex, setCurrentPathIndex] = useState(-1);
+  const [currentPathIndex, setCurrentPathIndex] = useState<any>(-1);
 
-  const fetchData = async (kanji: Kanji) => {
+  const fetchData = async (kanji: any) => {
     // look up the kanjiVG index for the given kanji
     const kanjiIndex = KVGindex[kanji].find((index: any) => index.length === 9).slice(0, -4);
     const response2 = await fetch('src/kanjiData/joyo_kanji_vg.xml');

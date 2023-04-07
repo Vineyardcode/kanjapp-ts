@@ -24,6 +24,14 @@ interface Kanji {
   wk_radicals?: string;
 }
 
+interface ModalProps {
+  show: boolean;
+  kanji: Kanji;
+  hideModal: () => void;
+  handleSaveKanji: (kanji: Kanji) => void;
+  createAnkiCard: any;
+}
+
 export const Learn = () => {
 
   //info management
