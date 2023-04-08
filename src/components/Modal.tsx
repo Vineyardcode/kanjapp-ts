@@ -29,7 +29,7 @@ interface Kanji {
 
 const Modal: React.FC<ModalProps> = ({ show, kanji, hideModal, handleSaveKanji, createAnkiCard }) => {
 
-  const [forVercel, setForVercel] = useState(KVGindex)
+  const [forVercel, setForVercel] = useState<any>(KVGindex)
 
   const [strokes, setStrokes] = useState<any>(null);
   const [kvgIndex, setKvgIndex] = useState<any>();
