@@ -1,6 +1,5 @@
 //react
-import React from 'react'
-import { useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react'
 //firebase
 import { database, db, auth } from '../config/firebase';
 import { doc, setDoc, collection, deleteDoc, getDocs, } from "firebase/firestore";
@@ -127,7 +126,6 @@ return(
       </div>
 
       <div className="stats">
-        
 
         {modal.show && (
             <div className="homeModal" style={{ top: modal.position.top, left: modal.position.left }}>
