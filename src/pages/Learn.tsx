@@ -129,59 +129,6 @@ export const Learn = () => {
     }
   };
 
-  //functions for sorting of the kanji
-  // useEffect(() => {
-  //   sortKanji();
-  // }, [sortByFreq, sortByGrade, sortByStrokes]);
-
-  // const sortKanji = () => {
-  //   let filteredKanji = kanji.filter(k => selectedLevels.includes(k.jlpt_new));
-  //   let sortedKanji = [...filteredKanji];
-  
-  //   sortedKanji.sort((a, b) => {
-  //     if (sortByFreq) {
-  //       if (a.freq === null || a.freq === undefined) {
-  //         return 1;
-  //       } else if (b.freq === null || b.freq === undefined) {
-  //         return -1;
-  //       } else {
-  //         return a.freq - b.freq;
-  //       }
-  //     } else if (sortByGrade) {
-  //       if (a.grade === null || a.grade === undefined) {
-  //         return 1;
-  //       } else if (b.grade === null || b.grade === undefined) {
-  //         return -1;
-  //       } else {
-  //         return a.grade - b.grade;
-  //       }
-  //     } else if (sortByStrokes) {
-  //       if (a.strokes === null || a.strokes === undefined) {
-  //         return 1;
-  //       } else if (b.strokes === null || b.strokes === undefined) {
-  //         return -1;
-  //       } else {
-  //         return a.strokes - b.strokes;
-  //       }
-  //     }
-  //   });
-  
-  //   setKanji(sortedKanji);
-  // };
-  
-  // const handleSortByFreqChange = () => {
-  //   setSortByFreq(!sortByFreq);
-
-  // };
-
-  // const handleSortByGradeChange = () => {
-  //   setSortByGrade(!sortByGrade);
-  // };
-
-  // const handleSortByStrokesChange = () => {
-  //   setSortByStrokes(!sortByStrokes);
-  // };
-
   //modal options
   const showModal = (kanji: Kanji) => setModal({ show: true, kanji });
   const hideModal = () => setModal({ ...modal, show: false });
@@ -300,7 +247,98 @@ export const Learn = () => {
           </div>         
       
         <script>
-var paths1=document.querySelectorAll("#kvg\\\\:${kanjiVGID} path"),currentPathIndex=-1;function displayPath(){paths1.forEach(((t,e)=>{if(e<=currentPathIndex){t.style.display="block";const e=t.getTotalLength();t.style.strokeDasharray=e,t.style.strokeDashoffset=e,t.style.animation="draw 1s forwards 0.5s"}else t.style.display="none",t.style.strokeDasharray=null,t.style.strokeDashoffset=null,t.style.animation=null}))}displayPath(),document.getElementById("minus").addEventListener("click",(()=>{currentPathIndex>-1&&(currentPathIndex--,displayPath())})),document.getElementById("plus").addEventListener("click",(()=>{currentPathIndex<paths1.length-1&&(currentPathIndex++,displayPath())}));var hardModeCheckbox=document.getElementById("hardModeCheckbox"),clicks=0;hardModeCheckbox.addEventListener("click",(function(){if(0===clicks){hardModeCheckbox.style.border="5px solid rgb(33, 128, 201)";const t=document.querySelectorAll(".text");document.querySelectorAll(".dot").forEach((t=>t.style.display="none")),t.forEach((t=>t.style.display="none")),clicks++}else{hardModeCheckbox.style.border="";const t=document.querySelectorAll(".text"),e=document.querySelectorAll(".dot");clicks--,e.forEach((t=>t.style.display="block")),t.forEach((t=>t.style.display="block"))}}));var kanjiVG="${kanjiVGID}",kanjiVG1="#kvg\\\\:"+kanjiVG+" path",paths=document.querySelectorAll(kanjiVG1);function fun(){let t=.3;for(let e=0;e<paths.length;e++){const s=paths[e];s.style.strokeDasharray=null,s.style.strokeDashoffset=null,s.style.animation=null;const l=s.getTotalLength();s.style.strokeDasharray=l,s.style.strokeDashoffset=l,s.style.animation="draw 1s forwards "+t+"s",s.style.display="block",t+=.42,currentPathIndex++}}var hue=200;for(let t=0;t<paths.length;t++){paths[t].style.stroke="hsl("+hue+", 100%, 50%)",hue+=25;const e=paths[t].getPointAtLength(0),s=document.createElementNS("http://www.w3.org/2000/svg","text");s.setAttribute("x",e.x+3),s.setAttribute("y",e.y),s.textContent=t+1,s.setAttribute("font-size","4.2px"),s.classList.add("text");const l=document.querySelector("svg");l.appendChild(s);const a=document.createElementNS("http://www.w3.org/2000/svg","circle");a.setAttribute("cx",e.x),a.setAttribute("cy",e.y),a.setAttribute("r","1.5"),a.setAttribute("fill","rgba(0,0,0,0.5)"),a.classList.add("dot"),l.appendChild(a)}function deleteStrokes(){paths1.forEach((t=>{t.style.display="none"})),currentPathIndex=-1}function showStrokes(){paths1.forEach((t=>{t.style.display="block",t.style.strokeDasharray=null,t.style.strokeDashoffset=null,t.style.animation=null})),currentPathIndex=paths1.length-1}
+        var kanjiVG = "${kanjiVGID}"
+        var kanjiVG1 = "#kvg\\\\:" + kanjiVG + " path"
+        var paths1 = document.querySelectorAll(kanjiVG1);
+var currentPathIndex = -1;
+function displayPath() {
+let delay = 0.1
+paths1.forEach((path, index) => {
+  if (index <= currentPathIndex) {
+    path.style.display = 'block';
+    const length = path.getTotalLength();
+    path.style.strokeDasharray = length;
+    path.style.strokeDashoffset = length;
+    path.style.animation = "draw 1s forwards " + delay + "s";
+  } else {
+    path.style.display = 'none';
+    path.style.strokeDasharray = null;
+    path.style.strokeDashoffset = null;
+    path.style.animation = null;
+  }
+});
+}
+displayPath();
+document.getElementById('minus').addEventListener('click', () => {
+if (currentPathIndex > -1) {
+  currentPathIndex--;
+  displayPath();
+}
+});
+document.getElementById('plus').addEventListener('click', () => {
+if (currentPathIndex < paths1.length -1) {
+  currentPathIndex++;
+  displayPath();
+}
+});
+var hardModeCheckbox = document.getElementById("hardModeCheckbox");
+hardModeCheckbox.addEventListener('change', function() {
+if (this.checked) {
+  const text = document.querySelectorAll('.text');
+  const dot = document.querySelectorAll('.dot'); 
+  dot.forEach((dot) => (dot.style.display = 'none'));
+  text.forEach((text) => (text.style.display = 'none'));
+} else {
+  const text = document.querySelectorAll('.text');
+  const dot = document.querySelectorAll('.dot'); 
+  dot.forEach((dot) => (dot.style.display = 'block'));
+  text.forEach((text) => (text.style.display = 'block'));
+}
+});
+var kanjiVG1 = "${kanjiVGID}";
+var kanjiVG11 = "#kvg\\\\:" + kanjiVG + " path";
+var paths = document.querySelectorAll(kanjiVG11);
+function fun() {
+let delay = 0.3;
+for (let i = 0; i < paths.length; i++) {
+  const path = paths[i];
+  path.style.strokeDasharray = null;
+  path.style.strokeDashoffset = null;
+  path.style.animation = null;
+  const length = path.getTotalLength();
+  path.style.strokeDasharray = length;
+  path.style.strokeDashoffset = length;
+  path.style.animation = "draw 1s forwards " + delay + "s";
+  path.style.display = 'block';
+  delay += 1;
+  currentPathIndex++
+}
+}
+var hue = 200;
+for (let i = 0; i < paths.length; i++) {
+  paths[i].style.stroke = "hsl(" + hue + ", 100%, 50%)";
+  hue += 25;
+  const start = paths[i].getPointAtLength(0);
+  const number = document.createElementNS("http://www.w3.org/2000/svg", "text");
+  number.setAttribute("x", start.x);
+  number.setAttribute("y", start.y);
+  number.textContent = i + 1;
+  number.setAttribute("font-size", "5px");
+  number.classList.add("text");
+  const strokesSVG = document.querySelector('svg');
+  strokesSVG.appendChild(number);
+  const dot = document.createElementNS("http://www.w3.org/2000/svg", "circle");
+  dot.setAttribute("cx", start.x);
+  dot.setAttribute("cy", start.y);
+  dot.setAttribute("r", "1.5");
+  dot.setAttribute("fill", "rgba(0,0,0,0.5)");
+  dot.classList.add("dot");
+  strokesSVG.appendChild(dot);
+}
+function deleteStrokes() {
+  paths1.forEach((path) => {path.style.display = 'none';});
+currentPathIndex = -1
+}
       </script>`,
         }
       ]
