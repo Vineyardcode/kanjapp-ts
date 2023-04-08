@@ -1,7 +1,6 @@
 import React from 'react';
 import { useState, useEffect } from 'react';
 import KVGindex  from "../kanjiData/kvg-index.json"
-import test from "./kanjivg-parsed.json"
 import '../styles/Modal.css'
 
 interface ModalProps {
@@ -26,41 +25,29 @@ interface Kanji {
   wk_radicals?: string;
 }
 
-
-
 const Modal: React.FC<ModalProps> = ({ show, kanji, hideModal, handleSaveKanji, createAnkiCard }) => {
 
-  const [forVercel, setForVercel] = useState<any>(KVGindex)
-  const [doAnythingForVercel, setDoAnythingForVercel] = useState<any>(test)
 
 
   const [strokes, setStrokes] = useState<any>(null);
+  const [kvgIndexes, setKvgIndexes] = useState<any>(KVGindex);
   const [kvgIndex, setKvgIndex] = useState<any>();
 
   const [currentPathIndex, setCurrentPathIndex] = useState<any>(-1);
 
   const fetchData = async (kanji: any) => {
     // look up the kanjiVG index for the given kanji
-    const kanjiVGindex:any = forVercel[kanji].find((index: any) => index.length === 9).slice(0, -4);
-    // const kanjiIndex = kanjiVGindex[kanji].find((index: any) => index.length === 9).slice(0, -4);
-    // const test = (forVercel[kanji].find((index: any) => index.length === 9).slice(0, -4))
-    // const kanjiVGs = await fetch('src/kanjiData/kvg-index.json')
-    // const kanjiVGsJSON = await kanjiVGs.json()
-    // const forVercelsNeeds = kanjiVGsJSON[kanji].find((index: any) => index.length === 9).slice(0, -4)
+    const kanjiVGindex:any = kvgIndexes[kanji].find((index: any) => index.length === 9).slice(0, -4);
     
-    const response2 = await fetch('src/components/joyo_kanji_vg.xml');
+
+    const response2 = await fetch('/KVGs/joyo_kanji_vg.xml');
     const xmlString = await response2.text();
     const xmlDoc = new DOMParser().parseFromString(xmlString, "text/xml");
     // look up the kanji svg in the XML file using the kanji VG index
-    const kanjiElement = doAnythingForVercel.querySelector(`[id="kvg:${kanjiVGindex}"]`);
-  
-    // console.log(xmlDoc);
-    
+    const kanjiElement = xmlDoc.querySelector(`[id="kvg:${kanjiVGindex}"]`);
 
     setKvgIndex(kanjiVGindex)
     setStrokes(kanjiElement)
-  
-    
   };
 
   useEffect(() => {
