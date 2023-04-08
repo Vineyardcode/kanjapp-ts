@@ -1,7 +1,7 @@
 import React from 'react';
 import { useState, useEffect } from 'react';
 import KVGindex  from "../kanjiData/kvg-index.json"
-
+import test from "./kanjivg-parsed.json"
 import '../styles/Modal.css'
 
 interface ModalProps {
@@ -31,7 +31,7 @@ interface Kanji {
 const Modal: React.FC<ModalProps> = ({ show, kanji, hideModal, handleSaveKanji, createAnkiCard }) => {
 
   const [forVercel, setForVercel] = useState<any>(KVGindex)
-  const [doAnythingForVercel, setDoAnythingForVercel] = useState<any>()
+  const [doAnythingForVercel, setDoAnythingForVercel] = useState<any>(test)
 
 
   const [strokes, setStrokes] = useState<any>(null);
@@ -52,9 +52,9 @@ const Modal: React.FC<ModalProps> = ({ show, kanji, hideModal, handleSaveKanji, 
     const xmlString = await response2.text();
     const xmlDoc = new DOMParser().parseFromString(xmlString, "text/xml");
     // look up the kanji svg in the XML file using the kanji VG index
-    const kanjiElement = xmlDoc.querySelector(`[id="kvg:${kanjiVGindex}"]`);
+    const kanjiElement = doAnythingForVercel.querySelector(`[id="kvg:${kanjiVGindex}"]`);
   
-    console.log(kanjiVGindex);
+    // console.log(xmlDoc);
     
 
     setKvgIndex(kanjiVGindex)
