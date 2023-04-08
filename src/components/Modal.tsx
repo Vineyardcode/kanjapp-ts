@@ -40,7 +40,7 @@ const Modal: React.FC<ModalProps> = ({ show, kanji, hideModal, handleSaveKanji, 
     const kanjiVGindex:any = kvgIndexes[kanji].find((index: any) => index.length === 9).slice(0, -4);
     
 
-    const response2 = await fetch('/KVGs/joyo_kanji_vg.xml');
+    const response2 = await fetch('/kanjiData/joyo_kanji_vg.xml');
     const xmlString = await response2.text();
     const xmlDoc = new DOMParser().parseFromString(xmlString, "text/xml");
     // look up the kanji svg in the XML file using the kanji VG index

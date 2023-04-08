@@ -419,7 +419,7 @@ currentPathIndex = -1
         // look up the kanjiVG index for the given kanji
         const kanjiVGindex:any = KVGindex
         const kanjiIndex = kanjiVGindex[kanji. character].find((index: any) => index.length === 9).slice(0, -4);
-        const response2 = await fetch('/KVGs/joyo_kanji_vg.xml');
+        const response2 = await fetch('/kanjiData/joyo_kanji_vg.xml');
         const xmlString = await response2.text();
         const xmlDoc = new DOMParser().parseFromString(xmlString, "text/xml");
       
