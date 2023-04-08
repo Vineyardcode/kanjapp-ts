@@ -36,18 +36,26 @@ const Modal: React.FC<ModalProps> = ({ show, kanji, hideModal, handleSaveKanji, 
 
   const fetchData = async (kanji: any) => {
     // look up the kanjiVG index for the given kanji
-    const kanjiVGindex:any = KVGindex
-    const kanjiIndex = kanjiVGindex[kanji].find((index: any) => index.length === 9).slice(0, -4);
+    // const kanjiVGindex:any = KVGindex
+    // const kanjiIndex = kanjiVGindex[kanji].find((index: any) => index.length === 9).slice(0, -4);
+
+    const kanjiVGs = await fetch('src/kanjiData/kvg-index.json')
+    const kanjiVGsJSON = await kanjiVGs.json()
+    const forVercelsNeeds = kanjiVGsJSON[kanji].find((index: any) => index.length === 9).slice(0, -4)
+    
     const response2 = await fetch('src/kanjiData/joyo_kanji_vg.xml');
     const xmlString = await response2.text();
     const xmlDoc = new DOMParser().parseFromString(xmlString, "text/xml");
     // look up the kanji svg in the XML file using the kanji VG index
-    const kanjiElement = xmlDoc.querySelector(`[id="kvg:${kanjiIndex}"]`);
+    const kanjiElement = xmlDoc.querySelector(`[id="kvg:${forVercelsNeeds}"]`);
   
-  
+    console.log(forVercelsNeeds);
+    
+
+    setKvgIndex(forVercelsNeeds)
     setStrokes(kanjiElement)
-   
-    setKvgIndex(kanjiIndex)
+  
+    
   };
 
   useEffect(() => {
