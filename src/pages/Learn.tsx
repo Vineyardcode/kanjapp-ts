@@ -31,9 +31,6 @@ export const Learn = () => {
   const [modal, setModal] = useState({ show: false, kanji: {} })
   const [learnedKanjiArray, setLearnedKanjiArray] = useState<Kanji[]>([]);
   const [selectedLevels, setSelectedLevels] = useState([5]);
-  // const [sortByFreq, setSortByFreq] = useState(false);
-  // const [sortByGrade, setSortByGrade] = useState(false);
-  // const [sortByStrokes, setSortByStrokes] = useState(false);
 
   //selector
   const [selectedKanji, setSelectedKanji] = useState<Kanji[]>([]);

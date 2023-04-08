@@ -6,7 +6,7 @@ import { database, db, auth } from '../config/firebase';
 import { doc, setDoc, collection, deleteDoc, getDocs, } from "firebase/firestore";
 //components & data
 import ProgressBar from '../components/ProgressBar';
-import joyo from "../kanjiData/joyo.json"
+// import joyo from "../kanjiData/joyo.json"
 import { Link } from 'react-router-dom';
 import IconHeart from '../assets/icons/heart';
 //style
@@ -32,7 +32,7 @@ export const Home = () => {
     position: { top: number, left: number };
   }
 
-  const [kanjiData, setKanjiData] = useState<Kanji[]>(joyo);
+  const [kanjiData, setKanjiData] = useState<Kanji[]>([]);
   const [learnedKanjiArray, setLearnedKanjiArray] = useState<Kanji[]>([]);
   const [modal, setModal] = useState<Modal>({ show: false, kanji: {}, position: { top: 0, left: 0 }} );
 
