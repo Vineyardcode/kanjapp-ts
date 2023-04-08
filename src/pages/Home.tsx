@@ -170,7 +170,7 @@ return(
             
                 <h5>To create Anki cards, you need to have the <a href="https://ankiweb.net/shared/info/2055492159">Anki Connect</a> addon installed, then go to "Tools{'>'}Add-ons" inside the anki app, double click on AnkiConnect and add <b>"https://kanjapp-ts-vineyardcode.vercel.app"</b> inside the "webCorsOriginList", like this:</h5>
                 
-                <img id='tutorialIMG' src='public/imgs/tutorial.png'></img>
+                <img id='tutorialIMG' src='/imgs/tutorial.png'></img>
                 
                 <h5>You need to have the anki app open while creating the cards.</h5> 
 
