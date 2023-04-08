@@ -168,9 +168,15 @@ return(
         <h3>Info</h3>
           <div className='info'>
             
-                <h5>To create Anki cards, you need to have the <a href="https://ankiweb.net/shared/info/2055492159">Anki Connect</a> addon installed and have the anki app open while creating the cards</h5> 
+                <h5>To create Anki cards, you need to have the <a href="https://ankiweb.net/shared/info/2055492159">Anki Connect</a> addon installed, then go to "Tools{'>'}Add-ons" inside the anki app, double click on AnkiConnect and add <b>"https://kanjapp-ts-vineyardcode.vercel.app"</b> inside the "webCorsOriginList", like this:</h5>
+                
+                <img id='tutorialIMG' src='public\imgs\tutorial.png'></img>
+                
+                <h5>You need to have the anki app open while creating the cards.</h5> 
 
                 <h5>Only <a href="https://en.wikipedia.org/wiki/J%C5%8Dy%C5%8D_kanji">joyo</a> kanji are available at the moment. For more kanji, please check in later</h5>
+
+                <h5>5x correct recognition's of kanji in a test, will have the letter added to the "Learned" category on this page</h5>
 
                 <h5>More features incoming !</h5>
     
