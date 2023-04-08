@@ -45,7 +45,6 @@ const Modal: React.FC<ModalProps> = ({ show, kanji, hideModal, handleSaveKanji, 
     const xmlDoc = new DOMParser().parseFromString(xmlString, "text/xml");
     // look up the kanji svg in the XML file using the kanji VG index
     const kanjiElement = xmlDoc.querySelector(`[id="kvg:${kanjiVGindex}"]`);
-    console.log(kanjiElement);
     
     setKvgIndex(kanjiVGindex)
     setStrokes(kanjiElement)
