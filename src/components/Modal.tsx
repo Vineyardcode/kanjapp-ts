@@ -29,6 +29,8 @@ interface Kanji {
 
 const Modal: React.FC<ModalProps> = ({ show, kanji, hideModal, handleSaveKanji, createAnkiCard }) => {
 
+  const [forVercel, setForVercel] = useState(KVGindex)
+
   const [strokes, setStrokes] = useState<any>(null);
   const [kvgIndex, setKvgIndex] = useState<any>();
 
@@ -36,23 +38,23 @@ const Modal: React.FC<ModalProps> = ({ show, kanji, hideModal, handleSaveKanji, 
 
   const fetchData = async (kanji: any) => {
     // look up the kanjiVG index for the given kanji
-    // const kanjiVGindex:any = KVGindex
+    const kanjiVGindex:any = forVercel[kanji].find((index: any) => index.length === 9).slice(0, -4);
     // const kanjiIndex = kanjiVGindex[kanji].find((index: any) => index.length === 9).slice(0, -4);
-
-    const kanjiVGs = await fetch('src/kanjiData/kvg-index.json')
-    const kanjiVGsJSON = await kanjiVGs.json()
-    const forVercelsNeeds = kanjiVGsJSON[kanji].find((index: any) => index.length === 9).slice(0, -4)
+    // const test = (forVercel[kanji].find((index: any) => index.length === 9).slice(0, -4))
+    // const kanjiVGs = await fetch('src/kanjiData/kvg-index.json')
+    // const kanjiVGsJSON = await kanjiVGs.json()
+    // const forVercelsNeeds = kanjiVGsJSON[kanji].find((index: any) => index.length === 9).slice(0, -4)
     
     const response2 = await fetch('src/kanjiData/joyo_kanji_vg.xml');
     const xmlString = await response2.text();
     const xmlDoc = new DOMParser().parseFromString(xmlString, "text/xml");
     // look up the kanji svg in the XML file using the kanji VG index
-    const kanjiElement = xmlDoc.querySelector(`[id="kvg:${forVercelsNeeds}"]`);
+    const kanjiElement = xmlDoc.querySelector(`[id="kvg:${kanjiVGindex}"]`);
   
-    console.log(forVercelsNeeds);
+    console.log(kanjiVGindex);
     
 
-    setKvgIndex(forVercelsNeeds)
+    setKvgIndex(kanjiVGindex)
     setStrokes(kanjiElement)
   
     
