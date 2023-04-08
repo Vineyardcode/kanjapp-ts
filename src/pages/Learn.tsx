@@ -47,7 +47,7 @@ export const Learn = () => {
   // fetch kanjis and sort them
   const fetchData = async () => {
     try {
-      const response = await fetch('src/kanjiData/joyo.json');
+      const response = await fetch('/kanjiData/joyo.json');
       const json = await response.json();
       setKanji(json.sort((a: Kanji, b: Kanji) => {
         const freqA = a.freq ?? Infinity;
