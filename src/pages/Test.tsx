@@ -185,7 +185,7 @@ const Test = () => {
       <div className="tests-params">
 
         <div className='params-column1'>
-          <label htmlFor="numKanji">Kanji </label>
+          <label htmlFor="numKanji"> <h5>Kanji</h5> </label>
           <input
           type="number"
           name="numKanji"
@@ -193,7 +193,7 @@ const Test = () => {
           onChange={(e) => setNumKanji(Number(e.target.value))}
           />
         
-          <label htmlFor="minStrokes">Min strokes </label>
+          <label htmlFor="minStrokes"><h5>Min strokes</h5> </label>
           <input
             type="number"
             name="minStrokes"
@@ -201,7 +201,7 @@ const Test = () => {
             onChange={(e) => setMinStrokes(Number(e.target.value))}
           />
         
-          <label htmlFor="maxStrokes">Max strokes </label>
+          <label htmlFor="maxStrokes"><h5>Max strokes</h5> </label>
           <input
             type="number"
             name="maxStrokes"
@@ -212,7 +212,7 @@ const Test = () => {
         </div>
 
         <div className='params-column2'>
-          <label htmlFor="jlptLevel">JLPT level </label>
+          <label htmlFor="jlptLevel"><h5>JLPT level</h5> </label>
           <select
             name="jlptLevel"
             value={jlptLevel}
@@ -227,7 +227,7 @@ const Test = () => {
             
           </select>
         
-          <label htmlFor="minGrade">Min kanji grade </label>
+          <label htmlFor="minGrade"><h5>Min kanji grade</h5> </label>
           <select
             name="minGrade"
             value={minGrade}
@@ -243,7 +243,7 @@ const Test = () => {
           <option value={9}>9</option>
           </select>
         
-          <label htmlFor="testType">Type of test </label>
+          <label htmlFor="testType"><h5>Type of test</h5> </label>
           <select
             name="testType"
             value={testType}

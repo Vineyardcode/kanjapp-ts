@@ -35,6 +35,11 @@ b {
   border-radius: 4.2px;
 
 }
+
+  .tests-params h5 {
+    margin: 0.5rem 0 0.5rem 0;
+  }
+
   .params-column1 {
     grid-area: 1 / 1 / 4 / 2;
     display: flex;
