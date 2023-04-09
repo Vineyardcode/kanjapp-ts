@@ -16,9 +16,9 @@ export const Navbar = () => {
   return (
     <div className="navbar">
       <div className="links">
-        <Link to="/Learn"><h5>Learn</h5></Link>
-        <Link to="/Test"><h5>Test</h5></Link>
-        <Link to="/"><h5>Home</h5></Link>
+        <Link to="/"><h5>Learn</h5></Link>
+        <Link to="/Test"><h5>Test</h5></Link> 
+        <Link to="/Home"><h5>Home</h5></Link>    
         <Link to="/Login"><h5>Login</h5></Link>
       </div>
     {user && (

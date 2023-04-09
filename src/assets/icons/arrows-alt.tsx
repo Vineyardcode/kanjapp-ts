@@ -6,13 +6,13 @@ function IconArrowsAlt(props: React.SVGProps<SVGSVGElement>) {
     <svg
     viewBox="0 0 64 64"
     fill="currentColor"
-    height="1.9em"
-    width="1.9em"
+    height="2.1em"
+    width="2.1em"
     {...props}
   >
     <path
       fill="none"
-      stroke="currentColor"
+      stroke="black"
       strokeMiterlimit={10}
       strokeWidth={2}
       d="M0 40h64M0 32h64M0 24h64"

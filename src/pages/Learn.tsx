@@ -375,9 +375,6 @@ currentPathIndex = -1
         api.onreadystatechange = function() {
           if (this.readyState === XMLHttpRequest.DONE && this.status === 200) {
             console.log(`Kanji ${kanjiData.character} was added to Anki successfully!`);
-            
-            
-            
           }
         };
       }
@@ -488,7 +485,7 @@ currentPathIndex = -1
 
     if (selector instanceof HTMLElement) {
       if (selectorShown === false) {
-        selector.style.height = "16%";
+        selector.style.height = "17.27%";
         setSelectorShown(true);
       } else {
         selector.style.height = "0";
@@ -505,21 +502,7 @@ currentPathIndex = -1
   return (
       <>
         <div className="filters">
-          {/* <div className='sorting'>
-            <h3>Sort</h3>
-                <label>
-                    <input type="checkbox" checked={sortByFreq} onChange={handleSortByFreqChange} />
-                    <h5>By frequency</h5>
-                  </label>
-                  <label>
-                    <input type="checkbox" checked={sortByGrade} onChange={handleSortByGradeChange} />
-                    <h5>By grade</h5>
-                  </label>
-                  <label>
-                    <input type="checkbox" checked={sortByStrokes} onChange={handleSortByStrokesChange} />
-                    <h5>By strokes</h5>
-                </label>
-          </div> */}
+
           <div className='levels'>
             <h3>Select JLPT levels:</h3>
             {[5, 4, 3, 2, 1].map((level) => (
@@ -621,23 +604,7 @@ currentPathIndex = -1
                 
               </select>
             </div>
-            {/* <div>
-              <label htmlFor="minGrade">Min grade:</label>
-              <select
-                name="minGrade"
-                value={minGrade}
-                onChange={(e) => setMinGrade(Number(e.target.value))}
-              >
-              <option value={1}>1</option>
-              <option value={2}>2</option>
-              <option value={3}>3</option>
-              <option value={4}>4</option>
-              <option value={5}>5</option>
-              <option value={6}>6</option>
-              <option value={8}>8</option>
-              <option value={9}>9</option>
-              </select>
-            </div> */}
+
           </div>
 
           <div className="selector-create-move-manual" >
