@@ -9,6 +9,7 @@ import "../styles/Learn.css"
 import joyo from "../kanjiData/joyo.json"
 import KVGindex from "../kanjiData/kvg-index.json"
 import IconArrowsAlt from '../assets/icons/arrows-alt';
+import { SearchBar } from '../components/SearchBar';
 
 interface Kanji {
   character?: string;
@@ -44,6 +45,28 @@ export const Learn = () => {
   const [minGrade, setMinGrade] = useState(1);
   const [completed, setCompleted] = useState(0)
   
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
   // fetch kanjis and sort them
   const fetchData = async () => {
     try {
@@ -503,6 +526,13 @@ currentPathIndex = -1
       <>
         <div className="filters">
 
+          
+          <div className="searchBar">
+
+            {/* <SearchBar /> */}
+
+          </div>
+
           <div className='levels'>
             <h3>Select JLPT levels:</h3>
             {[5, 4, 3, 2, 1].map((level) => (
@@ -517,6 +547,8 @@ currentPathIndex = -1
               </label>
             ))}
           </div>
+
+
         </div>
 
         <div className='group-container'>
