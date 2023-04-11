@@ -6,10 +6,12 @@ import { doc, setDoc, collection } from "firebase/firestore";
 //components, pages, styles
 import Modal from '../components/Modal';
 import "../styles/Learn.css"
+//kanji data
 import joyo from "../kanjiData/joyo.json"
 import KVGindex from "../kanjiData/kvg-index.json"
+//icons
 import IconArrowsAlt from '../assets/icons/arrows-alt';
-import { SearchBar } from '../components/SearchBar';
+
 
 interface Kanji {
   character?: string;
@@ -45,27 +47,9 @@ export const Learn = () => {
   const [minGrade, setMinGrade] = useState(1);
   const [completed, setCompleted] = useState(0)
   
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+  //search bar 
+  const [query, setQuery] = useState<string>('');
+  const [results, setResults] = useState<any>([]);
 
   // fetch kanjis and sort them
   const fetchData = async () => {
@@ -404,9 +388,7 @@ currentPathIndex = -1
     };
   };
 
-  
-
-  //choose multiple kanji
+  //select multiple kanji
   const handleGenerateKanji = () => {
     // Filter out already learned kanji
     const filteredKanjiData = kanji.filter(kanji => {
@@ -519,7 +501,33 @@ currentPathIndex = -1
     
   }
 
-  // console.log(selectedKanji)
+  //search function
+  const handleSearchSubmit = (event:any) => {
+    event.preventDefault();
+
+    if (/[\u4e00-\u9faf]/.test(query)) { // search for kanji if input is kanji
+      const result:any | null = kanji.find((k: any) => k.character === query);
+      if (result) {
+        
+       
+        setResults([result]);
+      } else {
+        setResults(['Kanji not found']);
+      }
+
+    } else { // otherwise, search for kanji.meanings
+      const result: any | null = kanji.filter((k: any) => k.meanings.includes(query.charAt(0).toUpperCase()+query.slice(1)));
+      if (result.length > 0) {
+        
+        setResults(result);
+      } else {
+        setResults([`Kanji with a meaning of "${query}" not found`]);
+      }
+    }
+    
+  };
+
+  // console.log(results)
   // console.log([highlightedKanji])
 
   return (
@@ -527,10 +535,31 @@ currentPathIndex = -1
         <div className="filters">
 
           
-          <div className="searchBar">
+          <div className="search">
 
-            {/* <SearchBar /> */}
+            <div className="searchBar">
+              <form onSubmit={handleSearchSubmit}>
+                <input type="text" value={query} onChange={(e) => setQuery(e.target.value)} />
+                <button type="submit">Search</button>
+              </form>
+            </div>  
+            
+              {typeof results[0] !== "string" && (
+              <div className="searchBar-results" style={{ display:typeof results[0] === "string" ? 'none' : 'flex' }}>
+                {results.map((item:any, index:any) => (
+                  
+                  <button 
+                    key={item.character} 
+                    onClick={selectionMode === false ? () => showModal(item) : () => handleHighLight(item)}   
+                    className="kanji-button"
+                    style={highlightedKanji.includes(item) ? { border: '1px solid black' } : {}}> 
+                    <span className="button-text"><h1>{item.character}</h1></span>
+                  </button>
 
+                ))}
+              </div>
+                )}
+             {typeof results[0] === "string" &&  (<h5>{results}</h5>)}
           </div>
 
           <div className='levels'>
@@ -547,7 +576,6 @@ currentPathIndex = -1
               </label>
             ))}
           </div>
-
 
         </div>
 
@@ -587,10 +615,7 @@ currentPathIndex = -1
               )}
         </div>
       
-
-      {modal.show===false && (
-      
-        <div className="selector">
+        <div className="selector" style={{ display: modal.show ? 'none' : 'grid' }}>
 
           <div className="params">
             <div>
@@ -655,13 +680,11 @@ currentPathIndex = -1
 
         </div>
       
-        )}   
-
-      {modal.show===false && (    
-        <div className="hamburger-holder">
-          {modal.show===false && (<IconArrowsAlt className='hamburger' onClick={handleShowSelector}/>)}   
-        </div>
-        )}
+        {modal.show===false && (    
+          <div className="hamburger-holder">
+            {modal.show===false && (<IconArrowsAlt className='hamburger' onClick={handleShowSelector}/>)}   
+          </div>
+          )}
     </>
   );
   
