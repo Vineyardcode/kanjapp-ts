@@ -18,6 +18,7 @@
   transition: 0.5s;
   color: #000;
   vertical-align: middle;
+  z-index: 3;
 }
 
 .button-text{
@@ -43,6 +44,7 @@
   height: 100%;
   text-align: center;
   padding-bottom: 15.5%;
+  z-index: 5;
 }
   .group-container h2 {
     padding: 1rem 0 1rem 0;
@@ -148,7 +150,8 @@
   transition: height 0.75s ease-in-out;
   z-index: 9;
   width: 100%;
-  background-image: url('https://images.pexels.com/photos/5697673/pexels-photo-5697673.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1');
+  background-color: white;
+  /* background-image: url('https://images.pexels.com/photos/5697673/pexels-photo-5697673.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1'); */
   background-attachment: fixed;
   background-repeat: no-repeat;
   background-size: cover;
@@ -269,7 +272,8 @@
   align-items: center;
   vertical-align: middle;
   flex-wrap: wrap;
-  background-image: url('https://images.pexels.com/photos/5697673/pexels-photo-5697673.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1');
+  background-color: white;
+  /* background-image: url('https://images.pexels.com/photos/5697673/pexels-photo-5697673.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1'); */
   background-attachment: fixed;
   background-repeat: no-repeat;
   background-size: cover;
