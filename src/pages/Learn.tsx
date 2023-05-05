@@ -544,7 +544,7 @@ currentPathIndex = -1
               </form>
             </div>  
             
-              {typeof results[0] !== "string" && (
+              {typeof results[0] !== "string" && modal.show === false && (
               <div className="searchBar-results" style={{ display:typeof results[0] === "string" ? 'none' : 'flex' }}>
                 {results.map((item:any, index:any) => (
                   
