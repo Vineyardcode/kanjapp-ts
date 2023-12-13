@@ -84,7 +84,7 @@ const Test = () => {
         (kanji) => kanji.jlpt_new === jlptLevel
       );
     }
-    const shuffledKanji = filteredKanji.toSorted(() => 0.5 - Math.random());
+    const shuffledKanji = filteredKanji.sort(() => 0.5 - Math.random());
     const selected = shuffledKanji.slice(0, numKanji);
   
     setSelectedKanji(selected);
@@ -164,10 +164,10 @@ const Test = () => {
   const shuffleQuestions = () => {
 
     const kanjiWithoutCurrent = kanjiData.filter((kanji) => kanji !== currentQuestion);
-    const shuffled = kanjiWithoutCurrent.toSorted(() => 0.5 - Math.random());
+    const shuffled = kanjiWithoutCurrent.sort(() => 0.5 - Math.random());
 
     const options = shuffled.slice(0, 8).concat(currentQuestion)
-    const shuffledOptions = options.toSorted(() => 0.5 - Math.random());
+    const shuffledOptions = options.sort(() => 0.5 - Math.random());
 
     setQuestions(shuffledOptions)
 
