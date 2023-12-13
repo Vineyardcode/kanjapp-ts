@@ -1,5 +1,4 @@
-import React from 'react'
-import { useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react'
 import { setDoc, doc, collection, getDocs } from "firebase/firestore";
 import { auth, provider, db } from "../config/firebase";
 import "../styles/Test.css"
@@ -85,7 +84,7 @@ const Test = () => {
         (kanji) => kanji.jlpt_new === jlptLevel
       );
     }
-    const shuffledKanji = filteredKanji.sort(() => 0.5 - Math.random());
+    const shuffledKanji = filteredKanji.toSorted(() => 0.5 - Math.random());
     const selected = shuffledKanji.slice(0, numKanji);
   
     setSelectedKanji(selected);
@@ -123,7 +122,7 @@ const Test = () => {
         if (parseInt(prevScore) + 1 === 5) {
           handleSaveKanji(kanji)
           localStorage.removeItem(kanji.character);
-          const learnedKanjiArray = JSON.parse(localStorage.getItem('learnedKanjiArray') || '[]');
+          const learnedKanjiArray = JSON.parse(localStorage.getItem('learnedKanjiArray') ?? '[]');
           if (!learnedKanjiArray.some((k: any) => k.character === kanji.character)) {
             learnedKanjiArray.push(kanji);
             localStorage.setItem("learnedKanjiArray", JSON.stringify(learnedKanjiArray));
@@ -165,19 +164,28 @@ const Test = () => {
   const shuffleQuestions = () => {
 
     const kanjiWithoutCurrent = kanjiData.filter((kanji) => kanji !== currentQuestion);
-    const shuffled = kanjiWithoutCurrent.sort(() => 0.5 - Math.random());
+    const shuffled = kanjiWithoutCurrent.toSorted(() => 0.5 - Math.random());
 
     const options = shuffled.slice(0, 8).concat(currentQuestion)
-    const shuffledOptions = options.sort(() => 0.5 - Math.random());
+    const shuffledOptions = options.toSorted(() => 0.5 - Math.random());
 
     setQuestions(shuffledOptions)
 
   };
 
-  //wrong answer reactions
-  const angryQuote = ["Nope", "What ?", "No", "Wrong", "You need to study harder!"]
-
-  const randomAngryQuote = angryQuote[Math.floor(Math.random() * angryQuote.length)];
+  //wrong answer reaction
+  const randomAngryQuote = (() => {
+    const angryQuotes = [
+      "Nope", "What?", "No", "Wrong", "You need to study harder!",
+      "Unbelievable", "Absolutely not", "Seriously?", "Outrageous",
+      "I can't believe it", "Ridiculous", "This is unacceptable",
+      "Not even close", "Try again", "You must be kidding", "Incorrect",
+      "Not a chance", "Absolutely incorrect", "You're way off",
+      "I expected better", "Inexcusable", "Nonsense", "Absolutely wrong"
+    ];
+    return angryQuotes[Math.floor(Math.random() * angryQuotes.length)];
+  })();
+  
 
   return (
     <>

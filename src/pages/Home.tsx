@@ -51,7 +51,7 @@ export const Home = () => {
       
   //group kanji by JLPT level
   const kanjiByJlpt: Record<string, Kanji[]>  = kanjiData.reduce((groupedKanji, kanji) => {
-    const jlpt= kanji.jlpt_new || 1; // set default JLPT 1 if JLPT level is undefined
+    const jlpt= kanji.jlpt_new ?? 1; // set default JLPT 1 if JLPT level is undefined
     if (!groupedKanji[jlpt]) {
       groupedKanji[jlpt] = [];
     }
@@ -61,7 +61,7 @@ export const Home = () => {
 
   //group learned kanji by JLPT level
   const learnedKanjiByJlpt  = learnedKanjiArray.reduce((groupedKanji, kanji) => {
-    const jlpt = kanji.jlpt_new || 1; // set default JLPT 1 if JLPT level is undefined
+    const jlpt = kanji.jlpt_new ?? 1; // set default JLPT 1 if JLPT level is undefined
     if (!groupedKanji[jlpt]) {
       groupedKanji[jlpt] = [];
     }
@@ -81,7 +81,7 @@ export const Home = () => {
 
   //delete kanji from the database and from localStorage
   const handleForgetKanji = async (kanji: Kanji) => {
-    let learnedKanjiArray: Kanji[] = JSON.parse(localStorage.getItem("learnedKanjiArray") || "[]");
+    let learnedKanjiArray: Kanji[] = JSON.parse(localStorage.getItem("learnedKanjiArray") ?? "[]");
     learnedKanjiArray = learnedKanjiArray.filter(k => k.character !== kanji.character);
     localStorage.setItem("learnedKanjiArray", JSON.stringify(learnedKanjiArray));
 
@@ -107,18 +107,16 @@ export const Home = () => {
     };
     setModal({ show: true, kanji, position});
     
-    
   };
 
   const hideModal = () => setModal({ ...modal, show: false, position: { top: 0, left: 0 } });
 
 return(
-  <>
     <div className="home" onClick={() => {
-  if (modal.show) {
-    hideModal();
-  }
-}}>
+        if (modal.show) {
+          hideModal();
+        }
+      }}>
 
       <div className='WeatherWidget'>
         <h3>Find out if the weather today is suitable for learning kanji</h3>
@@ -197,12 +195,8 @@ return(
               
               
                 <h5>Made with <IconHeart/> by <a href="https://github.com/Vineyardcode">Vine</a></h5>
-                 
           </div>
       </div>  
-
     </div>
-
-  </>
   );
 };
