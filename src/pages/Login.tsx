@@ -31,7 +31,6 @@ export const Login = () => {
           const querySnapshot = await getDocs(collection(db, "users", currentUser, "learned"));
           const learnedKanjiArray = querySnapshot.docs.map((doc) => doc.data().kanji);
           
-              
           // Save the "learned" kanji collection to sessionStorage
           localStorage.setItem("learnedKanjiArray", JSON.stringify(learnedKanjiArray));
           
