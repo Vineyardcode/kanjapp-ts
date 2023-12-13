@@ -167,7 +167,6 @@ export const Learn = () => {
   // create anki flash cards out of selected kanji
   const createAnkiCard = (kanjiData: Kanji, kanjiVGID: any, svgPaths: any) => {
     
-
     const api = new XMLHttpRequest();
     const model = {
       modelName: kanjiData.character,
