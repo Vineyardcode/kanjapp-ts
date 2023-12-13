@@ -8,15 +8,16 @@ import { getDatabase, ref} from "firebase/database";
 
 // Your web app's Firebase configuration
 const firebaseConfig = {
-  apiKey: "AIzaSyAj2ZhiQUATidxpcwGEIgjp_I_uDWxs-Qk",
-  authDomain: "kanjapp2.firebaseapp.com",
-  databaseURL: "https://kanjapp2-default-rtdb.europe-west1.firebasedatabase.app",
-  projectId: "kanjapp2",
-  storageBucket: "kanjapp2.appspot.com",
-  messagingSenderId: "744137002416",
-  appId: "1:744137002416:web:80329de24cbea30ee71a75",
-  measurementId: "G-SD6W7L94K9"
+  apiKey: import.meta.env.VITE_FIREBASE_API_KEY,
+  authDomain: import.meta.env.VITE_FIREBASE_AUTH_DOMAIN,
+  databaseURL: import.meta.env.VITE_FIREBASE_DATABASE_URL,
+  projectId: import.meta.env.VITE_FIREBASE_PROJECT_ID,
+  storageBucket: import.meta.env.VITE_FIREBASE_STORAGE_BUCKET,
+  messagingSenderId: import.meta.env.VITE_FIREBASE_MESSAGING_SENDER_ID,
+  appId: import.meta.env.VITE_FIREBASE_APP_ID,
+  measurementId: import.meta.env.VITE_FIREBASE_MEASUREMENT_ID
 };
+
 
 // Initialize Firebase
 const app = initializeApp(firebaseConfig);
