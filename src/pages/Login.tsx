@@ -41,8 +41,12 @@ export const Login = () => {
       }
     );
     console.log(result);
-    navigate("/Learn");
+    navigate("/Home");
   };
+
+// const deleteAccount = async () => {
+  
+// }
 
 
   return (
