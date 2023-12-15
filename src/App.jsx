@@ -5,10 +5,10 @@ import { Canvas, useLoader, useThree, useFrame } from '@react-three/fiber'
 import { useTransition, useSpring, a } from '@react-spring/three'
 import { CameraControls, CatmullRomLine, Line, Trail, Float, Stars, Text3D, Center } from '@react-three/drei'
 import { EffectComposer, Bloom } from '@react-three/postprocessing'
-
 import './App.css'
 import kvg_index from './assets/kvg_index.json'
 import asiana from './assets/fonts/Asiana_Regular'
+
 
 function Spark({ radius = 5, speed = 0.3, path, ...props }) {
   const ref = useRef();
@@ -81,8 +81,6 @@ const PathManager = () => {
   }, []);
   const data = useLoader(SVGLoader, `src/assets/kanji/${randomName}`);
 
-  console.log(randomName);
-
   return (
     <>
       {data.paths && data.paths.map((path, index) => (
@@ -95,21 +93,18 @@ const PathManager = () => {
   );
 };
 
-
 export default function App() {
   return (
     <Canvas camera={{ position: [0, 0, 200] }}>
       <color attach="background" args={['black']} />
-      
           <Text3D
             font={asiana}
             position={[-90, 50, 100]}
             scale={5}
             material={new THREE.MeshNormalMaterial}
           >
-            Closed for database migration. Please check in later... 
+            Closed for server migration. Please check in later... 
           </Text3D>
-        
       <Float speed={4} rotationIntensity={1} floatIntensity={2}>
         <group rotation={[Math.PI,0,0]} position={[-50,50,0]}>
           <PathManager />
@@ -119,7 +114,6 @@ export default function App() {
       <EffectComposer>
         <Bloom mipmapBlur luminanceThreshold={0.5} radius={0.7} />
       </EffectComposer>
-
       <CameraControls />
     </Canvas>
   )
