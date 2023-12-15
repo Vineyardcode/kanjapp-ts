@@ -74,11 +74,11 @@ const PathManager = () => {
   
     generateRandomName();
   
-    const intervalId = setInterval(generateRandomName, 10000);
+    const intervalId = setInterval(generateRandomName, 3000);
   
     return () => clearInterval(intervalId);
   }, []);
-  const data = useLoader(SVGLoader, `/kanji/${randomName}`);
+  const data = useLoader(SVGLoader, `/${randomName}`);
 
   return (
     <>
