@@ -63,7 +63,6 @@ const TubeComponent = ({ path }) => {
 const PathManager = () => {
   const [randomName, setRandomName] = useState('');
   
-
   useEffect(() => {
     const generateRandomName = () => {
       const randomCharacter = Object.keys(kvg_index)[Math.floor(Math.random() * Object.keys(kvg_index).length)];
