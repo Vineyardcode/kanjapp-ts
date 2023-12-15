@@ -79,7 +79,7 @@ const PathManager = () => {
   
     return () => clearInterval(intervalId);
   }, []);
-  const data = useLoader(SVGLoader, `src/assets/kanji/${randomName}`);
+  const data = useLoader(SVGLoader, `/kanji/${randomName}`);
 
   return (
     <>
