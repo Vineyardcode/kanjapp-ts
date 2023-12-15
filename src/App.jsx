@@ -24,7 +24,7 @@ function Spark({ radius = 5, speed = 0.3, path, ...props }) {
 
   return (
     <group {...props}>
-      <Trail width={15} length={10} color={new THREE.Color(2, 1, 10)} attenuation={(t) => t * t}>
+      <Trail width={15} length={10} color={new THREE.Color(2, 1, 100)} attenuation={(t) => t * t}>
         <mesh ref={ref}>
           <sphereGeometry args={[1]} />
           <meshBasicMaterial color={[6, 0.5, 2]} toneMapped={false} />        
@@ -106,11 +106,12 @@ export default function App() {
       <Float speed={4} rotationIntensity={1} floatIntensity={2}>
         <group rotation={[Math.PI,0,0]} position={[-50,50,0]}>
           <PathManager />
+
         </group>
       </Float>
       <Stars saturation={0} count={400} speed={0.5} />
       <EffectComposer>
-        <Bloom mipmapBlur luminanceThreshold={0.5} radius={0.7} />
+        <Bloom mipmapBlur luminanceThreshold={0.7} radius={0.7} />
       </EffectComposer>
       <CameraControls />
     </Canvas>
