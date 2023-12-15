@@ -9,7 +9,6 @@ import './App.css'
 import kvg_index from './assets/kvg_index.json'
 import asiana from './assets/fonts/Asiana_Regular'
 
-
 function Spark({ radius = 5, speed = 0.3, path, ...props }) {
   const ref = useRef();
   const position = useMemo(() => new THREE.Vector3(), []);
