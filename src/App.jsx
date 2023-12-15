@@ -73,7 +73,7 @@ const PathManager = () => {
   
     generateRandomName();
   
-    const intervalId = setInterval(generateRandomName, 3000);
+    const intervalId = setInterval(generateRandomName, 6666);
   
     return () => clearInterval(intervalId);
   }, []);
