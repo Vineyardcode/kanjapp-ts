@@ -62,13 +62,16 @@ const TubeComponent = ({ path }) => {
 
 const PathManager = () => {
   const [randomName, setRandomName] = useState('');
-  
+  const [randomCharacter, setRandomCharacter] = useState('');
+
   useEffect(() => {
     const generateRandomName = () => {
       const randomCharacter = Object.keys(kvg_index)[Math.floor(Math.random() * Object.keys(kvg_index).length)];
       const randomFileNames = kvg_index[randomCharacter];
       const randomFileName = randomFileNames[Math.floor(Math.random() * randomFileNames.length)];
       setRandomName(randomFileName);
+      setRandomCharacter(randomCharacter);
+
     };
   
     generateRandomName();
@@ -77,39 +80,46 @@ const PathManager = () => {
   
     return () => clearInterval(intervalId);
   }, []);
+
   const data = useLoader(SVGLoader, `/${randomName}`);
+
+  const handleClick = () => {
+    window.open(`https://en.wiktionary.org/wiki/${randomCharacter}`, '_blank');
+  };
 
   return (
     <>
-      {data.paths && data.paths.map((path, index) => (
-        <React.Fragment key={index}>
-          <TubeComponent path={path.currentPath} />
-          <Spark path={path.currentPath} />
-        </React.Fragment>
-      ))}
+      <group onClick={handleClick}>
+        {data.paths && data.paths.map((path, index) => (
+          <React.Fragment key={index}>
+            <TubeComponent path={path.currentPath} />
+            <Spark path={path.currentPath} />
+          </React.Fragment>
+        ))}
+      </group>
     </>
   );
 };
+
 
 export default function App() {
   return (
     <Canvas camera={{ position: [0, 0, 200] }}>
       <color attach="background" args={['black']} />
-          <Text3D
-            font={asiana}
-            position={[-90, 50, 100]}
-            scale={5}
-            material={new THREE.MeshNormalMaterial}
-          >
-            Closed for server migration. Please check in later... 
-          </Text3D>
+        <Text3D
+          font={asiana}
+          position={[-90, 50, 100]}
+          scale={5}
+          material={new THREE.MeshNormalMaterial}
+        >
+          Closed for server migration. Please check in later... 
+        </Text3D>
       <Float speed={4} rotationIntensity={1} floatIntensity={2}>
         <group rotation={[Math.PI,0,0]} position={[-50,50,0]}>
           <PathManager />
-
         </group>
       </Float>
-      <Stars saturation={0} count={400} speed={0.5} />
+        <Stars saturation={0} count={400} speed={0.5} />
       <EffectComposer>
         <Bloom mipmapBlur luminanceThreshold={0.7} radius={0.7} />
       </EffectComposer>
