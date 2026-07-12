@@ -1,8 +1,5 @@
 //react
 import React, { useState, useEffect } from 'react'
-//firebase
-import { database, db, auth } from '../config/firebase';
-import { doc, setDoc, collection, deleteDoc, getDocs, } from "firebase/firestore";
 //components & data
 import ProgressBar from '../components/ProgressBar';
 import joyo from "../kanjiData/joyo.json"
@@ -11,6 +8,9 @@ import IconHeart from '../assets/icons/heart';
 //style
 import "../styles/Home.css"
 import WeatherWidget from '../components/WeatherWidget/WeatherWidget';
+//supabase-backed learned-kanji sync
+import { deleteLearnedKanji } from '../lib/learnedKanji';
+import { useSyncLearned } from '../hooks/useSyncLearned';
 
 export const Home = () => {
 
@@ -46,7 +46,10 @@ export const Home = () => {
       useEffect(() => {
         readFromLocalStorage();
       }, []);
-  
+
+  //when signed in, merge cloud-stored learned kanji into local state
+  useSyncLearned(setLearnedKanjiArray);
+
     
       
   //group kanji by JLPT level
@@ -79,23 +82,10 @@ export const Home = () => {
     percentByJlpt[jlpt] = percent;
   });
 
-  //delete kanji from the database and from localStorage
+  //delete kanji from localStorage + Supabase (when signed in)
   const handleForgetKanji = async (kanji: Kanji) => {
-    let learnedKanjiArray: Kanji[] = JSON.parse(localStorage.getItem("learnedKanjiArray") ?? "[]");
-    learnedKanjiArray = learnedKanjiArray.filter(k => k.character !== kanji.character);
-    localStorage.setItem("learnedKanjiArray", JSON.stringify(learnedKanjiArray));
-
-    const currentUser = auth.currentUser?.uid;
-    if (currentUser) {
-      const kanjiRef = doc(collection(db, "users", currentUser, "learned"), kanji.character);
-      try {
-        await deleteDoc(kanjiRef);
-        console.log("Kanji deleted successfully from Firestore");
-      } catch (error) {
-        console.error("Error deleting kanji from Firestore: ", error);
-      }
-    }
-    setLearnedKanjiArray(learnedKanjiArray)
+    const updated = await deleteLearnedKanji(kanji);
+    setLearnedKanjiArray(updated);
   };
 
   //modal options and position calc

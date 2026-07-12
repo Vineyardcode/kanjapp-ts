@@ -1,11 +1,11 @@
 //react
 import React, {useEffect, useState}from 'react';
-//firebase
-import { database, db, auth } from '../config/firebase';
-import { doc, setDoc, collection } from "firebase/firestore";
 //components, pages, styles
 import Modal from '../components/Modal';
 import "../styles/Learn.css"
+//supabase-backed learned-kanji sync
+import { saveLearnedKanji } from '../lib/learnedKanji';
+import { useSyncLearned } from '../hooks/useSyncLearned';
 //kanji data
 import joyo from "../kanjiData/joyo.json"
 import KVGindex from "../kanjiData/kvg-index.json"
@@ -86,29 +86,14 @@ export const Learn = () => {
       setLearnedKanjiArray(kanjiArray);
     }
   }, []);
-  
-  //save kanji to database
-  const handleSaveKanji = async (kanji: Kanji) => { 
 
-    const currentUser = auth.currentUser?.uid;
-      if (currentUser) {
-        const learnedRef = collection(db, "users", currentUser, "learned");
-        const docRef = doc(learnedRef, kanji.character);
-        await setDoc(docRef, { kanji });    
-    }  
+  //when signed in, merge cloud-stored learned kanji into local state
+  useSyncLearned(setLearnedKanjiArray);
 
-  };
-
-  //save learned kanji to localStorage 
-  const saveKanji = (kanji: Kanji) => {
-    let learnedKanjiArray = JSON.parse(localStorage.getItem("learnedKanjiArray") || "[]");
-    if (!learnedKanjiArray.some((k: Kanji) => k.character === kanji.character)) {
-      learnedKanjiArray.push(kanji);
-      localStorage.setItem("learnedKanjiArray", JSON.stringify(learnedKanjiArray));
-      
-    }
-    setLearnedKanjiArray(learnedKanjiArray)
-    handleSaveKanji(kanji)
+  //save learned kanji to localStorage + Supabase (when signed in)
+  const saveKanji = async (kanji: Kanji) => {
+    const updated = await saveLearnedKanji(kanji);
+    setLearnedKanjiArray(updated);
   };
 
   //create batches for saving kanji

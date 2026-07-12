@@ -1,11 +1,12 @@
 import React, { useEffect, useState } from 'react'
-import { setDoc, doc, collection, getDocs } from "firebase/firestore";
-import { auth, provider, db } from "../config/firebase";
 import "../styles/Test.css"
 import GuessKanjiMeaningsQuiz from '../components/TestComponents/GuessKanjiMeaningsQuiz';
 import MatchMeaningWithKanji from '../components/TestComponents/MatchMeaningWithKanji';
 
 import joyo from "../kanjiData/joyo.json"
+//supabase-backed learned-kanji sync
+import { saveLearnedKanji } from '../lib/learnedKanji';
+import { useSyncLearned } from '../hooks/useSyncLearned';
 
 
 
@@ -16,8 +17,7 @@ const Test = () => {
   const [maxStrokes, setMaxStrokes] = useState(2);
   const [jlptLevel, setJlptLevel] = useState<string | number>('All');
   const [minGrade, setMinGrade] = useState(1);
-  const [selectedKanji, setSelectedKanji] = useState<Kanji[]>([]);
-  
+  const [selectedKanji, setSelectedKanji] = useState<Kanji[]>([]); 
   const [currentQuestion, setCurrentQuestion] = useState<Kanji | null>(null);
   const [usedKanji, setUsedKanji] = useState<Kanji[]>([]);
 
@@ -59,8 +59,11 @@ const Test = () => {
       const kanjiArray = JSON.parse(storedKanji);
       setLearnedKanjiArray(kanjiArray);
     }
-    
+
   }, [isFinished]);
+
+  //when signed in, merge cloud-stored learned kanji into local state
+  useSyncLearned(setLearnedKanjiArray);
 
   //question counter
   let qNumber = ((selectedKanji.length) - (usedKanji.length)) + 1
@@ -99,15 +102,9 @@ const Test = () => {
     setIsFinished(false)
   };
 
-  const handleSaveKanji = async (kanji: any) => { 
-
-    const currentUser = auth.currentUser?.uid;
-      if (currentUser) {
-        const learnedRef = collection(db, "users", currentUser, "learned");
-        const docRef = doc(learnedRef, kanji.character);
-        await setDoc(docRef, { kanji });    
-    }  
-
+  //save to localStorage + Supabase (when signed in)
+  const handleSaveKanji = async (kanji: any) => {
+    await saveLearnedKanji(kanji);
   };
       
   //quiz logic 
@@ -120,13 +117,8 @@ const Test = () => {
       if (prevScore) {
         localStorage.setItem(kanji.character, String(parseInt(prevScore) + 1));
         if (parseInt(prevScore) + 1 === 5) {
-          handleSaveKanji(kanji)
+          handleSaveKanji(kanji) // writes to localStorage + Supabase
           localStorage.removeItem(kanji.character);
-          const learnedKanjiArray = JSON.parse(localStorage.getItem('learnedKanjiArray') ?? '[]');
-          if (!learnedKanjiArray.some((k: any) => k.character === kanji.character)) {
-            learnedKanjiArray.push(kanji);
-            localStorage.setItem("learnedKanjiArray", JSON.stringify(learnedKanjiArray));
-          }
         }
       } else {
         localStorage.setItem(kanji.character, '1');

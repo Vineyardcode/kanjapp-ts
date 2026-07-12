@@ -1,34 +1,31 @@
 import { Link } from "react-router-dom";
-import { auth } from "../config/firebase";
-import { useAuthState } from "react-firebase-hooks/auth";
-import { signOut } from "firebase/auth";
+import { supabase } from "../config/supabase";
+import { useSession } from "../hooks/useSession";
 
 export const Navbar = () => {
-  
-  const [user] = useAuthState(auth);
+  const session = useSession();
 
   const signUserOut = async () => {
-    await signOut(auth);
+    await supabase.auth.signOut();
   };
 
   return (
     <div className="navbar">
       <div className="links">
         <Link to="/"><h5>Learn</h5></Link>
-        <Link to="/Test"><h5>Test</h5></Link> 
-        <Link to="/Home"><h5>Home</h5></Link>    
-        <Link to="/Login"><h5>Login</h5></Link>
+        <Link to="/Test"><h5>Test</h5></Link>
+        <Link to="/Home"><h5>Home</h5></Link>
+        {session ? (
+          <button onClick={signUserOut}><h5>Log Out</h5></button>
+        ) : (
+          <Link to="/Login"><h5>Login</h5></Link>
+        )}
       </div>
-    {user && (
-      <div className="user">
-        
-          <>
-            <p> {user?.displayName} </p>
-            <img src={user?.photoURL || ""} width="20" height="20" />
-            <button onClick={signUserOut}> Log Out</button>
-          </>
-        
-      </div>
+
+      {session && (
+        <div className="user">
+          <p>{session.user.email}</p>
+        </div>
       )}
     </div>
   );

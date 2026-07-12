@@ -5,7 +5,6 @@ import { geoApiOptions, GEO_API_URL, WEATHER_API_URL, WEATHER_API_KEY } from './
 
 
 const WeatherWidget = () => {
-
   interface WeatherData {
     city: string;
     weather: {

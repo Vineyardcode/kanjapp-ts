@@ -9,27 +9,30 @@
     "preview": "vite preview"
   },
   "dependencies": {
-    "@reduxjs/toolkit": "^1.9.2",
-    "firebase": "^9.15.0",
+    "@react-three/drei": "^10.7.6",
+    "@react-three/fiber": "^9.4.0",
+    "@reduxjs/toolkit": "^2.9.2",
+    "@supabase/supabase-js": "^2.110.2",
     "isomorphic-fetch": "^3.0.0",
-    "react": "^18.2.0",
-    "react-dom": "^18.2.0",
-    "react-firebase-hooks": "^5.1.1",
-    "react-redux": "^8.0.5",
-    "react-router-dom": "^6.6.2",
-    "react-select": "^5.7.2",
-    "react-select-async-paginate": "^0.7.2",
+    "react": "^19.2.0",
+    "react-dom": "^19.2.0",
+    "react-redux": "^9.2.0",
+    "react-router-dom": "^7.9.4",
+    "react-select": "^5.10.2",
+    "react-select-async-paginate": "^0.7.11",
     "react-xml-parser": "^1.1.8",
-    "redux": "^4.2.1",
+    "redux": "^5.0.1",
+    "three": "^0.180.0",
     "xml-js": "^1.6.11"
   },
   "devDependencies": {
-    "@types/react": "^18.0.26",
-    "@types/react-dom": "^18.0.9",
-    "@types/xml-parser": "^1.2.30",
-    "@types/xml2js": "^0.4.11",
-    "@vitejs/plugin-react": "^3.0.0",
-    "typescript": "^4.9.3",
-    "vite": "^4.0.0"
+    "@types/react": "^19.2.2",
+    "@types/react-dom": "^19.2.2",
+    "@types/three": "^0.180.0",
+    "@types/xml-parser": "^1.2.33",
+    "@types/xml2js": "^0.4.14",
+    "@vitejs/plugin-react": "^5.0.4",
+    "typescript": "^5.9.3",
+    "vite": "^7.1.12"
   }
 }
