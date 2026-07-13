@@ -1,0 +1,7 @@
+# Supabase project configuration.
+# Docs: https://supabase.com/docs/guides/local-development/cli/config
+#
+# project_id is the reference for this Supabase project (the subdomain in your
+# project URL: https://<project_id>.supabase.co). The GitHub integration uses
+# the migrations in supabase/migrations/ to deploy schema changes on push.
+project_id = "otnpdmfbpzyonufcdnmh"
