@@ -2,7 +2,7 @@ import * as THREE from 'three'
 import { SVGLoader } from 'three/examples/jsm/loaders/SVGLoader'
 import React, { Suspense, useState, useEffect, useMemo, useRef } from 'react'
 import { Canvas, useLoader, useFrame } from '@react-three/fiber'
-import { CameraControls, Trail, Float, Stars, Text3D, Center } from '@react-three/drei'
+import { CameraControls, Float, Stars, Text3D, Center } from '@react-three/drei'
 import { EffectComposer, Bloom } from '@react-three/postprocessing'
 import './App.css'
 import kvg_index from './assets/kvg_index.json'
@@ -132,12 +132,10 @@ function KanjiStrokes({ url }) {
         </mesh>
       ))}
       <group ref={penGroup}>
-        <Trail width={7} length={6} color={new THREE.Color(4, 1, 10)} attenuation={(w) => w * w}>
-          <mesh ref={penMesh}>
-            <sphereGeometry args={[1.6]} />
-            <meshBasicMaterial color={[8, 2, 12]} toneMapped={false} />
-          </mesh>
-        </Trail>
+        <mesh ref={penMesh}>
+          <sphereGeometry args={[1.8, 16, 16]} />
+          <meshBasicMaterial color={[8, 2, 12]} toneMapped={false} />
+        </mesh>
       </group>
     </>
   )
