@@ -1,54 +1,65 @@
-.modal {
-  position: fixed;
-  left: 0;
-  top: 0;
-  width: 100%;
-  height: 100%;
-  overflow: hidden;
-  background-color: rgba(0,0,0,0.4);
-}
+/* Learn.css - kanji grid, filters, search and the bottom selector drawer.
+   NOTE: the `.modal` block that used to live here has been deleted. It was a
+   second, conflicting declaration of the same class owned by Modal.css
+   (rgba(0,0,0,0.4) with no blur vs Modal.css's scrim + blur), and which one won
+   depended silently on stylesheet import order. */
 
 .kanji-button {
-  border-radius: 4.2px 4.2px 4.2px 4.2px;
-  width: 3.7rem;
-  height: 3.7rem;
-  margin: 2px;  
+  border-radius: var(--r-2);
+  width: 3.5rem;
+  height: 3.5rem;
+  margin: 2px;
   background-color: transparent;
-  border: none;
-  transition: 0.5s;
-  color: #000;
+  /* transparent border reserves the box so the selected state cannot reflow
+     the grid (it used to add a 1px border inline, nudging every tile) */
+  border: 1px solid transparent;
+  transition: background-color var(--dur-2) var(--ease),
+              border-color var(--dur-2) var(--ease),
+              box-shadow var(--dur-2) var(--ease),
+              transform var(--dur-2) var(--ease);
+  color: var(--ink);
   vertical-align: middle;
+  padding: 0;
   z-index: 3;
 }
 
-.button-text{
-  text-shadow: 1px 1px 2px rgb(209, 182, 182), 0 0 1em rgb(255, 255, 255), 0 0 0.2em rgb(255, 255, 255);
-  color: rgb(0, 0, 0);
+.button-text {
+  color: var(--ink);
   display: flex;
   justify-content: center;
   align-items: center;
   width: 100%;
   height: 100%;
-  border-radius: 4.2px 4.2px 4.2px 4.2px;
+  border-radius: var(--r-2);
 }
 
-.kanji-button:hover{
-  font-size: 1.035rem;
+.kanji-button:hover {
   cursor: pointer;
-  box-shadow: 0px 3px 7px 0px rgba(0, 0, 0, 0.37);
+  background-color: var(--glass);
+  border-color: var(--hairline);
+  box-shadow: var(--shadow-2);
+  transform: translateY(-1px);   /* was font-size: 1.035rem, which reflowed the grid */
+}
+
+.kanji-button[data-selected] {
+  border-color: var(--seal);
+  background-color: var(--seal-tint);
+  box-shadow: 0 0 0 1px var(--seal-line);
 }
 
 .group-container {
-  text-shadow: 1px 1px 2px rgb(209, 182, 182), 0 0 1em rgb(255, 255, 255), 0 0 0.2em rgb(255, 255, 255);
   width: 100%;
   height: 100%;
   text-align: center;
-  padding-bottom: 15.5%;
+  padding-bottom: calc(17.5vh + 2.75rem);
   z-index: 5;
 }
-  .group-container h2 {
-    padding: 1rem 0 1rem 0;
-  }
+
+.group-container h2 {
+  padding: var(--sp-3) 0;
+  font-size: var(--fs-500);
+  font-weight: 600;
+}
 
 .filters {
   display: flex;
@@ -56,86 +67,71 @@
   justify-content: center;
   align-items: center;
   text-align: center;
+  gap: var(--sp-2);
+  padding-top: var(--sp-3);
 }
-  .levels {
-    display: grid;
-    grid-template-columns: repeat(5, 1fr);
-    grid-template-rows: repeat(2, 1fr);
-    column-gap: 1.5rem;
-    row-gap: 2%;
-    justify-content: center;
-    align-items: center;
-    text-align: center;
-  }
 
-  .levels h3 {
-    grid-area: 1 / 1 / 2 / 6;
-  }
+.levels {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  column-gap: var(--sp-4);
+  row-gap: var(--sp-1);
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+}
 
-  .levels label input {
-    width: 1rem;
-  }
+.levels h3 {
+  grid-area: 1 / 1 / 2 / 6;
+  font-size: var(--fs-300);
+  font-weight: 600;
+  margin: 0 0 var(--sp-1);
+}
 
-  .filters div{
-    margin: 4.2%; 
-  }
+.levels label {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+  cursor: pointer;
+}
 
-  .filters h5 {
-    margin: 0.2rem;
-  }
+.levels label input { width: 1rem; accent-color: var(--seal); }
 
-  .search {
-    display: flex;
-    flex-direction: column;
-    height: fit-content;
-    justify-content: center;
-    align-items: center;
-    text-align: center;
-    padding: 0;
-    margin: 0;
-    width: 100%;
-  }
+.filters div { margin: var(--sp-2); }
+.filters h5 { margin: 0.2rem; font-weight: 500; }
 
-    .searchBar{
-      justify-content: center;
-      align-items: center;
-    } 
+.search {
+  display: flex;
+  flex-direction: column;
+  height: fit-content;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  width: 100%;
+}
 
-    .searchBar form{
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      gap: 1rem;
-    }
+.searchBar form {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: var(--sp-2);
+}
 
-    .searchBar input {
-      width: 5rem;
-    }
+.searchBar input { width: 9rem; min-height: var(--control-sm); }
+.searchBar button { min-height: var(--control-sm); }
 
-    .searchBar button {
-      text-shadow: 1px 1px 2px rgb(209, 182, 182), 0 0 1em rgb(255, 255, 255), 0 0 0.2em rgb(255, 255, 255);
-      border-radius: 4.2px 4.2px 4.2px 4.2px;
-      background-color: transparent;
-      border: 1px solid black;
-      transition: 0.5s;
-    }
+.searchBar-results {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  width: 100%;
+  text-align: center;
+  justify-content: center;
+  align-items: center;
+}
 
-    .searchBar button:hover{
-      cursor: pointer;
-
-    }
-
-    .searchBar-results {
-      flex-direction: row;
-      flex-wrap: wrap;
-      width: 100%;
-      height: 100%;
-      text-align: center;
-      justify-content: center;
-      align-items: center;
-      
-    }
-
+/* ---- the bottom drawer -------------------------------------------------- */
 .selector {
   position: fixed;
   display: grid;
@@ -146,36 +142,26 @@
   text-align: center;
   height: 0;
   bottom: 0;
-  padding-top: 1%;
-  transition: height 0.75s ease-in-out;
+  padding-top: 0;
+  overflow: hidden;
+  transition: height var(--dur-drawer) var(--ease);
   z-index: 9;
   width: 100%;
-  background-color: white;
-  /* background-image: url('https://images.pexels.com/photos/5697673/pexels-photo-5697673.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1'); */
-  background-attachment: fixed;
-  background-repeat: no-repeat;
-  background-size: cover;
-  
+  background-color: var(--glass-3);
+  -webkit-backdrop-filter: var(--blur-2);
+  backdrop-filter: var(--blur-2);
+  border-top: 1px solid var(--hairline);
+  box-shadow: 0 -4px 18px rgba(26, 21, 18, 0.10);
 }
 
-  .selector button {
-    text-shadow: 1px 1px 2px rgb(209, 182, 182), 0 0 1em rgb(255, 255, 255), 0 0 0.2em rgb(255, 255, 255);
-    border-radius: 4.2px 4.2px 4.2px 4.2px;
-    background-color: transparent;
-    border: 1px solid black;
-    transition: 0.5s;
-    height: 3rem;
-    
-  }
+.selector button { min-height: var(--control-lg); }
 
-  .selector button:hover{
-    cursor: pointer;
-    box-shadow: 0px 5px 10px 0px rgba(0, 0, 0, 0.5);
-  }
+.selector h5 { margin: 0; }
 
-  .selector h5 {
-    margin: 0;
-  }
+.selector-manual[data-active] {
+  border-color: var(--seal);
+  box-shadow: var(--glass-inset), 0 0 0 2px var(--seal-line);
+}
 
 .params {
   grid-area: 1 / 1 / 3 / 3;
@@ -183,20 +169,17 @@
   flex-direction: row;
   justify-content: center;
   flex-wrap: wrap;
+  align-items: center;
   max-height: min-content;
-  gap: 1.5%;
-  padding-top: 1%;
-  padding-bottom: 1%;
+  gap: var(--sp-1);
+  padding: var(--sp-1);
 }
 
-.params input,select {
-  width: 2rem;
-  text-shadow: 1px 1px 2px rgb(209, 182, 182), 0 0 1em rgb(255, 255, 255), 0 0 0.2em rgb(255, 255, 255);
-  border-radius: 4.2px 4.2px 4.2px 4.2px;
-  background-color: transparent;
-  border: 1px solid black;
-  transition: 0.5s;
-}
+/* was `.params input,select` - the bare `select` was a global leak that styled
+   every <select> in the app. */
+.params input { width: var(--field-sm); }
+.params select { width: auto; min-width: 5.5rem; }
+.params :where(input, select) { min-height: var(--control-sm); text-align: center; }
 
 .selector-create-move-manual {
   grid-area: 1 / 3 / 2 / 6;
@@ -205,14 +188,12 @@
   justify-content: space-evenly;
   white-space: normal;
   padding-right: 1%;
-  gap: 1%;
+  gap: var(--sp-1);
 }
 
-  .selector-create-move-manual button {
-    width: 33.3%;
-  }
+.selector-create-move-manual button { width: 33.3%; }
 
-.selector-select-progressBar-cancel{
+.selector-select-progressBar-cancel {
   grid-area: 2 / 3 / 3 / 6;
   display: flex;
   flex-direction: row;
@@ -220,74 +201,50 @@
   white-space: normal;
   padding-top: 1%;
   padding-right: 1%;
-  gap: 1%;
-  
+  gap: var(--sp-1);
 }
 
-  .selector-select {
-    order: 0;
-    flex-grow: 1;
-    width: 33.3%;
-    transition: width 0.5s;
-  }
+.selector-select { order: 0; flex-grow: 1; width: 33.3%; }
+.selector-progressBar {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  order: 1;
+  flex-grow: 1;
+  width: 33.3%;
+}
+.selector-cancel { order: 2; flex-grow: 1; width: 33.3%; }
 
-  .selector-progressBar {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    order: 1;
-    flex-grow: 1;
-    width: 33.3%;
-    transition: width 0.3s;
-    
-  }
-
-  .selector-cancel {
-    order: 2;
-    flex-grow: 1;
-    width: 33.3%;
-    transition: width 0.5s;
-  }
-
+/* ---- the drawer handle -------------------------------------------------- */
 .hamburger {
   position: fixed;
-  transition: 0.5s;
   bottom: 0;
   margin: 0;
+  color: var(--ink);
+  transition: transform var(--dur-2) var(--ease);
 }
 
-.hamburger:hover {
-  cursor: pointer;
-  font-size: 1.1em;
-}
+/* was font-size: 1.1em - the icon is sized in em, so scale() keeps the
+   grow affordance without nudging the flex row around it */
+.hamburger:hover { cursor: pointer; transform: scale(1.08); }
 
-.hamburger-holder{
+.hamburger-holder {
   position: fixed;
   width: 100%;
-  height: 3.5%;
+  height: 2.75rem;   /* was 3.5%, i.e. 3.5vh - the 2.1em icon overflowed it */
   bottom: 0;
   z-index: 99999;
   display: flex;
   justify-content: center;
   align-items: center;
-  vertical-align: middle;
   flex-wrap: wrap;
-  background-color: white;
-  /* background-image: url('https://images.pexels.com/photos/5697673/pexels-photo-5697673.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1'); */
-  background-attachment: fixed;
-  background-repeat: no-repeat;
-  background-size: cover;
-
+  background-color: var(--glass-3);
+  -webkit-backdrop-filter: var(--blur-2);
+  backdrop-filter: var(--blur-2);
+  border-top: 1px solid var(--hairline);
 }
 
-@media all and (min-width: 300px) and (max-width: 620px){
-
-  .group-container {
-    text-shadow: 1px 1px 2px rgb(209, 182, 182), 0 0 1em rgb(255, 255, 255), 0 0 0.2em rgb(255, 255, 255);
-    width: 100%;
-    height: 100%;
-    text-align: center;
-    padding-bottom: 42%;
-  }
-  
+@media all and (max-width: 620px) {
+  .group-container { padding-bottom: calc(34vh + 2.75rem); }
+  .kanji-button { width: 3rem; height: 3rem; }
 }

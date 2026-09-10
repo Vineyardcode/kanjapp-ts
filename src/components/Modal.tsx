@@ -71,14 +71,14 @@ const Modal: React.FC<ModalProps> = ({ show, kanji, hideModal, handleSaveKanji, 
 
         <div className="controls">
 
-          <button onClick={() => kanji3DRef.current?.prev()} className='row-btn'><h5>{'Prev'}</h5></button>
+          <button onClick={() => kanji3DRef.current?.prev()} className='row-btn'><h5>{'Prev stroke'}</h5></button>
 
           <div className="ctrls-column">
             <button onClick={() => kanji3DRef.current?.play()} id='draw-btn'><h5>Draw</h5></button>
             <button onClick={() => kanji3DRef.current?.erase()} id="delete-btn"><h5>Erase</h5></button>
           </div>
 
-          <button onClick={() => kanji3DRef.current?.next()} className='row-btn'><h5>{'Next'}</h5></button>
+          <button onClick={() => kanji3DRef.current?.next()} className='row-btn'><h5>{'Next stroke'}</h5></button>
 
           <div className="ctrls-column">
             <button onClick={() => kanji3DRef.current?.toggleRotate()}><h5>{'Rotate'}</h5></button>

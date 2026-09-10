@@ -1,0 +1,253 @@
+/* =============================================================
+   tokens.css - the single source of truth for the visual system.
+   Imported FIRST (see src/main.tsx) so every later stylesheet can
+   read these values.
+
+   Palette is anchored to Japanese material rather than decoration:
+   washi paper ground / sumi ink / seal red / indigo.
+   ============================================================= */
+
+:root {
+  color-scheme: light;
+
+  /* ---- sumi - ink -------------------------------------------- */
+  --ink:          #1a1512;      /* replaces every #000 / rgb(0,0,0) */
+  --ink-2:        #4a423a;
+  --ink-3:        #7d746a;
+  --ink-on-scrim: #f7f2e8;
+
+  /* ---- washi - paper ----------------------------------------- */
+  --paper:   #f7f3ec;
+  --paper-2: #efe8dc;
+  --paper-3: #e4dacb;
+
+  /* ---- seal red, the single accent --------------------------- */
+  --seal:      #b7282e;
+  --seal-deep: #7e1a1e;               /* was rgb(145,7,7) */
+  --seal-tint: rgba(183, 40, 46, 0.10);
+  --seal-line: rgba(183, 40, 46, 0.45);
+
+  /* ---- indigo, reserved for focus ---------------------------- */
+  --ai:      #24446b;
+  --ai-tint: rgba(36, 68, 107, 0.10);
+
+  /* ---- glass -------------------------------------------------- */
+  --glass:       rgba(255, 255, 255, 0.46);
+  --glass-2:     rgba(255, 255, 255, 0.62);
+  --glass-3:     rgba(255, 255, 255, 0.76);
+  --glass-hover: rgba(255, 255, 255, 0.72);
+  --glass-edge:  rgba(255, 255, 255, 0.85);
+  --scrim:       rgba(26, 21, 18, 0.68);   /* 0.55 failed AA; 0.68 gives ~5.6:1 */
+  --hairline:    rgba(26, 21, 18, 0.22);   /* replaces `1px solid black` x14 */
+  --hairline-2:  rgba(26, 21, 18, 0.40);
+
+  /* saturate() is what turns flat fog into glass */
+  --blur-1: blur(6px) saturate(150%);
+  --blur-2: blur(12px) saturate(160%);
+  --blur-3: blur(20px) saturate(120%);
+
+  /* ---- elevation ---------------------------------------------- */
+  --glass-inset: inset 0 1px 0 var(--glass-edge),
+                 inset 0 -1px 0 rgba(26, 21, 18, 0.06);
+  --shadow-1: 0 1px 2px rgba(26, 21, 18, 0.10);
+  --shadow-2: 0 3px 8px rgba(26, 21, 18, 0.14), 0 1px 2px rgba(26, 21, 18, 0.10);
+  --shadow-3: 0 10px 28px rgba(26, 21, 18, 0.20);
+  --text-emboss: 0 1px 0 rgba(255, 255, 255, 0.65);
+
+  /* ---- radius (was 4.2px x20 / 8.4px / 10px) ------------------ */
+  --r-1: 4px;
+  --r-2: 7px;
+  --r-3: 12px;
+
+  /* ---- spacing ------------------------------------------------ */
+  --sp-1: 0.5rem;
+  --sp-2: 0.75rem;
+  --sp-3: 1rem;
+  --sp-4: 1.5rem;
+  --sp-5: 2rem;
+
+  /* ---- control sizing ----------------------------------------- */
+  --control-sm: 2rem;
+  --control-md: 2.5rem;
+  --control-lg: 3rem;
+  --field-sm: 4.25rem;   /* fits a 2-digit number plus its spinner */
+
+  /* ---- type ---------------------------------------------------- */
+  --font-ui: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  --font-kanji: "Hiragino Mincho ProN", "Yu Mincho", YuMincho,
+                "Noto Serif JP", "MS Mincho", serif;
+  --fs-100: 0.8125rem;
+  --fs-200: 0.9375rem;
+  --fs-300: 1rem;
+  --fs-400: 1.25rem;
+  --fs-500: 1.5rem;
+  --fs-600: 1.875rem;
+  --fs-kanji-tile: 1.625rem;
+  --fs-kanji-hero: clamp(2rem, 5.5vh, 3rem);
+  --lh-body: 1.55;
+  --lh-tight: 1.15;
+  --tracking-ui: 0.01em;
+
+  /* ---- motion (was 0.5s / 0.37s / 0.3s / 0.75s) ---------------- */
+  --dur-1: 120ms;
+  --dur-2: 200ms;
+  --dur-3: 320ms;
+  --dur-drawer: 600ms;
+  --ease: cubic-bezier(0.2, 0.6, 0.2, 1);
+
+  /* hexagon flag sizing - large enough to sit behind the sticky bars */
+  --hex-s: clamp(56px, 11.5vmax, 175px);
+}
+
+*, *::before, *::after { box-sizing: border-box; }
+
+/* The ground goes on <html>, NEVER on <body>.
+   .background-flag is z-index:-1, and per CSS painting order a background on
+   body paints AFTER negative-z-index children - i.e. it would silently erase
+   the flag. Do not "tidy" this onto body. */
+html {
+  background-color: var(--paper);
+  background-image:
+    radial-gradient(120vmax 70vmax at 8% -18%, var(--ai-tint), transparent 62%),
+    radial-gradient(90vmax 55vmax at 96% 118%, var(--seal-tint), transparent 62%),
+    /* low-frequency bands: these DO sit behind the sticky bars, so the
+       backdrop-filter has real structure to pick up */
+    linear-gradient(180deg, rgba(36, 68, 107, 0.07) 0, transparent 22%),
+    linear-gradient(0deg, rgba(183, 40, 46, 0.07) 0, transparent 26%),
+    /* washi fibre: at-rest paper texture only - blur() erases a 1px period */
+    repeating-linear-gradient(46deg, rgba(26,21,18,0.020) 0 1px, transparent 1px 5px),
+    repeating-linear-gradient(-46deg, rgba(26,21,18,0.014) 0 1px, transparent 1px 7px),
+    linear-gradient(180deg, var(--paper) 0%, var(--paper-2) 62%, var(--paper-3) 100%);
+  background-size: cover, cover, cover, cover, auto, auto, cover;
+  background-attachment: fixed;
+}
+
+body {
+  margin: 0;
+  background: transparent;   /* MANDATORY - see the note on html above */
+  color: var(--ink);
+  font-family: var(--font-ui);
+  font-size: var(--fs-300);
+  line-height: var(--lh-body);
+  letter-spacing: var(--tracking-ui);
+  text-shadow: none;         /* removes the global grey smudge */
+  -webkit-font-smoothing: antialiased;
+  min-height: 100dvh;
+}
+
+/* =============================================================
+   The glass primitive - ONE definition replacing 9 drifted copies.
+   :where() keeps specificity at 0 so each page stylesheet still owns
+   its LAYOUT (grid-area, width/height); only the glass look lives here.
+   ============================================================= */
+
+/* Controls sitting directly on the page ground: real blur. */
+:where(.login-main, .searchBar, .answers, .tests-params, .homeModal,
+       .error-fallback, .learned-kanji) button,
+:where(.params, .tests-params, .searchBar, .login-main) :where(input, select),
+.glass {
+  font-family: inherit;
+  font-size: var(--fs-200);
+  line-height: var(--lh-tight);
+  color: var(--ink);
+  background-color: var(--glass);
+  -webkit-backdrop-filter: var(--blur-1);
+  backdrop-filter: var(--blur-1);
+  border: 1px solid var(--hairline);
+  border-radius: var(--r-2);
+  box-shadow: var(--glass-inset), var(--shadow-1);
+  text-shadow: var(--text-emboss);
+  padding: var(--sp-1) var(--sp-2);
+  transition: background-color var(--dur-2) var(--ease),
+              border-color var(--dur-2) var(--ease),
+              box-shadow var(--dur-2) var(--ease),
+              transform var(--dur-2) var(--ease);
+}
+
+/* Controls sitting ON an already-blurred bar: a second blur is a no-op,
+   so these are tinted panels instead. */
+:where(.selector, .controls) button {
+  font-family: inherit;
+  font-size: var(--fs-200);
+  line-height: var(--lh-tight);
+  color: var(--ink);
+  background-color: var(--glass-2);
+  backdrop-filter: none;
+  border: 1px solid var(--hairline);
+  border-radius: var(--r-2);
+  box-shadow: var(--glass-inset), var(--shadow-1);
+  text-shadow: var(--text-emboss);
+  padding: var(--sp-1) var(--sp-2);
+  transition: background-color var(--dur-2) var(--ease),
+              box-shadow var(--dur-2) var(--ease),
+              transform var(--dur-2) var(--ease);
+}
+
+/* Hover lifts instead of resizing text - the old `font-size` hovers
+   reflowed the grid and made every control jitter. */
+:where(.login-main, .searchBar, .answers, .tests-params, .homeModal,
+       .selector, .controls, .learned-kanji, .error-fallback) button:hover,
+.glass:hover {
+  cursor: pointer;
+  background-color: var(--glass-hover);
+  border-color: var(--hairline-2);
+  box-shadow: var(--glass-inset), var(--shadow-2);
+  transform: translateY(-1px);
+}
+
+:where(.login-main, .searchBar, .answers, .tests-params, .homeModal,
+       .selector, .controls, .learned-kanji, .error-fallback) button:active,
+.glass:active {
+  transform: translateY(0);
+  box-shadow: var(--glass-inset), var(--shadow-1);
+}
+
+:where(button, input, select, a, [tabindex]):focus-visible {
+  outline: 2px solid var(--ai);
+  outline-offset: 2px;
+}
+/* .selector clips its children while closed, which would crop an outward ring */
+.selector :where(button, input, select):focus-visible { outline-offset: -3px; }
+
+button:disabled, .glass:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
+
+/* Headings are used as control labels all over the app. Neutralise the
+   heading LEVEL without inflating the control's own font-size. */
+:where(button, a, .links, .controls, .selector, .answers, .tests-params, .filters)
+  :where(h1, h2, h3, h4, h5, h6) {
+  font-family: inherit;
+  font-size: inherit;
+  font-weight: 600;
+  line-height: inherit;
+  margin: 0;
+}
+
+/* ...but glyph displays carry the kanji, not a label - they opt back out. */
+.button-text,
+.mid-column h1,
+.learned-kanji button h3,
+.answers button h1 {
+  font-family: var(--font-kanji);
+  font-weight: 500;
+}
+.button-text             { font-size: var(--fs-kanji-tile); }
+.answers button h1       { font-size: var(--fs-600); }
+.learned-kanji button h3 { font-size: var(--fs-400); }
+.mid-column h1           { font-size: var(--fs-kanji-hero); line-height: var(--lh-tight); }
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+/* Without backdrop-filter the glass reads as washed-out paper, so lean opaque. */
+@supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
+  :root {
+    --glass: rgba(255, 255, 255, 0.86);
+    --glass-2: rgba(255, 255, 255, 0.90);
+    --glass-3: rgba(255, 255, 255, 0.94);
+    --glass-hover: rgba(255, 255, 255, 0.97);
+  }
+}

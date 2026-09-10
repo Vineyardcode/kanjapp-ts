@@ -1,58 +1,93 @@
-body {
-  text-shadow: 1px 1px 0.5px rgb(168, 156, 156), 1px 0.1px 0.5px rgb(201, 191, 191), 0.1px 0.1px 0.5px rgb(134, 130, 130);
-  margin: 0;
-  
-  font-family: Arial, Helvetica, sans-serif;
-  /* background-image: url("https://images.pexels.com/photos/5697673/pexels-photo-5697673.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1"); */
-  background-attachment: fixed;
-  background-repeat: no-repeat;
-  background-size: cover;
-  
-}
+/* App.css - global shell.
+   Base typography, colours and the glass primitive now live in tokens.css. */
 
-body::-webkit-scrollbar {
-  display: none;
-}
+body::-webkit-scrollbar { display: none; }
 
+.App { min-height: 100dvh; }
+
+/* The navbar was `position: static`, so nothing ever scrolled underneath it and
+   its backdrop-filter was a permanent no-op - that, more than anything, is why
+   the "crystal" look never actually read. Sticky gives the blur real content
+   to work on. z-index sits below .selector (9) and .hamburger-holder (99999)
+   so the Learn drawer still covers it. */
 .navbar {
+  position: sticky;
+  top: 0;
+  z-index: 8;
   width: 100%;
-  height: 80px;
-  background-color: transparent;
-  color: #000;
+  height: 72px;
   display: flex;
   flex-direction: row;
   justify-content: space-evenly;
   align-items: center;
-  backdrop-filter: blur(3px);
+  gap: var(--sp-3);
+  color: var(--ink);
+  background-color: var(--glass-2);
+  -webkit-backdrop-filter: var(--blur-2);
+  backdrop-filter: var(--blur-2);
+  border-bottom: 1px solid var(--hairline);
+  box-shadow: var(--shadow-1);
+}
+
+.links {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: clamp(var(--sp-3), 4vw, var(--sp-5));
 }
 
 .links a {
-  color: rgb(0, 0, 0);
+  color: var(--ink);
   text-decoration: none;
-  display:inline-block;
+  display: inline-block;
   padding-bottom: 2px;
-  margin: 2rem;
-  
-  font-size: 1.75rem;
-  text-shadow: 1px 1px 2px rgb(209, 182, 182), 0 0 1em rgb(255, 255, 255), 0 0 0.2em rgb(255, 255, 255);
+  font-size: var(--fs-400);
+  font-weight: 500;
+  letter-spacing: var(--tracking-ui);
 }
 
-  .links a h5{
-    margin: 0;
-    font-weight: 500;
-  }
+.links a h5 { margin: 0; }
 
 .links a:after {
-  display:block;
+  display: block;
   content: '';
-  border-bottom: solid 3px #000000;  
-  transform: scaleX(0);  
-  transition: transform 250ms ease-in-out;
+  border-bottom: solid 2px var(--seal);
+  transform: scaleX(0);
+  transition: transform var(--dur-2) var(--ease);
 }
 
-.links a:hover:after{
-  transform: scaleX(1);
+.links a:hover:after { transform: scaleX(1); }
+
+/* Log Out lives in .links next to the anchors, so it needs the glass look
+   the primitive gives page-level controls. */
+.links button {
+  font-family: inherit;
+  font-size: var(--fs-200);
+  color: var(--ink);
+  background-color: var(--glass);
+  border: 1px solid var(--hairline);
+  border-radius: var(--r-2);
+  padding: var(--sp-1) var(--sp-2);
+  box-shadow: var(--glass-inset), var(--shadow-1);
+  transition: background-color var(--dur-2) var(--ease),
+              box-shadow var(--dur-2) var(--ease),
+              transform var(--dur-2) var(--ease);
 }
+.links button:hover {
+  cursor: pointer;
+  background-color: var(--glass-hover);
+  box-shadow: var(--glass-inset), var(--shadow-2);
+  transform: translateY(-1px);
+}
+
+.navbar .user {
+  display: flex;
+  align-items: center;
+  gap: var(--sp-1);
+  color: var(--ink-2);
+  font-size: var(--fs-100);
+}
+.navbar .user p { margin: 0; }
 
 .login-main {
   display: flex;
@@ -60,152 +95,102 @@ body::-webkit-scrollbar {
   justify-content: center;
   align-items: center;
   text-align: center;
-  text-transform: capitalize;
+  gap: var(--sp-3);
+  padding: var(--sp-5) var(--sp-3);
 }
 
-.login-main button {
-  text-shadow: 1px 1px 2px rgb(209, 182, 182), 0 0 1em rgb(255, 255, 255), 0 0 0.2em rgb(255, 255, 255);
-  border-radius: 4.2px 4.2px 4.2px 4.2px;
-  background-color: transparent;
-  border: 1px solid black;
-  transition: 0.5s;
-  height: 2rem;
+.login-main h3 {
+  margin: 0;
+  font-size: var(--fs-500);
+  font-weight: 600;
+  text-transform: none;   /* was capitalize, which mangled the copy */
+}
+
+.login-main form {
   display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
   justify-content: center;
   align-items: center;
-  text-align: center;
+  gap: var(--sp-2);
 }
 
-.login-main button:hover{
-  cursor: pointer;
-  box-shadow: 0px 5px 10px 0px rgba(0, 0, 0, 0.5);
+.login-main input[type="email"] {
+  width: min(100%, 22rem);
+  text-align: left;
+  min-height: var(--control-md);
 }
-/* 
+
+.login-main button { min-height: var(--control-md); }
+
+.error-fallback {
+  max-width: 34rem;
+  margin: var(--sp-5) auto;
+  padding: var(--sp-4);
+  background-color: var(--glass-2);
+  -webkit-backdrop-filter: var(--blur-1);
+  backdrop-filter: var(--blur-1);
+  border: 1px solid var(--hairline);
+  border-radius: var(--r-3);
+  box-shadow: var(--glass-inset), var(--shadow-2);
+}
+.error-fallback button { margin: 0 var(--sp-1); min-height: var(--control-md); }
+
+/* The hinomaru-inspired hexagon field. It sits at z-index -1 behind
+   everything and gives the sticky bars something to blur. */
 .background-flag {
   top: 50%;
   left: 50%;
-  width: 10rem;
-  height: 10rem;
-  position: fixed;
-  background-color: red;
-  z-index: -1;
-  border-radius: 50%;
-  transform: translate(-50%, -50%);
-}
-
- */
-
-
-
-.background-flag {
-
-  top: 50%;
-  left: 50%;
   transform: translate(-50%, -50%);
   position: fixed;
   z-index: -1;
+  pointer-events: none;
 
-  
   display: flex;
-  --s: 65px;
+  --s: var(--hex-s);
   --m: 4px;
   --f: calc(1.732 * var(--s) + 4 * var(--m) - 1px);
-  clip-path: polygon(0% 50%, 25% 0%, 75% 0%, 100% 50%, 75% 100%, 25% 100%); 
-  width: calc(var(--s)*5 + var(--m)*12);
-  height: calc((var(--s)*5 + var(--m)*12) / 1.1547 + var(--m)*4);
+  clip-path: polygon(0% 50%, 25% 0%, 75% 0%, 100% 50%, 75% 100%, 25% 100%);
+  width: calc(var(--s) * 5 + var(--m) * 12);
+  height: calc((var(--s) * 5 + var(--m) * 12) / 1.1547 + var(--m) * 4);
   margin: 0 auto;
-  padding-left: calc(var(--m)*2);
-  background: white;
+  padding-left: calc(var(--m) * 2);
+  background: var(--paper-2);
+  opacity: 0.38;   /* a backdrop, not a pattern - it must not fight the kanji */
 }
 
-.flag-grid {
-  font-size: 0; /*disable white space between inline block element */
-}
+.flag-grid { font-size: 0; }
 
 .flag-grid div {
   width: var(--s);
   margin: var(--m);
-  height: calc(var(--s)*1.1547); 
+  height: calc(var(--s) * 1.1547);
   display: inline-block;
-  font-size:initial;
+  font-size: initial;
   clip-path: polygon(0% 25%, 0% 75%, 50% 100%, 100% 75%, 100% 25%, 50% 0%);
-  background: red;
-  margin-bottom: calc(var(--m) - var(--s)*0.2885); 
-  opacity: 0.3;
- 
+  background: var(--seal);
+  margin-bottom: calc(var(--m) - var(--s) * 0.2885);
+  opacity: 0.13;
 }
 
 .flag-grid::before {
   content: "";
-  width: calc(var(--s)/2 + var(--m));
+  width: calc(var(--s) / 2 + var(--m));
   float: left;
   height: 120%;
-  shape-outside: repeating-linear-gradient(     
-                   #0000 0 calc(var(--f) - 3px),      
-                   #000  0 var(--f));
+  shape-outside: repeating-linear-gradient(
+    #0000 0 calc(var(--f) - 3px),
+    #000 0 var(--f));
 }
 
-.flag-grid div:nth-child(1) {
-  opacity: 0;
-}
-.flag-grid div:nth-child(5) {
-  opacity: 0;
-}
-.flag-grid div:nth-child(19) {
-  opacity: 0;
-}
-.flag-grid div:nth-child(23) {
-  opacity: 0;
-}
+.flag-grid div:nth-child(1),
+.flag-grid div:nth-child(5),
+.flag-grid div:nth-child(19),
+.flag-grid div:nth-child(23) { opacity: 0; }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-@media all and (min-width: 320px) and (max-width: 620px){
-
-  .navbar {
-    width: 100%;
-    height: 80px;
-    background-color: transparent;
-    color: #000;
-    backdrop-filter: blur(3px);
-  }
-
-  .links a {
-    color: rgb(0, 0, 0);
-    text-decoration: none;
-    display: inline-block;
-    text-align: center;
-    margin: 1rem;
-    font-size: 1.2rem;
-    text-shadow: 1px 1px 2px rgb(209, 182, 182), 0 0 1em rgb(255, 255, 255), 0 0 0.2em rgb(255, 255, 255);
-  }
-
-    .links a h5 {
-      
-      font-weight: 550;
-    }
-
-  .links a:after {
-    display:block;
-    content: '';
-    border-bottom: solid 3px #000000;  
-    transform: scaleX(0);  
-    transition: transform 250ms ease-in-out;
-  }
-  
-  .links a:hover:after {
-    transform: scaleX(1);
-  }
-
+@media all and (max-width: 620px) {
+  .navbar { height: 64px; }
+  .links { gap: var(--sp-2); }
+  .links a { font-size: var(--fs-300); }
+  .links a h5 { font-weight: 550; }
 }

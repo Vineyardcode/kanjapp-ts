@@ -28,7 +28,7 @@ const App = () => {
 
       </BrowserRouter>
 
-      <div className='background-flag'>
+      <div className='background-flag' aria-hidden='true'>
         <div className="flag-grid">
           <DivMaker count={23} />
         </div>

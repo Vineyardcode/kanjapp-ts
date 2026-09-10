@@ -68,7 +68,7 @@ const GuessKanjiMeaningsQuiz = ({
         </div>
         <div className='answers'>
             {questions.map((kanji: Kanji) => (
-              <button  style={{border: "1px solid black"}}
+              <button
               key={kanji.character} 
               onClick={() => handleAnswer(kanji)}><h5>{kanji.meanings?.slice(0,3).join(", ")}</h5></button>
             ))}

@@ -4,7 +4,7 @@ function IconHeart(props: React.SVGProps<SVGSVGElement>) {
   return (
     <svg
       viewBox="0 0 1024 1024"
-      stroke="black"
+      stroke="currentColor"
       height="1em"
       width="1em"
       {...props}

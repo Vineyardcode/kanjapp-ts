@@ -1,24 +1,53 @@
+/* Home.css - progress dashboard.
+   NOTE: the bare `img { width: 2.5rem; height: 2.5rem }` rule that used to live
+   here has been deleted. Page stylesheets are global in this app, so it was
+   resizing every <img> anywhere. #tutorialIMG below is the only image and
+   already sets its own size. */
+
 .home {
   display: flex;
   justify-content: center;
   align-items: center;
   flex-direction: column;
-  padding: 1rem;
+  gap: var(--sp-3);
+  padding: var(--sp-4) var(--sp-3);
+  max-width: 68rem;
+  margin: 0 auto;
+}
+
+.stats,
+.about {
+  width: 100%;
+  background-color: var(--glass);
+  -webkit-backdrop-filter: var(--blur-1);
+  backdrop-filter: var(--blur-1);
+  border: 1px solid var(--hairline);
+  border-radius: var(--r-3);
+  box-shadow: var(--glass-inset), var(--shadow-1);
+  padding: var(--sp-4) var(--sp-3);
 }
 
 .stats {
-  width: 100%;
-  height: 50%;
-  border: 1px solid black;
-  border-radius: 4.2px 4.2px 4.2px 4.2px;
-  margin: 0.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-3);
 }
 
-.learned-group h2 {
-  flex-wrap: wrap;
+.about {
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--sp-2);
 }
 
-.learned-group  {
+.about h3 {
+  margin: 0;
+  font-size: var(--fs-400);
+  font-weight: 600;
+}
+
+.learned-group {
   display: flex;
   justify-self: center;
   align-self: center;
@@ -26,6 +55,15 @@
   align-items: center;
   flex-wrap: wrap;
   flex-direction: column;
+  gap: var(--sp-1);
+  width: 100%;
+}
+
+.learned-group h3 {
+  margin: 0;
+  font-size: var(--fs-300);
+  font-weight: 600;
+  color: var(--ink-2);
 }
 
 .learned-kanji {
@@ -34,78 +72,39 @@
   justify-content: center;
   align-items: center;
   flex-wrap: wrap;
+  gap: 3px;
+  padding-top: var(--sp-1);
 }
 
+/* size only - the glass look comes from the primitive in tokens.css */
 .learned-kanji button {
-  border-radius: 4.2px 4.2px 4.2px 4.2px;
-  width: 2.5rem;
-  height: 2.5rem;
-  margin: 3px;  
-  background-color: transparent;
-  border: none;
-  transition: 0.37s;
-  color: #000;
+  width: var(--control-md);
+  height: var(--control-md);
+  padding: 0;
   display: flex;
   justify-content: center;
   align-items: center;
-  vertical-align: middle;
   text-align: center;
-  text-shadow: 1px 1px 2px rgb(209, 182, 182), 0 0 1em rgb(255, 255, 255), 0 0 0.2em rgb(255, 255, 255);
 }
 
-.learned-kanji button:hover{
-  font-size: 1rem;
-  cursor: pointer;
-  box-shadow: 0px 3px 7px 0px rgba(0, 0, 0, 0.37);
-}
-
-.container {
-  margin: 1rem;
-}
-
-  img {
-    width: 2.5rem;
-    height: 2.5rem; 
-    border-radius: 4.2px;
-  }
+.container { margin: var(--sp-3); }
 
 .homeModal {
   position: absolute;
-  border-radius: 4.2px 4.2px 4.2px 4.2px;
-  background-color: transparent;
   vertical-align: middle;
   text-align: center;
   display: flex;
   justify-content: center;
   align-items: center;
   flex-direction: column;
+  z-index: 6;
 }
 
+/* keeps its distinctive asymmetric corner (it points back at the tile) */
 .homeModal button {
-  height: 3rem;
-  width: 5rem;
-  border-radius: 0 4.2px 4.2px 4.2px;
-  background-color: transparent;
-  backdrop-filter: blur(3px);
-  border: 1px solid black;
-  transition: 0.5s;
-}
-
-.homeModal button:hover {
-  cursor: pointer;
-  box-shadow: 0px 5px 10px 0px rgba(0, 0, 0, 0.5);
-}
-
-.about {
-  width: 100%;
-  height: 50%;
-  border: 1px solid black;
-  border-radius: 4.2px 4.2px 4.2px 4.2px;
-  margin: 0.5rem;
-  text-align: center;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
+  height: var(--control-lg);
+  width: 7rem;
+  border-radius: 0 var(--r-2) var(--r-2) var(--r-2);
 }
 
 .info {
@@ -113,11 +112,19 @@
   flex-direction: column;
   justify-items: center;
   align-items: center;
+  gap: var(--sp-2);
   word-wrap: normal;
+  max-width: 46rem;
+  color: var(--ink-2);
+  font-size: var(--fs-200);
 }
+
+.info h5 { margin: 0; font-weight: 500; line-height: var(--lh-body); }
+.info a { color: var(--ai); }
 
 #tutorialIMG {
   width: 75%;
-  height: 75%;
-  
+  height: auto;
+  border-radius: var(--r-2);
+  border: 1px solid var(--hairline);
 }

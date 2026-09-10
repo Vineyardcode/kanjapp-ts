@@ -536,7 +536,7 @@ currentPathIndex = -1
                     key={item.character} 
                     onClick={selectionMode === false ? () => showModal(item) : () => handleHighLight(item)}   
                     className="kanji-button"
-                    style={highlightedKanji.includes(item) ? { border: '1px solid black' } : {}}> 
+                    data-selected={highlightedKanji.includes(item) || undefined}> 
                     <span className="button-text"><h1>{item.character}</h1></span>
                   </button>
 
@@ -575,7 +575,7 @@ currentPathIndex = -1
                       key={item.character} 
                       onClick={selectionMode === false ? () => showModal(item) : () => handleHighLight(item)}   
                       className="kanji-button"
-                      style={highlightedKanji.includes(item) ? { border: '1px solid black' } : {}}> 
+                      data-selected={highlightedKanji.includes(item) || undefined}> 
                       <span className="button-text"><h1>{item.character}</h1></span>
                       
                     </button>
@@ -651,7 +651,7 @@ currentPathIndex = -1
           <div className="selector-create-move-manual" >
             <button className='selector-createDeck' onClick={createBatches}><h5>Create Anki deck</h5></button>
             <button className='selector-MoveSelectedToLearned' onClick={createBatchesForSavingKanji}><h5>Move to Learned</h5></button>
-            <button className='selector-manual' id='manual-btn' style={selectionMode ? {border: '3px solid black'} : {}} onClick={selectionMode ? handleCancelManualSelection : handleManualSelection}><h5>{selectionMode ? "Manual selection ON" : "Manual selection OFF"}</h5></button>
+            <button className='selector-manual' id='manual-btn' data-active={selectionMode || undefined} onClick={selectionMode ? handleCancelManualSelection : handleManualSelection}><h5>{selectionMode ? "Manual selection ON" : "Manual selection OFF"}</h5></button>
           </div>
 
           <div className="selector-select-progressBar-cancel">

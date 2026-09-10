@@ -12,7 +12,7 @@ function IconArrowsAlt(props: React.SVGProps<SVGSVGElement>) {
   >
     <path
       fill="none"
-      stroke="black"
+      stroke="currentColor"
       strokeMiterlimit={10}
       strokeWidth={2}
       d="M0 40h64M0 32h64M0 24h64"
