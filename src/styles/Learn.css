@@ -35,10 +35,8 @@
 
 .kanji-button:hover {
   cursor: pointer;
-  background-color: var(--glass);
   border-color: var(--hairline);
-  box-shadow: var(--shadow-2);
-  transform: translateY(-1px);   /* was font-size: 1.035rem, which reflowed the grid */
+  box-shadow: var(--shadow-1);   /* was font-size: 1.035rem, which reflowed the grid */
 }
 
 .kanji-button[data-selected] {
@@ -152,11 +150,9 @@
   z-index: 9;
   width: 100%;
   background-color: var(--glass-3);
-  background-image: var(--glass-sheen);
   -webkit-backdrop-filter: var(--blur-2);
   backdrop-filter: var(--blur-2);
   border-top: 1px solid var(--hairline);
-  box-shadow: inset 0 1px 0 var(--glass-edge), 0 -6px 22px rgba(26, 21, 18, 0.12);
 }
 
 .selector button { min-height: var(--control-lg); }
@@ -165,7 +161,7 @@
 
 .selector-manual[data-active] {
   border-color: var(--seal);
-  box-shadow: var(--glass-inset), 0 0 0 2px var(--seal-line);
+  box-shadow: 0 0 0 2px var(--seal-line);
 }
 
 .params {
@@ -244,7 +240,6 @@
   align-items: center;
   flex-wrap: wrap;
   background-color: var(--glass-3);
-  background-image: var(--glass-sheen);
   -webkit-backdrop-filter: var(--blur-2);
   backdrop-filter: var(--blur-2);
   border-top: 1px solid var(--hairline);

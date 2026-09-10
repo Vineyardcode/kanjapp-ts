@@ -149,26 +149,25 @@
 
 }
 /* ---------------------------------------------------------------------------
-   Everything above is the ORIGINAL modal styling, restored verbatim.
-   The two additions below only put back what the app-wide refactor removed,
-   so the card looks exactly as it did before:
-   1. the subtle text emboss that used to come from a global `body` rule
-   2. explicit resets, because the shared glass primitive no longer targets
-      `.controls` but a couple of inherited base styles still would
+   Everything above is the ORIGINAL modal CSS, restored verbatim.
+
+   The card is the reference the rest of the app is modelled on, so it must not
+   drift. This block opts it out of the app-wide base that would otherwise
+   still reach inside it. (Font family, colour and the body text emboss already
+   match the original, because tokens.css now uses those same values.)
    --------------------------------------------------------------------------- */
 
-.modal {
-  text-shadow: 1px 1px 0.5px rgb(168, 156, 156),
-               1px 0.1px 0.5px rgb(201, 191, 191),
-               0.1px 0.1px 0.5px rgb(134, 130, 130);
-}
+.modal { line-height: normal; }
 
-.modal-body { box-sizing: content-box; }
+/* the app sets border-box globally; the original card was content-box */
+.modal, .modal *, .modal *::before, .modal *::after { box-sizing: content-box; }
 
-.controls button {
-  font-family: inherit;
-  padding: 1px 6px;          /* the UA default the original relied on */
-  box-shadow: none;
-  background-image: none;
-  backdrop-filter: none;
+/* undo the app-wide "headings used as labels" rule inside the card, so the
+   <h5> labels and the <h1> glyph keep their original browser defaults */
+.modal :where(h1, h2, h3, h4, h5, h6) {
+  font-family: revert;
+  font-size: revert;
+  font-weight: revert;
+  line-height: revert;
+  margin: revert;
 }
