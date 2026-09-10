@@ -27,3 +27,5 @@ dist-ssr
 
 # Local tooling
 .claude/
+# stray scratch/test dirs
+szchk/
