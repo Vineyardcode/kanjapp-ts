@@ -7,7 +7,6 @@ import { Link } from 'react-router-dom';
 import IconHeart from '../assets/icons/heart';
 //style
 import "../styles/Home.css"
-import WeatherWidget from '../components/WeatherWidget/WeatherWidget';
 //supabase-backed learned-kanji sync
 import { deleteLearnedKanji } from '../lib/learnedKanji';
 import { useSyncLearned } from '../hooks/useSyncLearned';
@@ -108,10 +107,6 @@ return(
         }
       }}>
 
-      <div className='WeatherWidget'>
-        <h3>Find out if the weather today is suitable for learning kanji</h3>
-        <WeatherWidget />
-      </div>
 
       <div className="stats">
 
@@ -156,7 +151,7 @@ return(
         <h3>Info</h3>
           <div className='info'>
             
-                <h5>To create Anki cards, you need to have the <a href="https://ankiweb.net/shared/info/2055492159">Anki Connect</a> addon installed, then go to "Tools{'>'}Add-ons" inside the anki app, double click on AnkiConnect and add <b>"https://kanjapp-ts-vineyardcode.vercel.app"</b> inside the "webCorsOriginList", like this:</h5>
+                <h5>To create Anki cards, you need to have the <a href="https://ankiweb.net/shared/info/2055492159">Anki Connect</a> addon installed, then go to "Tools{'>'}Add-ons" inside the anki app, double click on AnkiConnect and add <b>"https://kanjapp-ts-vineyardcodes-projects.vercel.app"</b> inside the "webCorsOriginList", like this:</h5>
                 
                 <img id='tutorialIMG' src='/imgs/tutorial.png'></img>
                 
@@ -181,7 +176,6 @@ return(
                 <h5>Kanji stroke order data are taken from the <a href="https://kanjivg.tagaini.net/index.html">Kanji VG</a> project</h5>
               
                           
-                <h5>The weather widget is powered by the <a href="https://openweathermap.org/">OpenWeather</a> and the <a href="https://rapidapi.com/wirefreethought/api/geodb-cities">GeoDB</a> API's</h5>              
               
               
                 <h5>Made with <IconHeart/> by <a href="https://github.com/Vineyardcode">Vine</a></h5>
