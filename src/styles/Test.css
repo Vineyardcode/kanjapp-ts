@@ -35,12 +35,13 @@
   align-items: center;
 
   padding: var(--sp-4);
-  background-color: var(--glass);
-  -webkit-backdrop-filter: var(--blur-1);
-  backdrop-filter: var(--blur-1);
+  background-color: var(--glass-2);
+  background-image: var(--glass-sheen);
+  -webkit-backdrop-filter: var(--blur-2);
+  backdrop-filter: var(--blur-2);
   border: 1px solid var(--hairline);
   border-radius: var(--r-3);
-  box-shadow: var(--glass-inset), var(--shadow-1);
+  box-shadow: var(--glass-inset), var(--shadow-2);
 }
 
 .tests-params h5 { margin: var(--sp-1) 0; font-weight: 500; }
@@ -112,13 +113,14 @@
 }
 
 .answer-feedback {
-  border-radius: var(--r-2);
   padding: var(--sp-2);
+  background-color: var(--glass-2);
+  background-image: var(--glass-sheen);
+  -webkit-backdrop-filter: var(--blur-2);
+  backdrop-filter: var(--blur-2);
   border: 1px solid var(--hairline);
-  background-color: var(--glass);
-  -webkit-backdrop-filter: var(--blur-1);
-  backdrop-filter: var(--blur-1);
-  box-shadow: var(--glass-inset), var(--shadow-1);
+  border-radius: var(--r-3);
+  box-shadow: var(--glass-inset), var(--shadow-2);
   display: inline-block;
   margin: var(--sp-2) auto;
 }

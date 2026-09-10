@@ -474,7 +474,7 @@ currentPathIndex = -1
 
     if (selector instanceof HTMLElement) {
       if (selectorShown === false) {
-        selector.style.height = "17.27%";
+        selector.style.height = "calc(8.5rem + 2.75rem)";  // content + the fixed hamburger bar
         setSelectorShown(true);
       } else {
         selector.style.height = "0";

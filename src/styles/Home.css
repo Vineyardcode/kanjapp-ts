@@ -18,12 +18,13 @@
 .stats,
 .about {
   width: 100%;
-  background-color: var(--glass);
-  -webkit-backdrop-filter: var(--blur-1);
-  backdrop-filter: var(--blur-1);
+  background-color: var(--glass-2);
+  background-image: var(--glass-sheen);
+  -webkit-backdrop-filter: var(--blur-2);
+  backdrop-filter: var(--blur-2);
   border: 1px solid var(--hairline);
   border-radius: var(--r-3);
-  box-shadow: var(--glass-inset), var(--shadow-1);
+  box-shadow: var(--glass-inset), var(--shadow-2);
   padding: var(--sp-4) var(--sp-3);
 }
 

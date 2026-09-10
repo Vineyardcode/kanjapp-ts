@@ -32,23 +32,29 @@
   --ai-tint: rgba(36, 68, 107, 0.10);
 
   /* ---- glass -------------------------------------------------- */
-  --glass:       rgba(255, 255, 255, 0.46);
-  --glass-2:     rgba(255, 255, 255, 0.62);
-  --glass-3:     rgba(255, 255, 255, 0.76);
-  --glass-hover: rgba(255, 255, 255, 0.72);
-  --glass-edge:  rgba(255, 255, 255, 0.85);
+  --glass:       rgba(255, 255, 255, 0.34);
+  --glass-2:     rgba(255, 255, 255, 0.46);
+  --glass-3:     rgba(255, 255, 255, 0.58);
+  --glass-hover: rgba(255, 255, 255, 0.62);
+  --glass-edge:  rgba(255, 255, 255, 0.95);
+  /* the vertical sheen is what reads as a thick pane rather than a tint */
+  --glass-sheen: linear-gradient(180deg,
+                   rgba(255,255,255,0.50) 0%,
+                   rgba(255,255,255,0.08) 52%,
+                   rgba(255,255,255,0.24) 100%);
   --scrim:       rgba(26, 21, 18, 0.68);   /* 0.55 failed AA; 0.68 gives ~5.6:1 */
   --hairline:    rgba(26, 21, 18, 0.22);   /* replaces `1px solid black` x14 */
   --hairline-2:  rgba(26, 21, 18, 0.40);
 
   /* saturate() is what turns flat fog into glass */
-  --blur-1: blur(6px) saturate(150%);
-  --blur-2: blur(12px) saturate(160%);
-  --blur-3: blur(20px) saturate(120%);
+  --blur-1: blur(10px) saturate(165%);
+  --blur-2: blur(18px) saturate(175%);
+  --blur-3: blur(24px) saturate(130%);
 
   /* ---- elevation ---------------------------------------------- */
   --glass-inset: inset 0 1px 0 var(--glass-edge),
-                 inset 0 -1px 0 rgba(26, 21, 18, 0.06);
+                 inset 0 -1px 0 rgba(255, 255, 255, 0.40),
+                 inset 0 0 0 1px rgba(255, 255, 255, 0.12);
   --shadow-1: 0 1px 2px rgba(26, 21, 18, 0.10);
   --shadow-2: 0 3px 8px rgba(26, 21, 18, 0.14), 0 1px 2px rgba(26, 21, 18, 0.10);
   --shadow-3: 0 10px 28px rgba(26, 21, 18, 0.20);
@@ -97,6 +103,7 @@
 
   /* hexagon flag sizing - large enough to sit behind the sticky bars */
   --hex-s: clamp(56px, 11.5vmax, 175px);
+  --hud-bar-h: 2.75rem;   /* the fixed hamburger bar the drawer must clear */
 }
 
 *, *::before, *::after { box-sizing: border-box; }
@@ -151,6 +158,7 @@ body {
   line-height: var(--lh-tight);
   color: var(--ink);
   background-color: var(--glass);
+  background-image: var(--glass-sheen);
   -webkit-backdrop-filter: var(--blur-1);
   backdrop-filter: var(--blur-1);
   border: 1px solid var(--hairline);
@@ -172,6 +180,7 @@ body {
   line-height: var(--lh-tight);
   color: var(--ink);
   background-color: var(--glass-2);
+  background-image: var(--glass-sheen);
   backdrop-filter: none;
   border: 1px solid var(--hairline);
   border-radius: var(--r-2);
