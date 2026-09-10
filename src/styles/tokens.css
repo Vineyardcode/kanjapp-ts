@@ -174,7 +174,7 @@ body {
 
 /* Controls sitting ON an already-blurred bar: a second blur is a no-op,
    so these are tinted panels instead. */
-:where(.selector, .controls) button {
+:where(.selector) button {
   font-family: inherit;
   font-size: var(--fs-200);
   line-height: var(--lh-tight);
@@ -195,7 +195,7 @@ body {
 /* Hover lifts instead of resizing text - the old `font-size` hovers
    reflowed the grid and made every control jitter. */
 :where(.login-main, .searchBar, .answers, .tests-params, .homeModal,
-       .selector, .controls, .learned-kanji, .error-fallback) button:hover,
+       .selector, .learned-kanji, .error-fallback) button:hover,
 .glass:hover {
   cursor: pointer;
   background-color: var(--glass-hover);
@@ -205,7 +205,7 @@ body {
 }
 
 :where(.login-main, .searchBar, .answers, .tests-params, .homeModal,
-       .selector, .controls, .learned-kanji, .error-fallback) button:active,
+       .selector, .learned-kanji, .error-fallback) button:active,
 .glass:active {
   transform: translateY(0);
   box-shadow: var(--glass-inset), var(--shadow-1);
@@ -222,7 +222,7 @@ button:disabled, .glass:disabled { opacity: 0.5; cursor: not-allowed; transform:
 
 /* Headings are used as control labels all over the app. Neutralise the
    heading LEVEL without inflating the control's own font-size. */
-:where(button, a, .links, .controls, .selector, .answers, .tests-params, .filters)
+:where(button, a, .links, .selector, .answers, .tests-params, .filters)
   :where(h1, h2, h3, h4, h5, h6) {
   font-family: inherit;
   font-size: inherit;
@@ -233,7 +233,6 @@ button:disabled, .glass:disabled { opacity: 0.5; cursor: not-allowed; transform:
 
 /* ...but glyph displays carry the kanji, not a label - they opt back out. */
 .button-text,
-.mid-column h1,
 .learned-kanji button h3,
 .answers button h1 {
   font-family: var(--font-kanji);
@@ -242,7 +241,6 @@ button:disabled, .glass:disabled { opacity: 0.5; cursor: not-allowed; transform:
 .button-text             { font-size: var(--fs-kanji-tile); }
 .answers button h1       { font-size: var(--fs-600); }
 .learned-kanji button h3 { font-size: var(--fs-400); }
-.mid-column h1           { font-size: var(--fs-kanji-hero); line-height: var(--lh-tight); }
 
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after {

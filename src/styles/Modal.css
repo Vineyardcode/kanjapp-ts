@@ -1,156 +1,174 @@
-/* Modal.css - the kanji card. Layout is deliberately unchanged; only the
-   surface treatment is tokenised. */
-
-/* .modal is a TOKEN SCOPE: it redefines the glass/ink tokens locally, so every
-   control inside flips to the dark-surface variant without a single new
-   selector. Composite tokens must be REDECLARED here - a var() inside a custom
-   property is resolved on the element that declares it, so the :root versions
-   have already baked in the light values. */
 .modal {
   position: fixed;
-  inset: 0;
-  overflow: hidden;
-  background-color: var(--scrim);
-  -webkit-backdrop-filter: var(--blur-3);
-  backdrop-filter: var(--blur-3);
-
-  --ink:         var(--ink-on-scrim);
-  --glass:       rgba(255, 255, 255, 0.12);
-  --glass-2:     rgba(255, 255, 255, 0.18);
-  --glass-3:     rgba(255, 255, 255, 0.22);
-  --glass-hover: rgba(255, 255, 255, 0.24);
-  --glass-edge:  rgba(255, 255, 255, 0.20);
-  --hairline:    rgba(255, 255, 255, 0.28);
-  --hairline-2:  rgba(255, 255, 255, 0.46);
-  --text-emboss: 0 1px 0 rgba(0, 0, 0, 0.35);
-
-  --glass-inset: inset 0 1px 0 rgba(255, 255, 255, 0.20),
-                 inset 0 -1px 0 rgba(0, 0, 0, 0.30);
-  --shadow-1: 0 1px 2px rgba(0, 0, 0, 0.45);
-  --shadow-2: 0 3px 8px rgba(0, 0, 0, 0.50), 0 1px 2px rgba(0, 0, 0, 0.35);
-  --shadow-3: 0 10px 28px rgba(0, 0, 0, 0.55);
-
-  color: var(--ink);
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.6);
+  backdrop-filter: blur(5px);
 }
 
-/* Without backdrop-filter the scrim alone must carry the contrast. */
-@supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
-  .modal {
-    --scrim: rgba(26, 21, 18, 0.86);
-    --glass: rgba(255, 255, 255, 0.16);
-    --glass-2: rgba(255, 255, 255, 0.22);
-    --glass-hover: rgba(255, 255, 255, 0.26);
+  .modal-body {
+
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    width: 70vh;
+    height: 70vh;
+    transform: translate(-50%, -50%);
+    padding: 0.75rem;
+
+    background-color: transparent;
+    border: 1px solid black;
+
+    border-radius: 8.4px;
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    grid-template-rows: repeat(6, 1fr);
+    grid-column-gap: 0px;
+    grid-row-gap: 0px;
+
   }
+
+.kanji{
+  grid-area: 1 / 1 / 5 / 6;
+
+
 }
 
-.modal-body {
-  position: fixed;
-  top: 50%;
-  left: 50%;
-  width: 70vh;
-  height: 70vh;
-  transform: translate(-50%, -50%);
-  padding: var(--sp-2);
+  .kanji path {
+    fill: none;
+    stroke: rgb(145, 7, 7);
+    stroke-width: 3.7;
 
-  background-color: transparent;
-  border: 1px solid var(--hairline);
-  border-radius: var(--r-3);
-
-  display: grid;
-  grid-template-columns: repeat(5, 1fr);
-  grid-template-rows: repeat(4, minmax(0, 1fr)) auto auto;
-  grid-column-gap: 0px;
-  grid-row-gap: var(--sp-1);
-}
-
-.kanji { grid-area: 1 / 1 / 5 / 6; min-height: 0; min-width: 0; }
-
-.kanji path {
-  fill: none;
-  stroke: var(--seal-deep);
-  stroke-width: 3.7;
-}
+  }
 
 .modal-details {
   display: flex;
   flex-direction: row;
   grid-area: 5 / 1 / 6 / 6;
   justify-content: space-between;
-  align-items: center;
-  gap: var(--sp-2);
-  margin-bottom: 0;
-  padding: var(--sp-1) 0;
-  font-size: var(--fs-100);
-  color: var(--ink);
+  margin-bottom: 5%;
+
 }
 
-.left-column,
-.right-column {
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-  gap: var(--sp-1);
-  word-wrap: break-word;
-  width: 33.3%;
-}
+  .left-column {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    word-wrap: break-word;
+    width: 33.3%;
+  }
 
-.mid-column {
-  display: flex;
-  flex-direction: column;
-  justify-content: space-around;
-  align-items: center;
-  width: 33.3%;
-}
+  .mid-column{
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+    width: 33.3%;
+  }
 
-.modal-details h5 { margin: 0; font-weight: 500; color: var(--ink); }
+  .mid-column h1 {
+    font-size: 333%;
+  }
+
+  .right-column {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    word-wrap: break-word;
+    width: 33.3%;
+  }
 
 .controls {
   grid-area: 6 / 1 / 7 / 6;
   display: flex;
   flex-direction: row;
   justify-content: space-between;
-  gap: var(--sp-1);
+  gap: 2.5%;
 }
 
-.ctrls-column {
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-  gap: var(--sp-1);
-  flex-grow: 1;
-  width: 3rem;
-}
+  .ctrls-column {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    gap: 1rem;
+    flex-grow: 1;
+    width: 3rem;
+    
+  }
 
-.ctrls-column button {
-  height: 100%;
-  justify-content: center;
-  align-items: center;
-}
+  .ctrls-column button{
+    height: 100%;
+    justify-content: center;
+    align-items: center;
+  }
 
-/* compact inside the card: the labels are long ("Create anki card") and the
-   canvas above must keep its space */
-.controls button {
-  padding: var(--sp-1) var(--sp-1);
-  font-size: var(--fs-100);
-  line-height: 1.2;
-}
+  .row-btn {
+    flex-grow: 1;
+  }
 
-.row-btn { flex-grow: 1; }
+  .controls button {
+    text-shadow: 1px 1px 2px rgb(209, 182, 182), 0 0 1em rgb(255, 255, 255), 0 0 0.2em rgb(255, 255, 255);
+    border-radius: 4.2px 4.2px 4.2px 4.2px;
+    background-color: transparent;
+    border: 1px solid black;
+    transition: 0.5s;
+  }
 
-/* The glass look for .controls button now comes from the primitive in
-   tokens.css, re-tinted by the .modal token scope above. */
+  .controls button:hover{
+    cursor: pointer;
+    box-shadow: 0px 5px 10px 0px rgba(0, 0, 0, 0.5);
+  }
 
 @keyframes draw {
-  to { stroke-dashoffset: 0; }
+  to {
+    stroke-dashoffset: 0;
+  }
 }
 
-@media all and (max-width: 620px) {
+@media all and (min-width: 300px) and (max-width: 620px){
+
   .modal-body {
-    width: 92%;
-    height: 94%;
-    border-radius: var(--r-3);
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: transparent;
+    border: 1px solid black;
+    padding: 0.75rem;
+    border-radius: 10px;
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    grid-template-rows: repeat(6, 1fr);
+    grid-column-gap: 0px;
     grid-row-gap: 1%;
+    width: 90%;
+    height: 95%;
   }
-  .modal-details { font-size: var(--fs-100); }
-  .controls { gap: 2%; }
+
+
+}
+/* ---------------------------------------------------------------------------
+   Everything above is the ORIGINAL modal styling, restored verbatim.
+   The two additions below only put back what the app-wide refactor removed,
+   so the card looks exactly as it did before:
+   1. the subtle text emboss that used to come from a global `body` rule
+   2. explicit resets, because the shared glass primitive no longer targets
+      `.controls` but a couple of inherited base styles still would
+   --------------------------------------------------------------------------- */
+
+.modal {
+  text-shadow: 1px 1px 0.5px rgb(168, 156, 156),
+               1px 0.1px 0.5px rgb(201, 191, 191),
+               0.1px 0.1px 0.5px rgb(134, 130, 130);
+}
+
+.modal-body { box-sizing: content-box; }
+
+.controls button {
+  font-family: inherit;
+  padding: 1px 6px;          /* the UA default the original relied on */
+  box-shadow: none;
+  background-image: none;
+  backdrop-filter: none;
 }
