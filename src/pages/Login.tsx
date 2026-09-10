@@ -1,6 +1,6 @@
 //react
 import { useState } from "react";
-import { supabase } from "../config/supabase";
+import { supabase, supabaseConfigured } from "../config/supabase";
 
 export const Login = () => {
   const [email, setEmail] = useState("");
@@ -9,10 +9,12 @@ export const Login = () => {
 
   const sendMagicLink = async (e: React.FormEvent) => {
     e.preventDefault();
+    const db = supabase;
+    if (!db) return;
     setStatus("sending");
     setMessage("");
 
-    const { error } = await supabase.auth.signInWithOtp({
+    const { error } = await db.auth.signInWithOtp({
       email,
       options: { emailRedirectTo: `${window.location.origin}/Home` },
     });
@@ -30,7 +32,12 @@ export const Login = () => {
     <div className="login-main">
       <h3>save your learning progress by signing in</h3>
 
-      {status === "sent" ? (
+      {!supabaseConfigured ? (
+        <h5>
+          Sign-in is unavailable right now. Your progress is still being saved
+          on this device.
+        </h5>
+      ) : status === "sent" ? (
         <h5>{message}</h5>
       ) : (
         <form onSubmit={sendMagicLink}>

@@ -20,10 +20,21 @@ function setLocalLearned(arr: Kanji[]) {
   localStorage.setItem(STORAGE_KEY, JSON.stringify(arr));
 }
 
+/** Drop the locally cached list (used on sign-out so it can't leak to the next account). */
+export function clearLocalLearned() {
+  try {
+    localStorage.removeItem(STORAGE_KEY);
+  } catch {
+    /* ignore quota/privacy-mode errors */
+  }
+}
+
 async function currentUserId(): Promise<string | null> {
+  const db = supabase;
+  if (!db) return null;
   const {
     data: { user },
-  } = await supabase.auth.getUser();
+  } = await db.auth.getUser();
   return user?.id ?? null;
 }
 
@@ -38,9 +49,12 @@ export async function saveLearnedKanji(kanji: Kanji): Promise<Kanji[]> {
     setLocalLearned(arr);
   }
 
+  const db = supabase;
+  if (!db) return arr;
+
   const userId = await currentUserId();
   if (userId && kanji.character) {
-    const { error } = await supabase
+    const { error } = await db
       .from('learned_kanji')
       .upsert(
         { user_id: userId, character: kanji.character, kanji },
@@ -60,9 +74,12 @@ export async function deleteLearnedKanji(kanji: Kanji): Promise<Kanji[]> {
   const arr = getLocalLearned().filter((k) => k.character !== kanji.character);
   setLocalLearned(arr);
 
+  const db = supabase;
+  if (!db) return arr;
+
   const userId = await currentUserId();
   if (userId && kanji.character) {
-    const { error } = await supabase
+    const { error } = await db
       .from('learned_kanji')
       .delete()
       .eq('user_id', userId)
@@ -77,14 +94,18 @@ export async function deleteLearnedKanji(kanji: Kanji): Promise<Kanji[]> {
  * Pull the signed-in user's learned kanji from Supabase and merge with
  * whatever is in localStorage (union by character). Local-only kanji are
  * pushed up so nothing learned while logged out is lost. Writes the merged
- * result back to localStorage and returns it. Returns null when signed out.
+ * result back to localStorage and returns it. Returns null when signed out
+ * or when Supabase is not configured.
  */
 export async function syncLearnedFromCloud(): Promise<Kanji[] | null> {
+  const db = supabase;
+  if (!db) return null;
+
   const userId = await currentUserId();
   if (!userId) return null;
 
   const local = getLocalLearned();
-  const { data, error } = await supabase
+  const { data, error } = await db
     .from('learned_kanji')
     .select('kanji')
     .eq('user_id', userId);
@@ -110,7 +131,7 @@ export async function syncLearnedFromCloud(): Promise<Kanji[] | null> {
     .filter((k) => k.character && !cloudChars.has(k.character))
     .map((k) => ({ user_id: userId, character: k.character!, kanji: k }));
   if (toPush.length) {
-    const { error: pushError } = await supabase
+    const { error: pushError } = await db
       .from('learned_kanji')
       .upsert(toPush, { onConflict: 'user_id,character' });
     if (pushError) console.error('syncLearnedFromCloud (push):', pushError.message);

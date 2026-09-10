@@ -6,7 +6,9 @@ export const Navbar = () => {
   const session = useSession();
 
   const signUserOut = async () => {
-    await supabase.auth.signOut();
+    const db = supabase;
+    if (!db) return;
+    await db.auth.signOut();
   };
 
   return (

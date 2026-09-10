@@ -7,10 +7,17 @@ export function useSession(): Session | null {
   const [session, setSession] = useState<Session | null>(null);
 
   useEffect(() => {
-    supabase.auth.getSession().then(({ data }) => setSession(data.session));
+    const db = supabase;
+    if (!db) return; // not configured -> app behaves as permanently signed out
+
+    db.auth
+      .getSession()
+      .then(({ data }) => setSession(data.session))
+      .catch(() => setSession(null));
+
     const {
       data: { subscription },
-    } = supabase.auth.onAuthStateChange((_event, newSession) => {
+    } = db.auth.onAuthStateChange((_event, newSession) => {
       setSession(newSession);
     });
     return () => subscription.unsubscribe();

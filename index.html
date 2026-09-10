@@ -3,9 +3,83 @@
   <head>
     <meta charset="UTF-8" />
     <link rel="icon" type="image/svg+xml" href="icon/japanese-kanji-svgrepo-com.png" />
-  
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="referrer" content="origin" />
     <title>Kanji App</title>
+
+    <!--
+      Boot guard. A crash while the module graph is evaluating (e.g. a bad
+      config throwing at import time) happens BEFORE React exists, so no
+      ErrorBoundary can catch it. Only a classic, non-module script registered
+      ahead of the module tag can. Keep this dependency-free and inline.
+    -->
+    <script>
+      (function () {
+        var PROD_HOST = 'kanjapp-ts-vineyardcode.vercel.app';
+        var ERROR_PAGE = 'https://error-page-ten.vercel.app/';
+
+        // Allowlist, not a denylist: localhost, LAN IPs, `vercel dev` and preview
+        // deployments must keep their real stack trace and Vite's error overlay.
+        if (location.hostname !== PROD_HOST) return;
+
+        var fired = false;
+
+        // Supabase magic-link returns tokens in the URL fragment (implicit flow).
+        // Never navigate away mid-exchange or the login is silently destroyed.
+        function midAuth() {
+          return /[#&](access_token|refresh_token|provider_token)=/.test(location.hash) ||
+                 /[?&]code=/.test(location.search);
+        }
+
+        function mounted() {
+          var r = document.getElementById('root');
+          return !r || r.childElementCount > 0;
+        }
+
+        function fail(code) {
+          if (fired || mounted() || midAuth()) return;
+          fired = true;
+
+          // Paint a readable fallback FIRST. The error page is itself a heavy
+          // WebGL app, so it can fail for the very reason we are leaving (no
+          // WebGL, or the network fault that killed this bundle).
+          var r = document.getElementById('root');
+          if (r) {
+            r.innerHTML =
+              '<main style="font:16px/1.6 system-ui,sans-serif;color:#eee;background:#111;' +
+              'padding:2rem;min-height:100vh;box-sizing:border-box">' +
+              '<h1>Kanji App did not load</h1>' +
+              '<p>Your saved kanji are still stored on this device.</p>' +
+              '<p><a style="color:#8cf" href="' + ERROR_PAGE + '">More info</a></p>' +
+              '</main>';
+          }
+
+          // Build the URL from scratch — never forward location.href, the hash,
+          // the query, or a raw stack: any of those can carry session tokens.
+          // replace() so Back cannot bounce the user into the broken page.
+          location.replace(
+            ERROR_PAGE + '?code=' + code +
+            '&message=' + encodeURIComponent('The app failed to start. Please try again later.')
+          );
+        }
+
+        // Capture phase is required: a failed <script> resource fires an error
+        // event at the element and does NOT bubble to window.
+        window.addEventListener('error', function (e) {
+          if (e && e.target && e.target !== window && e.target.tagName === 'SCRIPT') {
+            fail(503);
+            return;
+          }
+          fail(500);
+        }, true);
+
+        // Long backstop only. The bundle is ~900 KB gzipped; a short timer would
+        // evict perfectly healthy users on slow connections.
+        window.addEventListener('load', function () {
+          setTimeout(function () { fail(504); }, 20000);
+        });
+      })();
+    </script>
   </head>
   <body>
     <div id="root"></div>
