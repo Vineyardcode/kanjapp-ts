@@ -9,7 +9,6 @@ interface ModalProps {
   kanji: Kanji;
   hideModal: any;
   handleSaveKanji: any;
-  createAnkiCard: any;
 }
 
 interface Kanji {
@@ -21,12 +20,17 @@ interface Kanji {
   jlpt_old?: number;
   category?: string;
   strokes?: number;
-  readings_kun?: string;
-  readings_on?: string;
+  readings_kun?: string[] | string;
+  readings_on?: string[] | string;
   wk_radicals?: string;
 }
 
-const Modal: React.FC<ModalProps> = ({ show, kanji, hideModal, handleSaveKanji, createAnkiCard }) => {
+/** joyo.json stores readings as arrays; rendering one directly concatenates it
+ *  with no separator (["にち","じつ"] -> "にちじつ"). */
+const readable = (v?: string[] | string) =>
+  Array.isArray(v) ? v.join('、') : v;
+
+const Modal: React.FC<ModalProps> = ({ show, kanji, hideModal, handleSaveKanji }) => {
   const [strokes, setStrokes] = useState<any>(null);
   const [kvgIndexes] = useState<any>(KVGindex);
   const [kvgIndex, setKvgIndex] = useState<any>();
@@ -86,7 +90,6 @@ const Modal: React.FC<ModalProps> = ({ show, kanji, hideModal, handleSaveKanji, 
           </div>
 
           <div className="ctrls-column">
-            <button onClick={() => createAnkiCard(kanji, `${kvgIndex}`, strokes)}><h5>Create anki card</h5></button>
             <button onClick={hideModal}><h5>Close</h5></button>
           </div>
 
@@ -104,8 +107,8 @@ const Modal: React.FC<ModalProps> = ({ show, kanji, hideModal, handleSaveKanji, 
           </div>
 
           <div className="right-column">
-            <div><h5>On'yomi: {kanji.readings_on || "N/A" }</h5></div>
-            <div><h5>Kun'yomi: {kanji.readings_kun || "N/A" }</h5></div>
+            <div><h5>On'yomi: {readable(kanji.readings_on) || "N/A" }</h5></div>
+            <div><h5>Kun'yomi: {readable(kanji.readings_kun) || "N/A" }</h5></div>
           </div>
 
         </div>

@@ -46,8 +46,8 @@ const Test = () => {
     jlpt_old?: number;
     category?: string;
     strokes?: number;
-    readings_kun?: string;
-    readings_on?: string;
+    readings_kun?: string[] | string;
+    readings_on?: string[] | string;
     wk_radicals?: string;
     [key: string]: any;
   }

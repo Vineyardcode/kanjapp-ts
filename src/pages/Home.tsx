@@ -151,11 +151,11 @@ return(
         <h3>Info</h3>
           <div className='info'>
             
-                <h5>To create Anki cards, you need to have the <a href="https://ankiweb.net/shared/info/2055492159">Anki Connect</a> addon installed, then go to "Tools{'>'}Add-ons" inside the anki app, double click on AnkiConnect and add <b>"https://kanjapp-ts-vineyardcodes-projects.vercel.app"</b> inside the "webCorsOriginList", like this:</h5>
-                
-                <img id='tutorialIMG' src='/imgs/tutorial.png'></img>
-                
-                <h5>You need to have the anki app open while creating the cards.</h5> 
+                <h5>To create Anki cards, pick some kanji in the selector at the bottom of the <a href="/">Learn</a> page and press "Create Anki deck". Your browser downloads a <b>.apkg</b> file - no add-ons and no setup needed.</h5>
+
+                <h5>On desktop, open the downloaded file (or use File {'>'} Import in Anki). On a phone, open it from your Downloads/Files app and choose Anki.</h5>
+
+                <h5>The cards land in a deck called <b>Kanjapp</b>. Re-exporting the same kanji updates those cards instead of creating duplicates.</h5>
 
                 <h5>Only <a href="https://en.wikipedia.org/wiki/J%C5%8Dy%C5%8D_kanji">joyo</a> kanji are available at the moment. For more kanji, please check in later</h5>
 
