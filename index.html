@@ -15,12 +15,16 @@
     -->
     <script>
       (function () {
-        var PROD_HOST = 'kanjapp-ts-vineyardcode.vercel.app';
-        var ERROR_PAGE = 'https://error-page-ten.vercel.app/';
-
         // Allowlist, not a denylist: localhost, LAN IPs, `vercel dev` and preview
         // deployments must keep their real stack trace and Vite's error overlay.
-        if (location.hostname !== PROD_HOST) return;
+        // Add any new production hostname here or the guard silently does nothing.
+        var PROD_HOSTS = [
+          'kanjapp-ts-vineyardcodes-projects.vercel.app',
+          'kanjapp-ts-vineyardcode.vercel.app'
+        ];
+        var ERROR_PAGE = 'https://error-page-ten.vercel.app/';
+
+        if (PROD_HOSTS.indexOf(location.hostname) === -1) return;
 
         var fired = false;
 
