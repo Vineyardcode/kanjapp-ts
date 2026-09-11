@@ -82,17 +82,21 @@ const CSS = `
   animation: kanjapp-draw 0.45s ease-out var(--d, 0s) forwards;
 }
 .kanji .kanjapp-num {
-  fill: currentColor;
+  /* a fixed red rather than currentColor: it separates the numbers from the
+     strokes and stays legible on both light and night-mode cards.
+     NOTE: font-size is set as an SVG presentation attribute in user units,
+     NOT here - a CSS px value is subject to the webview's text zoom. */
+  fill: #d9534f;
   opacity: 0;
   font-family: sans-serif;
-  font-size: 7px;
+  font-weight: bold;
   animation: kanjapp-fade 0.2s ease-out var(--d, 0s) forwards;
 }
 @keyframes kanjapp-draw { to { stroke-dashoffset: 0; } }
-@keyframes kanjapp-fade { to { opacity: 0.55; } }
+@keyframes kanjapp-fade { to { opacity: 0.95; } }
 @media (prefers-reduced-motion: reduce) {
   .kanji path { animation: none; stroke-dashoffset: 0; }
-  .kanji .kanjapp-num { animation: none; opacity: 0.55; }
+  .kanji .kanjapp-num { animation: none; opacity: 0.95; }
 }
 
 /* hidden by default so AnkiWeb (which does not run template JS) shows a clean
@@ -147,7 +151,7 @@ const BACK = `{{FrontSide}}
         var on = i < shown;
         paths[i].style.animation = 'none';
         paths[i].style.strokeDashoffset = on ? '0' : '350';
-        if (nums[i]) { nums[i].style.animation = 'none'; nums[i].style.opacity = on ? '0.55' : '0'; }
+        if (nums[i]) { nums[i].style.animation = 'none'; nums[i].style.opacity = on ? '0.95' : '0'; }
       }
       if (count) count.textContent = shown + ' / ' + total;
     }
@@ -156,11 +160,23 @@ const BACK = `{{FrontSide}}
       paint();
     };
     window.kanjappReplay = function () {
+      /* Restarting a finished CSS animation needs TWO phases. Just clearing the
+         inline style is a no-op on first play, because nothing was overriding
+         it yet - which is why replay did nothing until the user had stepped.
+         Phase 1 explicitly disables the animation and resets to hidden, then a
+         forced reflow commits that; phase 2 hands control back to the
+         stylesheet, which the browser now sees as a change and restarts. */
       for (var i = 0; i < total; i++) {
-        paths[i].style.animation = ''; paths[i].style.strokeDashoffset = '';
+        paths[i].style.animation = 'none';
+        paths[i].style.strokeDashoffset = '350';
+        if (nums[i]) { nums[i].style.animation = 'none'; nums[i].style.opacity = '0'; }
+      }
+      void root.offsetWidth;
+      for (var i = 0; i < total; i++) {
+        paths[i].style.animation = '';
+        paths[i].style.strokeDashoffset = '';
         if (nums[i]) { nums[i].style.animation = ''; nums[i].style.opacity = ''; }
       }
-      void root.offsetWidth;         // force reflow so the animation restarts
       shown = total;
       if (count) count.textContent = total + ' / ' + total;
     };
@@ -205,7 +221,9 @@ function strokeSvg(doc: Document, character: string): string {
     .map((d, i) => {
       const p = startOf(d);
       if (!p) return '';
-      return `<text class="kanjapp-num" x="${p[0]}" y="${p[1]}" style="${delay(i)}">${i + 1}</text>`;
+      /* user units inside the 109x109 viewBox, so it scales with the glyph
+         and is immune to the webview's CSS text zoom */
+      return `<text class="kanjapp-num" x="${p[0]}" y="${p[1]}" font-size="4.5" text-anchor="middle" style="${delay(i)}">${i + 1}</text>`;
     })
     .join('');
 
