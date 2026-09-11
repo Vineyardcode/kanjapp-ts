@@ -84,8 +84,13 @@
         // Capture phase is required: a failed <script> resource fires an error
         // event at the element and does NOT bubble to window.
         window.addEventListener('error', function (e) {
-          if (e && e.target && e.target !== window && e.target.tagName === 'SCRIPT') {
-            fail(503);
+          if (e && e.target && e.target !== window) {
+            // A RESOURCE failed, not a script execution. Only a script is
+            // fatal. This used to fall through to fail(500), so a stylesheet
+            // or an image that 404d - with the JS running perfectly well -
+            // ejected the user to the error page over an app that was merely
+            // unstyled. Measured: a 404 on either did exactly that.
+            if (e.target.tagName === 'SCRIPT') fail(503);
             return;
           }
           fail(500);
