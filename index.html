@@ -20,9 +20,11 @@
         // Allowlist, not a denylist: localhost, LAN IPs, `vercel dev` and preview
         // deployments must keep their real stack trace and Vite's error overlay.
         // Add any new production hostname here or the guard silently does nothing.
+        // 'kanjapp-ts-vineyardcode.vercel.app' used to be listed here and was
+        // dead weight: it serves a frozen build of the error page, not the app.
+        // Per-deployment URLs (kanjapp-<hash>-...) never match, by design.
         var PROD_HOSTS = [
-          'kanjapp-ts-vineyardcodes-projects.vercel.app',
-          'kanjapp-ts-vineyardcode.vercel.app'
+          'kanjapp-ts-vineyardcodes-projects.vercel.app'
         ];
         var ERROR_PAGE = 'https://error-page-ten.vercel.app/';
 
@@ -78,6 +80,16 @@
           }
           fail(500);
         }, true);
+
+        // A rejected promise never fires an 'error' event, so a failed dynamic
+        // import() or a rejected top-level await used to fall through to the
+        // 20s backstop - a blank screen for 20s before the redirect. Same 500
+        // as a synchronous throw: in both cases the app threw while starting.
+        // fail()'s mounted() check still protects an app that came up fine, so
+        // a rejection from ordinary use after boot cannot evict anyone.
+        window.addEventListener('unhandledrejection', function () {
+          fail(500);
+        });
 
         // Long backstop only. The bundle is ~900 KB gzipped; a short timer would
         // evict perfectly healthy users on slow connections.
