@@ -62,14 +62,15 @@ const CSS = `
   font-family: "Hiragino Mincho ProN", "Yu Mincho", "Noto Serif JP", serif;
   font-size: 20px;
 }
-.kanjapp-char { font-size: 96px; line-height: 1.1; }
+/* clamp, not a fixed %: a fixed large size overflows a 375px phone */
+.kanjapp-char { font-size: clamp(3.5rem, 26vw, 7rem); line-height: 1.1; }
 .kanjapp-meaning { font-size: 22px; margin: 0.4em 0; }
 .kanjapp-readings { font-size: 18px; opacity: 0.85; }
 .kanjapp-readings div { margin: 0.15em 0; }
 .kanjapp-label { opacity: 0.6; }
-.kanji { width: 240px; height: 240px; max-width: 90%; margin: 0.6em auto 0; display: block; }
-/* currentColor so the strokes follow Anki's night mode instead of being
-   hardcoded black on a dark background */
+
+.kanji { width: 260px; height: 260px; max-width: 88vw; margin: 0.5em auto 0; display: block; }
+/* currentColor everywhere so the card follows Anki night mode */
 .kanji path {
   fill: none;
   stroke: currentColor;
@@ -78,16 +79,42 @@ const CSS = `
   stroke-linejoin: round;
   stroke-dasharray: 350;
   stroke-dashoffset: 350;
-  animation: kanjapp-draw 0.45s ease-out forwards;
+  animation: kanjapp-draw 0.45s ease-out var(--d, 0s) forwards;
+}
+.kanji .kanjapp-num {
+  fill: currentColor;
+  opacity: 0;
+  font-family: sans-serif;
+  font-size: 7px;
+  animation: kanjapp-fade 0.2s ease-out var(--d, 0s) forwards;
 }
 @keyframes kanjapp-draw { to { stroke-dashoffset: 0; } }
+@keyframes kanjapp-fade { to { opacity: 0.55; } }
 @media (prefers-reduced-motion: reduce) {
   .kanji path { animation: none; stroke-dashoffset: 0; }
+  .kanji .kanjapp-num { animation: none; opacity: 0.55; }
 }
+
+/* hidden by default so AnkiWeb (which does not run template JS) shows a clean
+   static diagram instead of dead buttons; the script reveals them */
+.kanjapp-controls { display: none; justify-content: center; align-items: center; gap: 8px; margin-top: 0.5em; }
+.kanjapp-controls button {
+  font: inherit; font-size: 16px; line-height: 1;
+  min-width: 44px; min-height: 44px;      /* touch target */
+  padding: 6px 12px; cursor: pointer;
+  color: currentColor; background: transparent;
+  border: 1px solid currentColor; border-radius: 6px; opacity: 0.75;
+}
+.kanjapp-controls button:active { opacity: 1; }
+.kanjapp-count { font-size: 15px; opacity: 0.7; min-width: 4.5em; }
 `.trim();
 
 const FRONT = `<div class="kanjapp-char">{{Character}}</div>`;
 
+/* The stroke controls are progressive enhancement: the CSS animation and the
+   numbers work with JS off (AnkiWeb), and this script adds replay/stepping on
+   Desktop, AnkiDroid and AnkiMobile, all of which do run template <script>.
+   It re-runs on every card render, so it must be idempotent. */
 const BACK = `{{FrontSide}}
 <hr id="answer">
 <div class="kanjapp-meaning">{{Meaning}}</div>
@@ -95,7 +122,53 @@ const BACK = `{{FrontSide}}
   {{#Onyomi}}<div><span class="kanjapp-label">On:</span> {{Onyomi}}</div>{{/Onyomi}}
   {{#Kunyomi}}<div><span class="kanjapp-label">Kun:</span> {{Kunyomi}}</div>{{/Kunyomi}}
 </div>
-{{StrokeOrder}}`;
+<div id="kanjapp-sd">{{StrokeOrder}}</div>
+<div class="kanjapp-controls" id="kanjapp-controls">
+  <button type="button" onclick="kanjappStep(-1)" title="Previous stroke">&lsaquo;</button>
+  <button type="button" onclick="kanjappReplay()" title="Replay">&#8635;</button>
+  <button type="button" onclick="kanjappStep(1)" title="Next stroke">&rsaquo;</button>
+  <span class="kanjapp-count" id="kanjapp-count"></span>
+</div>
+<script>
+(function () {
+  try {
+    var root = document.getElementById('kanjapp-sd');
+    if (!root) return;
+    var paths = [].slice.call(root.querySelectorAll('path'));
+    var nums  = [].slice.call(root.querySelectorAll('.kanjapp-num'));
+    var total = paths.length;
+    if (!total) return;
+    var ctrls = document.getElementById('kanjapp-controls');
+    var count = document.getElementById('kanjapp-count');
+    var shown = total;               // the CSS animation ends fully drawn
+
+    function paint() {
+      for (var i = 0; i < total; i++) {
+        var on = i < shown;
+        paths[i].style.animation = 'none';
+        paths[i].style.strokeDashoffset = on ? '0' : '350';
+        if (nums[i]) { nums[i].style.animation = 'none'; nums[i].style.opacity = on ? '0.55' : '0'; }
+      }
+      if (count) count.textContent = shown + ' / ' + total;
+    }
+    window.kanjappStep = function (d) {
+      shown = Math.max(0, Math.min(total, shown + d));
+      paint();
+    };
+    window.kanjappReplay = function () {
+      for (var i = 0; i < total; i++) {
+        paths[i].style.animation = ''; paths[i].style.strokeDashoffset = '';
+        if (nums[i]) { nums[i].style.animation = ''; nums[i].style.opacity = ''; }
+      }
+      void root.offsetWidth;         // force reflow so the animation restarts
+      shown = total;
+      if (count) count.textContent = total + ' / ' + total;
+    };
+    if (ctrls) ctrls.style.display = 'flex';
+    if (count) count.textContent = total + ' / ' + total;
+  } catch (e) { /* never break the card over the controls */ }
+})();
+</script>`;
 
 /** Fetch + parse the 4 MB KanjiVG file ONCE per export (it used to be re-fetched
  *  and re-parsed inside the per-kanji loop). */
@@ -114,15 +187,29 @@ function strokeSvg(doc: Document, character: string): string {
   const group = doc.querySelector(`[id="kvg:${file.slice(0, -4)}"]`);
   if (!group) return '';
 
-  const paths = Array.from(group.getElementsByTagName('path'))
+  const ds = Array.from(group.getElementsByTagName('path'))
     .map((p) => p.getAttribute('d'))
     .filter((d): d is string => !!d);
-  if (!paths.length) return '';
+  if (!ds.length) return '';
 
-  const body = paths
-    .map((d, i) => `<path d="${d}" style="animation-delay:${(i * 0.35).toFixed(2)}s"/>`)
+  /* KanjiVG paths always begin with an absolute moveto, so the stroke's start
+     point (where its order number goes) can be read straight off the `d`. */
+  const startOf = (d: string): [number, number] | null => {
+    const m = /^[Mm]\s*(-?[\d.]+)[,\s]+(-?[\d.]+)/.exec(d.trim());
+    return m ? [parseFloat(m[1]), parseFloat(m[2])] : null;
+  };
+
+  const delay = (i: number) => `--d:${(i * 0.35).toFixed(2)}s`;
+  const strokes = ds.map((d, i) => `<path d="${d}" style="${delay(i)}"/>`).join('');
+  const numbers = ds
+    .map((d, i) => {
+      const p = startOf(d);
+      if (!p) return '';
+      return `<text class="kanjapp-num" x="${p[0]}" y="${p[1]}" style="${delay(i)}">${i + 1}</text>`;
+    })
     .join('');
-  return `<svg class="kanji" viewBox="0 0 109 109" xmlns="http://www.w3.org/2000/svg">${body}</svg>`;
+
+  return `<svg class="kanji" viewBox="0 0 109 109" xmlns="http://www.w3.org/2000/svg">${strokes}${numbers}</svg>`;
 }
 
 function tagsFor(k: ExportKanji): string[] {
