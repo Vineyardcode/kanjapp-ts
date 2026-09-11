@@ -138,21 +138,32 @@
   justify-content: center;
   align-items: center;
   text-align: center;
-  height: 0;
   bottom: 0;
-  /* the hamburger bar is fixed at z-index 99999 over the bottom of this
-     drawer, so its content must be padded clear of it or the second button
-     row is hidden behind it */
-  padding: var(--sp-1) var(--sp-1) calc(var(--hud-bar-h) + var(--sp-1));
+  /* Closed state. The vertical padding MUST collapse with the height: with
+     box-sizing:border-box a height of 0 does not shrink the padding, so the
+     box stayed ~3.75rem tall and overflow:hidden clipped to the padding box
+     rather than to nothing - which is why the drawer's inputs and buttons
+     showed through above the hamburger bar while it was shut. */
+  height: 0;
+  padding: 0 var(--sp-1);
   align-content: center;
   overflow: hidden;
-  transition: height var(--dur-drawer) var(--ease);
+  transition: height var(--dur-drawer) var(--ease),
+              padding var(--dur-drawer) var(--ease);
   z-index: 9;
   width: 100%;
   background-color: var(--glass-3);
   -webkit-backdrop-filter: var(--blur-2);
   backdrop-filter: var(--blur-2);
   border-top: 1px solid var(--hairline);
+}
+
+/* Open. The bottom padding clears the hamburger bar, which is fixed at
+   z-index 99999 over the bottom of this drawer; without it the second button
+   row hides behind the bar. */
+.selector[data-open] {
+  height: calc(8.5rem + 2.75rem);   /* content + the fixed hamburger bar */
+  padding: var(--sp-1) var(--sp-1) calc(var(--hud-bar-h) + var(--sp-1));
 }
 
 .selector button { min-height: var(--control-lg); }

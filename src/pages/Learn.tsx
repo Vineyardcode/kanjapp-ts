@@ -234,18 +234,10 @@ export const Learn = () => {
     setHighlightedKanji([]);
     setCompleted(0)
     
-    const selector = document.querySelector(".selector")
-   
-
-    if (selector instanceof HTMLElement) {
-      if (selectorShown === false) {
-        selector.style.height = "calc(8.5rem + 2.75rem)";  // content + the fixed hamburger bar
-        setSelectorShown(true);
-      } else {
-        selector.style.height = "0";
-        setSelectorShown(false);
-      }
-    }
+    // The open/closed geometry lives in Learn.css under .selector[data-open];
+    // setting style.height here could only ever move the height, leaving the
+    // padding behind and letting the shut drawer show its contents.
+    setSelectorShown((open) => !open);
 
     
   }
@@ -363,7 +355,7 @@ export const Learn = () => {
               )}
         </div>
       
-        <div className="selector" style={{ display: modal.show ? 'none' : 'grid' }}>
+        <div className="selector" data-open={selectorShown || undefined} style={{ display: modal.show || previewShown ? 'none' : 'grid' }}>
 
           <div className="params">
             <div>
@@ -433,9 +425,9 @@ export const Learn = () => {
           <AnkiCardPreview kanji={selectedKanji} onClose={() => setPreviewShown(false)} />
         )}
 
-        {modal.show===false && (    
+        {modal.show===false && previewShown===false && (    
           <div className="hamburger-holder">
-            {modal.show===false && (<IconArrowsAlt className='hamburger' onClick={handleShowSelector}/>)}   
+            <IconArrowsAlt className='hamburger' onClick={handleShowSelector}/>   
           </div>
           )}
     </>
