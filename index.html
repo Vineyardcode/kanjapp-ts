@@ -44,8 +44,18 @@
           return !r || r.childElementCount > 0;
         }
 
-        function fail(code) {
-          if (fired || mounted() || midAuth()) return;
+        // `force` is for the backstops only. midAuth() protects a login that is
+        // actually in flight, but it is sticky: only supabase-js clears the
+        // fragment, and on a broken deploy supabase-js never loads. It would
+        // otherwise stay true for the life of the page and suppress the
+        // redirect, the backstop AND the fallback paint below - a permanently
+        // blank screen for magic-link arrivals, the one group that cannot
+        // simply reload. After the backstop has elapsed with #root still empty
+        // there is demonstrably no app left to finish the exchange, and the
+        // token is discarded either way (the URL below is built from scratch).
+        function fail(code, force) {
+          if (fired || mounted()) return;
+          if (midAuth() && !force) return;
           fired = true;
 
           // Paint a readable fallback FIRST. The error page is itself a heavy
@@ -94,8 +104,16 @@
         // Long backstop only. The bundle is ~900 KB gzipped; a short timer would
         // evict perfectly healthy users on slow connections.
         window.addEventListener('load', function () {
-          setTimeout(function () { fail(504); }, 20000);
+          setTimeout(function () { fail(504, true); }, 20000);
         });
+
+        // ...and an absolute one, because 'load' does not fire while a request
+        // is still outstanding. A bundle request that hangs rather than failing
+        // (dead origin holding the connection open) leaves readyState at
+        // 'loading' indefinitely, so the timer above is never even scheduled -
+        // the exact scenario the backstop exists for. Measured from parse, so
+        // it must be slack enough not to evict a slow but healthy load.
+        setTimeout(function () { fail(504, true); }, 45000);
       })();
     </script>
   </head>
