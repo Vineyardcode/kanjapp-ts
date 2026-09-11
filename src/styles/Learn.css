@@ -192,7 +192,9 @@
   gap: var(--sp-1);
 }
 
-.selector-create-move-manual button { width: 33.3%; }
+/* flex-basis 0 rather than a hard 33.3%: the row shares itself out by however
+   many buttons it has, so adding one does not overflow the drawer */
+.selector-create-move-manual button { flex: 1 1 0; min-width: 0; }
 
 .selector-select-progressBar-cancel {
   grid-area: 2 / 3 / 3 / 6;

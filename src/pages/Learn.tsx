@@ -2,6 +2,7 @@
 import React, {useEffect, useState}from 'react';
 //components, pages, styles
 import Modal from '../components/Modal';
+import AnkiCardPreview from '../components/AnkiCardPreview';
 import "../styles/Learn.css"
 //supabase-backed learned-kanji sync
 import { saveLearnedKanji } from '../lib/learnedKanji';
@@ -48,6 +49,7 @@ export const Learn = () => {
   const [completed, setCompleted] = useState(0)
   const [exporting, setExporting] = useState(false);
   const [exportError, setExportError] = useState<string | null>(null);
+  const [previewShown, setPreviewShown] = useState(false);
   
   //search bar 
   const [query, setQuery] = useState<string>('');
@@ -412,6 +414,7 @@ export const Learn = () => {
 
           <div className="selector-create-move-manual" >
             <button className='selector-createDeck' onClick={handleExportAnki} disabled={exporting || selectedKanji.length === 0} title={exportError ?? undefined}><h5>{exporting ? 'Building deck...' : exportError ? 'Export failed - retry' : 'Create Anki deck'}</h5></button>
+            <button className='selector-previewCard' onClick={() => setPreviewShown(true)} disabled={selectedKanji.length === 0}><h5>Preview card</h5></button>
             <button className='selector-MoveSelectedToLearned' onClick={createBatchesForSavingKanji}><h5>Move to Learned</h5></button>
             <button className='selector-manual' id='manual-btn' data-active={selectionMode || undefined} onClick={selectionMode ? handleCancelManualSelection : handleManualSelection}><h5>{selectionMode ? "Manual selection ON" : "Manual selection OFF"}</h5></button>
           </div>
@@ -426,6 +429,10 @@ export const Learn = () => {
 
         </div>
       
+        {previewShown && (
+          <AnkiCardPreview kanji={selectedKanji} onClose={() => setPreviewShown(false)} />
+        )}
+
         {modal.show===false && (    
           <div className="hamburger-holder">
             {modal.show===false && (<IconArrowsAlt className='hamburger' onClick={handleShowSelector}/>)}   

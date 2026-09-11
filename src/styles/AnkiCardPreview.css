@@ -1,0 +1,127 @@
+/* Modelled on the card modal: black hairlines, paper ground, embossed labels. */
+
+.ankiprev-scrim {
+  position: fixed;
+  inset: 0;
+  z-index: 60;
+  display: grid;
+  place-items: center;
+  padding: var(--sp-3);
+  background: var(--scrim);
+  backdrop-filter: var(--blur-1);
+  -webkit-backdrop-filter: var(--blur-1);
+}
+
+.ankiprev {
+  display: grid;
+  grid-template-rows: auto 1fr auto auto;
+  gap: var(--sp-2);
+  width: min(26rem, 100%);
+  /* a DEFINITE height, not just a max: the stage is a 1fr row and the frame
+     inside it is height:100%, and neither can resolve against an auto height -
+     the frame would collapse to the stage's min-height instead of filling it */
+  height: min(100%, 46rem);
+  padding: var(--sp-3);
+  background: var(--paper);
+  border: 1px solid var(--hairline);
+  border-radius: var(--r-3);
+  box-shadow: var(--shadow-2);
+  font-family: var(--font-ui);
+  color: var(--ink);
+}
+
+.ankiprev h5 { margin: 0; font-size: var(--fs-200); font-weight: 700; }
+
+.ankiprev-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--sp-2);
+  padding-bottom: var(--sp-1);
+  border-bottom: 1px solid var(--hairline);
+}
+
+.ankiprev-close {
+  width: var(--control-sm);
+  height: var(--control-sm);
+  font-size: var(--fs-400);
+  line-height: 1;
+  color: var(--ink);
+  background: transparent;
+  border: 1px solid var(--hairline);
+  border-radius: var(--r-2);
+  cursor: pointer;
+}
+.ankiprev-close:hover { background: var(--paper-3); }
+
+/* a phone-shaped stage: the card is read on a phone, so it is previewed at a
+   phone's width rather than at whatever width this modal happens to be */
+.ankiprev-stage {
+  position: relative;
+  display: block;
+  /* min-height:0 lets the 1fr row actually shrink; the min-height below keeps
+     it usable on a short window. The frame fills it so the card's own replay
+     and stepping controls are reachable without scrolling the frame. */
+  min-height: min(18rem, 45vh);
+  overflow: hidden;
+  background: var(--paper-2);
+  border: 1px solid var(--hairline);
+  border-radius: var(--r-2);
+}
+
+ /* --s is set from JS: the largest scale at which a whole phone screen fits */
+.ankiprev-device {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%) scale(var(--s, 1));
+}
+
+.ankiprev-frame {
+  width: 100%;
+  height: 100%;
+  border: 0;
+  background: #fff;
+  color-scheme: light;   /* the frame paints its own ground; never invert it */
+}
+
+.ankiprev-loading,
+.ankiprev-error {
+  margin: 0;
+  padding: var(--sp-4);
+  font-size: var(--fs-200);
+  text-align: center;
+}
+.ankiprev-error { color: var(--seal-deep); }
+
+.ankiprev-controls {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: var(--sp-1);
+}
+
+.ankiprev-controls button {
+  min-height: var(--control-md);
+  padding: 0 var(--sp-1);
+  color: var(--ink);
+  background: transparent;
+  border: 1px solid var(--hairline);
+  border-radius: var(--r-2);
+  cursor: pointer;
+  transition: background var(--dur-1);
+}
+.ankiprev-controls button:hover:not(:disabled) { background: var(--paper-3); }
+.ankiprev-controls button:disabled { opacity: 0.4; cursor: default; }
+.ankiprev-controls button[data-active] { background: var(--ink); color: var(--paper); }
+
+.ankiprev-note {
+  margin: 0;
+  font-size: var(--fs-100);
+  color: var(--ink-3);
+  text-align: center;
+}
+
+@media (max-width: 30rem) {
+  .ankiprev { padding: var(--sp-2); }
+  .ankiprev-controls { grid-template-columns: repeat(2, 1fr); }
+}
